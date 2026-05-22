@@ -38,12 +38,23 @@ public class RemainsService {
     private Remains getRemainsByProductId(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ValidationError("productId", "Товар не найден"));
-        return getOrCreateRemains(product);
+        return remainsRepository.findByProduct(product).orElse(null);
     }
 
     @Transactional(readOnly = true)
     public RemainsRs getByProductId(Long productId) {
         Remains remains = getRemainsByProductId(productId);
+        if (remains == null) {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ValidationError("productId", "Товар не найден"));
+            RemainsRs rs = new RemainsRs();
+            rs.setProductId(productId);
+            rs.setProductName(product.getName());
+            rs.setBar(0);
+            rs.setWarehouse(0);
+            rs.setLastModified(null);
+            return rs;
+        }
         return convertToRs(remains);
     }
 
@@ -51,7 +62,7 @@ public class RemainsService {
     @Transactional
     public void setWarehouseStock(Long productId, Integer newWarehouse, Long adminId) {
         if (newWarehouse < 0) throw new ValidationError("warehouse", "Не может быть отрицательным");
-        Remains remains = getRemainsByProductId(productId);
+        Remains remains = getOrCreateRemainsForWrite(productId);
         int oldWarehouse = remains.getWarehouse();
         remains.setWarehouse(newWarehouse);
         remainsRepository.save(remains);
@@ -65,7 +76,7 @@ public class RemainsService {
     @Transactional
     public void setBarStock(Long productId, Integer newBar, Long adminId) {
         if (newBar < 0) throw new ValidationError("bar", "Не может быть отрицательным");
-        Remains remains = getRemainsByProductId(productId);
+        Remains remains = getOrCreateRemainsForWrite(productId);
         int oldBar = remains.getBar();
         remains.setBar(newBar);
         remainsRepository.save(remains);
@@ -79,7 +90,7 @@ public class RemainsService {
     @Transactional
     public void transferToBar(Long productId, Integer qty, Long adminId) {
         if (qty <= 0) throw new ValidationError("qty", "Количество должно быть положительным");
-        Remains remains = getRemainsByProductId(productId);
+        Remains remains = getOrCreateRemainsForWrite(productId);
         if (remains.getWarehouse() < qty)
             throw new ValidationError("warehouse", "Недостаточно на складе");
         remains.setWarehouse(remains.getWarehouse() - qty);
@@ -94,7 +105,7 @@ public class RemainsService {
     @Transactional
     public void decreaseBar(Long productId, Integer qty, Long adminId) {
         if (qty <= 0) throw new ValidationError("qty", "Количество должно быть положительным");
-        Remains remains = getRemainsByProductId(productId);
+        Remains remains = getOrCreateRemainsForWrite(productId);
         if (remains.getBar() < qty)
             throw new ValidationError("bar", "Недостаточно товара в баре");
         remains.setBar(remains.getBar() - qty);
@@ -108,7 +119,7 @@ public class RemainsService {
     @Transactional
     public void increaseBar(Long productId, Integer qty, Long adminId) {
         if (qty <= 0) throw new ValidationError("qty", "Количество должно быть положительным");
-        Remains remains = getRemainsByProductId(productId);
+        Remains remains = getOrCreateRemainsForWrite(productId);
         remains.setBar(remains.getBar() + qty);
         remainsRepository.save(remains);
 
@@ -133,5 +144,12 @@ public class RemainsService {
         rs.setWarehouse(remains.getWarehouse());
         rs.setLastModified(remains.getLastModified());
         return rs;
+    }
+
+    private Remains getOrCreateRemainsForWrite(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ValidationError("productId", "Товар не найден"));
+        return remainsRepository.findByProduct(product)
+                .orElseGet(() -> remainsRepository.save(new Remains(product)));
     }
 }
