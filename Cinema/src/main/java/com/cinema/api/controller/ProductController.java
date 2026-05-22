@@ -57,5 +57,8 @@ public class ProductController {
     public ResponseEntity<List<ProductRs>> filter(@RequestParam(required = false) Category category) {
         return ResponseEntity.ok(productService.filterByCategory(category));
     }
-
+    @GetMapping("/expired")
+    public ResponseEntity<List<ProductRs>> getExpired() {
+        return ResponseEntity.ok(productService.getExpiredProducts());
+    }
 }
