@@ -1,22 +1,24 @@
 package com.cinema.api.dto;
 
+import com.cinema.api.enums.Category;
 import java.time.LocalDate;
 
 public class ProductRs {
+
     private Long id;
     private String name;
     private Double price;
-    private String category;
+    private Category category;   // ← enum
     private Integer expirationDays;
     private LocalDate dateOfCreation;
     private Integer status;
-    private Integer daysLeft;   // вычисляемое поле
-    private Boolean isExpired;  // вычисляемое поле
+    private Integer daysLeft;
+    private Boolean isExpired;
 
-    // Конструкторы, геттеры, сеттеры
+    // конструкторы, геттеры, сеттеры
     public ProductRs() {}
 
-    public ProductRs(Long id, String name, Double price, String category,
+    public ProductRs(Long id, String name, Double price, Category category,
                      Integer expirationDays, LocalDate dateOfCreation, Integer status,
                      Integer daysLeft, Boolean isExpired) {
         this.id = id;
@@ -30,7 +32,7 @@ public class ProductRs {
         this.isExpired = isExpired;
     }
 
-    // Геттеры и сеттеры
+    // геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -40,8 +42,8 @@ public class ProductRs {
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
     public Integer getExpirationDays() { return expirationDays; }
     public void setExpirationDays(Integer expirationDays) { this.expirationDays = expirationDays; }

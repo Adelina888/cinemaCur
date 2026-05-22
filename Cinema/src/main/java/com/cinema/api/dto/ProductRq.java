@@ -1,7 +1,7 @@
 package com.cinema.api.dto;
 
+import com.cinema.api.enums.Category;
 import jakarta.validation.constraints.*;
-import java.time.LocalDate;
 
 public class ProductRq {
 
@@ -14,20 +14,22 @@ public class ProductRq {
     @DecimalMax(value = "1000000.00", message = "Цена не может превышать 1 000 000")
     private Double price;
 
-    private String category;
+    @NotNull(message = "Категория обязательна")
+    private Category category;
 
     @Min(value = 0, message = "Срок годности не может быть отрицательным")
     @Max(value = 3650, message = "Срок годности не может превышать 10 лет (3650 дней)")
-    private Integer expirationDays;  // null или 0 – товар не портится
+    private Integer expirationDays;
 
+    // Геттеры и сеттеры
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
     public Integer getExpirationDays() { return expirationDays; }
     public void setExpirationDays(Integer expirationDays) { this.expirationDays = expirationDays; }

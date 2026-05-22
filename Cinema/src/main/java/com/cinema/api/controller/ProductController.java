@@ -2,6 +2,7 @@ package com.cinema.api.controller;
 
 import com.cinema.api.dto.ProductRq;
 import com.cinema.api.dto.ProductRs;
+import com.cinema.api.enums.Category;
 import com.cinema.api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -53,7 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<ProductRs>> filter(@RequestParam(required = false) String category) {
+    public ResponseEntity<List<ProductRs>> filter(@RequestParam(required = false) Category category) {
         return ResponseEntity.ok(productService.filterByCategory(category));
     }
 

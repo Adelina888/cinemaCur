@@ -3,10 +3,12 @@ package com.cinema.api.service;
 import com.cinema.api.dto.ProductRq;
 import com.cinema.api.dto.ProductRs;
 import com.cinema.api.entity.Product;
+import com.cinema.api.enums.Category;
 import com.cinema.api.exception.ValidationError;
 import com.cinema.api.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -21,10 +23,10 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    // ========== Вспомогательные методы для срока годности ==========
+    // ===== Вспомогательные методы для срока годности =====
     private LocalDate getExpirationDate(Product product) {
         if (product.getExpirationDays() == null || product.getExpirationDays() <= 0) {
-            return null; // без срока годности
+            return null;
         }
         return product.getDateOfCreation().plusDays(product.getExpirationDays());
     }
@@ -40,15 +42,13 @@ public class ProductService {
         return (int) ChronoUnit.DAYS.between(LocalDate.now(), expDate);
     }
 
-    // ========== CRUD ==========
+    // ===== CRUD =====
     @Transactional
     public ProductRs create(ProductRq rq) {
-        // Валидация уникальности имени
         if (productRepository.existsByName(rq.getName())) {
             throw new ValidationError("name", "Товар с таким именем уже существует");
         }
-        // Валидация цены (дополнительно, хотя аннотации уже есть, но на всякий случай)
-        if (rq.getPrice() == null || rq.getPrice() <= 0) {
+        if (rq.getPrice() <= 0) {
             throw new ValidationError("price", "Цена должна быть больше 0");
         }
 
@@ -57,8 +57,7 @@ public class ProductService {
         product.setPrice(rq.getPrice());
         product.setCategory(rq.getCategory());
         product.setExpirationDays(rq.getExpirationDays());
-        // dateOfCreation устанавливается в конструкторе
-        product.setStatus(1); // активен
+        product.setStatus(1);
 
         Product saved = productRepository.save(product);
         return convertToRs(saved);
@@ -69,11 +68,10 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
 
-        // Проверка уникальности, если имя изменилось
         if (!product.getName().equals(rq.getName()) && productRepository.existsByName(rq.getName())) {
             throw new ValidationError("name", "Товар с таким именем уже существует");
         }
-        if (rq.getPrice() == null || rq.getPrice() <= 0) {
+        if (rq.getPrice() <= 0) {
             throw new ValidationError("price", "Цена должна быть больше 0");
         }
 
@@ -81,7 +79,6 @@ public class ProductService {
         product.setPrice(rq.getPrice());
         product.setCategory(rq.getCategory());
         product.setExpirationDays(rq.getExpirationDays());
-        // dateOfCreation не меняем
 
         Product updated = productRepository.save(product);
         return convertToRs(updated);
@@ -116,8 +113,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductRs> filterByCategory(String category) {
-        if (category == null || category.isBlank()) {
+    public List<ProductRs> filterByCategory(Category category) {
+        if (category == null) {
             return getAll();
         }
         return productRepository.findByCategory(category).stream()
@@ -125,18 +122,26 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    // ========== Конвертация ==========
+    // Для тестирования (если нужен доступ к репозиторию из контроллера – не делайте так, лучше создать метод в сервисе)
+    // Но если вы добавили эндпоинт /expired, то нужен метод:
+    public List<ProductRs> getExpiredProducts() {
+        return productRepository.findExpiredProducts().stream()
+                .map(this::convertToRs)
+                .collect(Collectors.toList());
+    }
+
+    // ===== Конвертация =====
     private ProductRs convertToRs(Product product) {
-        ProductRs rs = new ProductRs();
-        rs.setId(product.getId());
-        rs.setName(product.getName());
-        rs.setPrice(product.getPrice());
-        rs.setCategory(product.getCategory());
-        rs.setExpirationDays(product.getExpirationDays());
-        rs.setDateOfCreation(product.getDateOfCreation());
-        rs.setStatus(product.getStatus());
-        rs.setDaysLeft(getDaysLeft(product));
-        rs.setIsExpired(isExpired(product));
-        return rs;
+        return new ProductRs(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getCategory(),
+                product.getExpirationDays(),
+                product.getDateOfCreation(),
+                product.getStatus(),
+                getDaysLeft(product),
+                isExpired(product)
+        );
     }
 }

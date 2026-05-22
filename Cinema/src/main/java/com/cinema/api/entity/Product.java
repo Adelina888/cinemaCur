@@ -1,5 +1,6 @@
 package com.cinema.api.entity;
 
+import com.cinema.api.enums.Category;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -17,23 +18,23 @@ public class Product {
     @Column(nullable = false)
     private Double price;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @Column(name = "expiration_days")
-    private Integer expirationDays;   // срок годности в днях, null или 0 – означает "не портится"
+    private Integer expirationDays;
 
     @Column(name = "date_of_creation", nullable = false)
     private LocalDate dateOfCreation;
 
-    private Integer status;  // например, 0 – неактивен, 1 – активен
+    private Integer status;
 
-    // Конструкторы
     public Product() {
         this.dateOfCreation = LocalDate.now();
         this.status = 1;
     }
 
-    public Product(String name, Double price, String category, Integer expirationDays) {
+    public Product(String name, Double price, Category category, Integer expirationDays) {
         this();
         this.name = name;
         this.price = price;
@@ -51,8 +52,8 @@ public class Product {
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
     public Integer getExpirationDays() { return expirationDays; }
     public void setExpirationDays(Integer expirationDays) { this.expirationDays = expirationDays; }
