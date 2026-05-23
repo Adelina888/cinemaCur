@@ -31,7 +31,7 @@ public class ProductService {
         return product.getDateOfCreation().plusDays(product.getExpirationDays());
     }
 
-    private boolean isExpired(Product product) {
+    public  boolean isExpired(Product product) {
         LocalDate expDate = getExpirationDate(product);
         return expDate != null && expDate.isBefore(LocalDate.now());
     }
@@ -122,8 +122,6 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    // Для тестирования (если нужен доступ к репозиторию из контроллера – не делайте так, лучше создать метод в сервисе)
-    // Но если вы добавили эндпоинт /expired, то нужен метод:
     public List<ProductRs> getExpiredProducts() {
         return productRepository.findExpiredProducts().stream()
                 .map(this::convertToRs)

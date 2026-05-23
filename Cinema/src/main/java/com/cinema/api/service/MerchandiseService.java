@@ -4,6 +4,7 @@ import com.cinema.api.dto.MerchandiseRq;
 import com.cinema.api.dto.MerchandiseRs;
 import com.cinema.api.entity.Merchandise;
 import com.cinema.api.enums.MerchandiseType;
+import com.cinema.api.exception.InsufficientStockException;
 import com.cinema.api.exception.ValidationError;
 import com.cinema.api.repository.MerchandiseRepository;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,27 @@ public class MerchandiseService {
             throw new ValidationError("count", "Недостаточно товара на складе");
         }
         merch.setCount(merch.getCount() - count);
+        merchandiseRepository.save(merch);
+    }
+
+    @Transactional
+    public void increaseCount(Long id, Integer quantity, Long adminId) {
+        if (quantity <= 0) throw new ValidationError("quantity", "Количество должно быть положительным");
+        Merchandise merch = merchandiseRepository.findById(id)
+                .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
+        merch.setCount(merch.getCount() + quantity);
+        merchandiseRepository.save(merch);
+    }
+
+    @Transactional
+    public void sell(Long id, Integer quantity, Long adminId) {
+        if (quantity <= 0) throw new ValidationError("quantity", "Количество должно быть положительным");
+        Merchandise merch = merchandiseRepository.findById(id)
+                .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
+        if (merch.getCount() < quantity) {
+            throw new InsufficientStockException("Недостаточно товара: " + merch.getName());
+        }
+        merch.setCount(merch.getCount() - quantity);
         merchandiseRepository.save(merch);
     }
 
