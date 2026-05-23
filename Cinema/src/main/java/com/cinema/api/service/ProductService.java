@@ -7,6 +7,7 @@ import com.cinema.api.entity.Product;
 import com.cinema.api.enums.Category;
 import com.cinema.api.exception.ValidationError;
 import com.cinema.api.repository.ProductRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -138,6 +139,29 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<Product> getExpiringProducts(int daysThreshold) {
+        return productRepository.findAll().stream()
+                .filter(p -> {
+                    int daysLeft = getDaysLeft(p);
+                    return daysLeft > 0 && daysLeft <= daysThreshold;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    //@Scheduled(cron = "0 0 8 * * *")  // каждый день в 8:00
+    public void checkExpiringProducts() {
+        List<Product> expiringSoon = getExpiringProducts(3);
+        if (expiringSoon.isEmpty()) {
+            logger.logExpirationWarning("Нет товаров с истекающим сроком годности", 0);
+        } else {
+            for (Product product : expiringSoon) {
+                int daysLeft = getDaysLeft(product);
+                logger.logExpirationWarning(product.getName(), daysLeft);
+            }
+        }
+    }
     private ProductRs convertToRs(Product product) {
         return new ProductRs(
                 product.getId(),
