@@ -1,5 +1,6 @@
 package com.cinema.api.service;
 
+import com.cinema.api.aspect.LoggerAspect;
 import com.cinema.api.dto.ComboRq;
 import com.cinema.api.dto.ComboRs;
 import com.cinema.api.dto.ProductInComboDto;
@@ -22,17 +23,20 @@ public class ComboService {
     private final ComboRepository comboRepository;
     private final ComboProductRepository comboProductRepository;
     private final ProductRepository productRepository;
+    private final LoggerAspect logger;
 
     public ComboService(ComboRepository comboRepository,
                         ComboProductRepository comboProductRepository,
-                        ProductRepository productRepository) {
+                        ProductRepository productRepository,
+                        LoggerAspect logger) {
         this.comboRepository = comboRepository;
         this.comboProductRepository = comboProductRepository;
         this.productRepository = productRepository;
+        this.logger = logger;
     }
 
     @Transactional
-    public ComboRs create(ComboRq rq) {
+    public ComboRs create(ComboRq rq, Long adminId) {
         if (comboRepository.existsByName(rq.getName())) {
             throw new ValidationError("name", "Комбо с таким названием уже существует");
         }
@@ -60,11 +64,12 @@ public class ComboService {
         combo.setComboPrice(regularSum * (100 - rq.getDiscountPercent()) / 100.0);
         combo = comboRepository.save(combo);
 
+        logger.logProductCreate(adminId, "Комбо: " + combo.getName());
         return convertToRs(combo);
     }
 
     @Transactional
-    public ComboRs update(Long id, ComboRq rq) {
+    public ComboRs update(Long id, ComboRq rq, Long adminId) {
         Combo combo = comboRepository.findById(id)
                 .orElseThrow(() -> new ValidationError("id", "Комбо не найдено"));
         if (!combo.getName().equals(rq.getName()) && comboRepository.existsByName(rq.getName())) {
@@ -96,16 +101,18 @@ public class ComboService {
         combo.setComboPrice(regularSum * (100 - rq.getDiscountPercent()) / 100.0);
         combo = comboRepository.save(combo);
 
+        logger.logProductUpdate(adminId, "Комбо: " + combo.getName());
         return convertToRs(combo);
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id, Long adminId) {
         if (!comboRepository.existsById(id)) {
             throw new ValidationError("id", "Комбо не найдено");
         }
         comboProductRepository.deleteByComboId(id);
         comboRepository.deleteById(id);
+        logger.logProductDelete(adminId, id);
     }
 
     @Transactional(readOnly = true)
@@ -131,15 +138,12 @@ public class ComboService {
 
     @Transactional(readOnly = true)
     public List<ComboRs> filterByActive(Boolean isActive) {
-        if (isActive == null) {
-            return getAll();
-        }
+        if (isActive == null) return getAll();
         return comboRepository.findByIsActive(isActive).stream()
                 .map(this::convertToRs)
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public List<ComboRs> searchAndFilter(String name, Boolean isActive) {
         if (name != null && isActive != null) {
             return comboRepository.findByNameContainingIgnoreCaseAndIsActive(name, isActive).stream()

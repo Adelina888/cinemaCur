@@ -1,5 +1,6 @@
 package com.cinema.api.service;
 
+import com.cinema.api.aspect.LoggerAspect;
 import com.cinema.api.dto.MerchandiseRq;
 import com.cinema.api.dto.MerchandiseRs;
 import com.cinema.api.entity.Merchandise;
@@ -16,16 +17,22 @@ import java.util.stream.Collectors;
 public class MerchandiseService {
 
     private final MerchandiseRepository merchandiseRepository;
+    private final LoggerAspect logger;
 
-    public MerchandiseService(MerchandiseRepository merchandiseRepository) {
+    public MerchandiseService(MerchandiseRepository merchandiseRepository, LoggerAspect logger) {
         this.merchandiseRepository = merchandiseRepository;
+        this.logger = logger;
     }
 
     @Transactional
-    public MerchandiseRs create(MerchandiseRq rq) {
+    public MerchandiseRs create(MerchandiseRq rq, Long adminId) {
         if (merchandiseRepository.existsByName(rq.getName())) {
             throw new ValidationError("name", "Товар с таким названием уже существует");
         }
+        if (rq.getPrice() <= 0) {
+            throw new ValidationError("price", "Цена должна быть больше 0");
+        }
+
         Merchandise merch = new Merchandise();
         merch.setName(rq.getName());
         merch.setPrice(rq.getPrice());
@@ -35,17 +42,21 @@ public class MerchandiseService {
         merch.setType(rq.getType());
         merch.setCount(rq.getCount() != null ? rq.getCount() : 0);
         merch.setStatus(1);
+
         Merchandise saved = merchandiseRepository.save(merch);
+        logger.logProductCreate(adminId, saved.getName());
         return convertToRs(saved);
     }
 
     @Transactional
-    public MerchandiseRs update(Long id, MerchandiseRq rq) {
+    public MerchandiseRs update(Long id, MerchandiseRq rq, Long adminId) {
         Merchandise merch = merchandiseRepository.findById(id)
                 .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
         if (!merch.getName().equals(rq.getName()) && merchandiseRepository.existsByName(rq.getName())) {
             throw new ValidationError("name", "Товар с таким названием уже существует");
         }
+
+        Double oldPrice = merch.getPrice();
         merch.setName(rq.getName());
         merch.setPrice(rq.getPrice());
         merch.setImageUrl(rq.getImageUrl());
@@ -53,16 +64,23 @@ public class MerchandiseService {
         merch.setMaterial(rq.getMaterial());
         merch.setType(rq.getType());
         if (rq.getCount() != null) merch.setCount(rq.getCount());
+
         Merchandise updated = merchandiseRepository.save(merch);
+
+        if (!oldPrice.equals(merch.getPrice())) {
+            logger.logPriceChange(adminId, id, oldPrice, merch.getPrice());
+        }
+        logger.logProductUpdate(adminId, updated.getName());
         return convertToRs(updated);
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id, Long adminId) {
         if (!merchandiseRepository.existsById(id)) {
             throw new ValidationError("id", "Товар не найден");
         }
         merchandiseRepository.deleteById(id);
+        logger.logProductDelete(adminId, id);
     }
 
     @Transactional(readOnly = true)
@@ -86,6 +104,7 @@ public class MerchandiseService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<MerchandiseRs> filterByType(MerchandiseType type) {
         return merchandiseRepository.findByType(type).stream()
                 .map(this::convertToRs)
@@ -94,6 +113,7 @@ public class MerchandiseService {
 
     @Transactional(readOnly = true)
     public List<MerchandiseRs> filterBySize(Integer size) {
+        if (size == null) return getAll();
         return merchandiseRepository.findBySize(size).stream()
                 .map(this::convertToRs)
                 .collect(Collectors.toList());
@@ -101,32 +121,10 @@ public class MerchandiseService {
 
     @Transactional(readOnly = true)
     public List<MerchandiseRs> filterByStatus(Integer status) {
+        if (status == null) return getAll();
         return merchandiseRepository.findByStatus(status).stream()
                 .map(this::convertToRs)
                 .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void sell(Long id, Integer count) {
-        Merchandise merch = merchandiseRepository.findById(id)
-                .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
-        if (count <= 0) {
-            throw new ValidationError("count", "Количество должно быть положительным");
-        }
-        if (merch.getCount() < count) {
-            throw new ValidationError("count", "Недостаточно товара на складе");
-        }
-        merch.setCount(merch.getCount() - count);
-        merchandiseRepository.save(merch);
-    }
-
-    @Transactional
-    public void increaseCount(Long id, Integer quantity, Long adminId) {
-        if (quantity <= 0) throw new ValidationError("quantity", "Количество должно быть положительным");
-        Merchandise merch = merchandiseRepository.findById(id)
-                .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
-        merch.setCount(merch.getCount() + quantity);
-        merchandiseRepository.save(merch);
     }
 
     @Transactional
@@ -137,8 +135,21 @@ public class MerchandiseService {
         if (merch.getCount() < quantity) {
             throw new InsufficientStockException("Недостаточно товара: " + merch.getName());
         }
+        int oldCount = merch.getCount();
         merch.setCount(merch.getCount() - quantity);
         merchandiseRepository.save(merch);
+        logger.logStockChange(adminId, id, oldCount, merch.getCount(), "MERCHANDISE");
+    }
+
+    @Transactional
+    public void increaseCount(Long id, Integer quantity, Long adminId) {
+        if (quantity <= 0) throw new ValidationError("quantity", "Количество должно быть положительным");
+        Merchandise merch = merchandiseRepository.findById(id)
+                .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
+        int oldCount = merch.getCount();
+        merch.setCount(merch.getCount() + quantity);
+        merchandiseRepository.save(merch);
+        logger.logStockChange(adminId, id, oldCount, merch.getCount(), "MERCHANDISE");
     }
 
     private MerchandiseRs convertToRs(Merchandise entity) {

@@ -4,9 +4,9 @@ import com.cinema.api.dto.RemainsRs;
 import com.cinema.api.dto.StockMovementRs;
 import com.cinema.api.service.RemainsService;
 import com.cinema.api.service.StockMovementService;
+import com.cinema.api.util.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -22,11 +22,6 @@ public class RemainsController {
         this.movementService = movementService;
     }
 
-    private Long getCurrentAdminId() {
-        // Временная заглушка – позже получите из SecurityContextHolder
-        return 1L;
-    }
-
     @GetMapping("/{productId}")
     public ResponseEntity<RemainsRs> getByProductId(@PathVariable Long productId) {
         return ResponseEntity.ok(remainsService.getByProductId(productId));
@@ -34,19 +29,19 @@ public class RemainsController {
 
     @PutMapping("/{productId}/warehouse")
     public ResponseEntity<Void> setWarehouse(@PathVariable Long productId, @RequestParam Integer qty) {
-        remainsService.setWarehouseStock(productId, qty, getCurrentAdminId());
+        remainsService.setWarehouseStock(productId, qty, SecurityUtils.getCurrentAdminId());
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{productId}/bar")
     public ResponseEntity<Void> setBar(@PathVariable Long productId, @RequestParam Integer qty) {
-        remainsService.setBarStock(productId, qty, getCurrentAdminId());
+        remainsService.setBarStock(productId, qty, SecurityUtils.getCurrentAdminId());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{productId}/transfer")
     public ResponseEntity<Void> transferToBar(@PathVariable Long productId, @RequestParam Integer qty) {
-        remainsService.transferToBar(productId, qty, getCurrentAdminId());
+        remainsService.transferToBar(productId, qty, SecurityUtils.getCurrentAdminId());
         return ResponseEntity.noContent().build();
     }
 

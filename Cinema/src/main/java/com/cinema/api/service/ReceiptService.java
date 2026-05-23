@@ -1,5 +1,6 @@
 package com.cinema.api.service;
 
+import com.cinema.api.aspect.LoggerAspect;
 import com.cinema.api.dto.*;
 import com.cinema.api.entity.*;
 import com.cinema.api.exception.ExpiredProductException;
@@ -23,6 +24,7 @@ public class ReceiptService {
     private final RemainsService remainsService;
     private final MerchandiseService merchandiseService;
     private final ProductService productService;
+    private final LoggerAspect logger;
 
     public ReceiptService(ReceiptRepository receiptRepository,
                           ReceiptMerchandiseRepository receiptMerchandiseRepository,
@@ -31,7 +33,8 @@ public class ReceiptService {
                           ComboRepository comboRepository,
                           RemainsService remainsService,
                           MerchandiseService merchandiseService,
-                          ProductService productService) {
+                          ProductService productService,
+                          LoggerAspect logger) {
         this.receiptRepository = receiptRepository;
         this.receiptMerchandiseRepository = receiptMerchandiseRepository;
         this.receiptComboRepository = receiptComboRepository;
@@ -40,6 +43,7 @@ public class ReceiptService {
         this.remainsService = remainsService;
         this.merchandiseService = merchandiseService;
         this.productService = productService;
+        this.logger = logger;
     }
 
     @Transactional
@@ -139,6 +143,7 @@ public class ReceiptService {
         receipt.setTotalAmount(calculateTotal(receipt));
         receiptRepository.save(receipt);
 
+        logger.logSale(adminId, receiptId, receipt.getTotalAmount());
         return convertToRs(receipt);
     }
 
@@ -169,6 +174,7 @@ public class ReceiptService {
         receipt.setTypeOfOperation("RETURN");
         receiptRepository.save(receipt);
 
+        logger.logReturn(adminId, receiptId, receipt.getTotalAmount());
         return convertToRs(receipt);
     }
 

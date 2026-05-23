@@ -1,5 +1,6 @@
 package com.cinema.api.service;
 
+import com.cinema.api.aspect.LoggerAspect;
 import com.cinema.api.dto.ProductRq;
 import com.cinema.api.dto.ProductRs;
 import com.cinema.api.entity.Product;
@@ -18,12 +19,13 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final LoggerAspect logger;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, LoggerAspect logger) {
         this.productRepository = productRepository;
+        this.logger = logger;
     }
 
-    // ===== Вспомогательные методы для срока годности =====
     private LocalDate getExpirationDate(Product product) {
         if (product.getExpirationDays() == null || product.getExpirationDays() <= 0) {
             return null;
@@ -31,7 +33,7 @@ public class ProductService {
         return product.getDateOfCreation().plusDays(product.getExpirationDays());
     }
 
-    public  boolean isExpired(Product product) {
+    public boolean isExpired(Product product) {
         LocalDate expDate = getExpirationDate(product);
         return expDate != null && expDate.isBefore(LocalDate.now());
     }
@@ -42,9 +44,8 @@ public class ProductService {
         return (int) ChronoUnit.DAYS.between(LocalDate.now(), expDate);
     }
 
-    // ===== CRUD =====
     @Transactional
-    public ProductRs create(ProductRq rq) {
+    public ProductRs create(ProductRq rq, Long adminId) {
         if (productRepository.existsByName(rq.getName())) {
             throw new ValidationError("name", "Товар с таким именем уже существует");
         }
@@ -60,11 +61,12 @@ public class ProductService {
         product.setStatus(1);
 
         Product saved = productRepository.save(product);
+        logger.logProductCreate(adminId, saved.getName());
         return convertToRs(saved);
     }
 
     @Transactional
-    public ProductRs update(Long id, ProductRq rq) {
+    public ProductRs update(Long id, ProductRq rq, Long adminId) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
 
@@ -75,20 +77,28 @@ public class ProductService {
             throw new ValidationError("price", "Цена должна быть больше 0");
         }
 
+        Double oldPrice = product.getPrice();
         product.setName(rq.getName());
         product.setPrice(rq.getPrice());
         product.setCategory(rq.getCategory());
         product.setExpirationDays(rq.getExpirationDays());
 
         Product updated = productRepository.save(product);
+
+        if (!oldPrice.equals(product.getPrice())) {
+            logger.logPriceChange(adminId, id, oldPrice, product.getPrice());
+        }
+        logger.logProductUpdate(adminId, updated.getName());
         return convertToRs(updated);
     }
 
     @Transactional
-    public void delete(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
-        productRepository.delete(product);
+    public void delete(Long id, Long adminId) {
+        if (!productRepository.existsById(id)) {
+            throw new ValidationError("id", "Товар не найден");
+        }
+        productRepository.deleteById(id);
+        logger.logProductDelete(adminId, id);
     }
 
     @Transactional(readOnly = true)
@@ -128,7 +138,6 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    // ===== Конвертация =====
     private ProductRs convertToRs(Product product) {
         return new ProductRs(
                 product.getId(),

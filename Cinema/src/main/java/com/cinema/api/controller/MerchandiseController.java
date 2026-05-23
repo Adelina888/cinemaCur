@@ -4,6 +4,7 @@ import com.cinema.api.dto.MerchandiseRq;
 import com.cinema.api.dto.MerchandiseRs;
 import com.cinema.api.enums.MerchandiseType;
 import com.cinema.api.service.MerchandiseService;
+import com.cinema.api.util.SecurityUtils;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +23,18 @@ public class MerchandiseController {
 
     @PostMapping
     public ResponseEntity<MerchandiseRs> create(@Valid @RequestBody MerchandiseRq rq) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(merchandiseService.create(rq));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(merchandiseService.create(rq, SecurityUtils.getCurrentAdminId()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<MerchandiseRs> update(@PathVariable Long id, @Valid @RequestBody MerchandiseRq rq) {
-        return ResponseEntity.ok(merchandiseService.update(id, rq));
+        return ResponseEntity.ok(merchandiseService.update(id, rq, SecurityUtils.getCurrentAdminId()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        merchandiseService.delete(id);
+        merchandiseService.delete(id, SecurityUtils.getCurrentAdminId());
         return ResponseEntity.noContent().build();
     }
 
@@ -64,7 +66,7 @@ public class MerchandiseController {
 
     @PostMapping("/{id}/sell")
     public ResponseEntity<Void> sell(@PathVariable Long id, @RequestParam Integer count) {
-        merchandiseService.sell(id, count);
+        merchandiseService.sell(id, count, SecurityUtils.getCurrentAdminId());
         return ResponseEntity.noContent().build();
     }
 }

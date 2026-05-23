@@ -4,6 +4,7 @@ import com.cinema.api.dto.ProductRq;
 import com.cinema.api.dto.ProductRs;
 import com.cinema.api.enums.Category;
 import com.cinema.api.service.ProductService;
+import com.cinema.api.util.SecurityUtils;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +23,18 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductRs> create(@Valid @RequestBody ProductRq rq) {
-        ProductRs created = productService.create(rq);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productService.create(rq, SecurityUtils.getCurrentAdminId()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductRs> update(@PathVariable Long id, @Valid @RequestBody ProductRq rq) {
-        ProductRs updated = productService.update(id, rq);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(productService.update(id, rq, SecurityUtils.getCurrentAdminId()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        productService.delete(id);
+        productService.delete(id, SecurityUtils.getCurrentAdminId());
         return ResponseEntity.noContent().build();
     }
 
@@ -57,6 +57,7 @@ public class ProductController {
     public ResponseEntity<List<ProductRs>> filter(@RequestParam(required = false) Category category) {
         return ResponseEntity.ok(productService.filterByCategory(category));
     }
+
     @GetMapping("/expired")
     public ResponseEntity<List<ProductRs>> getExpired() {
         return ResponseEntity.ok(productService.getExpiredProducts());
