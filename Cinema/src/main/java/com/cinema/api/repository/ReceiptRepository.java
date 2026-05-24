@@ -18,4 +18,5 @@ public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
     List<Receipt> findByAdministratorId(Long administratorId);
 
     List<Receipt> findByTypeOfOperation(String typeOfOperation);
+    boolean existsByOriginalReceiptId(Long originalReceiptId);
 }

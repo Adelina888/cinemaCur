@@ -49,6 +49,7 @@ public class ReceiptService {
     @Transactional
     public ReceiptRs createReceipt(Long adminId) {
         Receipt receipt = new Receipt(adminId);
+        receipt.setTypeOfOperation("DRAFT");
         receipt = receiptRepository.save(receipt);
         return convertToRs(receipt);
     }
@@ -148,34 +149,66 @@ public class ReceiptService {
     }
 
     @Transactional
-    public ReceiptRs cancel(Long receiptId, Long adminId) {
-        Receipt receipt = receiptRepository.findById(receiptId)
+    public ReceiptRs cancel(Long originalReceiptId, Long adminId) {
+        // Находим оригинальный чек продажи
+        Receipt originalReceipt = receiptRepository.findById(originalReceiptId)
                 .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
 
-        if (!"SALE".equals(receipt.getTypeOfOperation())) {
+        if (!"SALE".equals(originalReceipt.getTypeOfOperation())) {
             throw new ValidationError("receiptId", "Возврат возможен только для проданных чеков");
         }
 
-        // Восстановление для мерча
-        for (ReceiptMerchandise rm : receipt.getMerchandiseItems()) {
+        // Проверяем, не был ли уже сделан возврат по этому чеку
+        boolean alreadyReturned = receiptRepository.existsByOriginalReceiptId(originalReceiptId);
+        if (alreadyReturned) {
+            throw new ValidationError("receiptId", "Возврат по этому чеку уже был оформлен");
+        }
+
+        // Создаём НОВЫЙ чек возврата
+        Receipt returnReceipt = new Receipt(adminId);
+        returnReceipt.setTypeOfOperation("RETURN");
+        returnReceipt.setPaymentMethod(originalReceipt.getPaymentMethod());
+        returnReceipt.setTotalAmount(originalReceipt.getTotalAmount());
+        returnReceipt.setOriginalReceiptId(originalReceiptId);
+        returnReceipt = receiptRepository.save(returnReceipt);
+
+        // Копируем позиции мерча и восстанавливаем остатки
+        for (ReceiptMerchandise rm : originalReceipt.getMerchandiseItems()) {
+            // Создаём копию позиции в чеке возврата
+            ReceiptMerchandise returnRm = new ReceiptMerchandise(
+                    returnReceipt,
+                    rm.getMerchandise(),
+                    rm.getQuantity(),
+                    rm.getPriceAtMoment()
+            );
+            receiptMerchandiseRepository.save(returnRm);
+
+            // Восстанавливаем остатки мерча
             merchandiseService.increaseCount(rm.getMerchandise().getId(), rm.getQuantity(), adminId);
         }
 
-        // Восстановление для комбо
-        for (ReceiptCombo rc : receipt.getComboItems()) {
-            Combo combo = rc.getCombo();
-            for (ComboProduct cp : combo.getComboProducts()) {
-                Product product = cp.getProduct();
+        // Копируем позиции комбо и восстанавливаем остатки товаров бара
+        for (ReceiptCombo rc : originalReceipt.getComboItems()) {
+            // Создаём копию позиции в чеке возврата
+            ReceiptCombo returnRc = new ReceiptCombo(
+                    returnReceipt,
+                    rc.getCombo(),
+                    rc.getQuantity(),
+                    rc.getPriceAtMoment()
+            );
+            receiptComboRepository.save(returnRc);
+
+            // Восстанавливаем остатки товаров бара
+            for (ComboProduct cp : rc.getCombo().getComboProducts()) {
                 int totalQuantity = cp.getQuantity() * rc.getQuantity();
-                remainsService.increaseBar(product.getId(), totalQuantity, adminId);
+                remainsService.increaseBar(cp.getProduct().getId(), totalQuantity, adminId);
             }
         }
 
-        receipt.setTypeOfOperation("RETURN");
-        receiptRepository.save(receipt);
+        // Логируем возврат
+        logger.logReturn(adminId, originalReceiptId, returnReceipt.getTotalAmount());
 
-        logger.logReturn(adminId, receiptId, receipt.getTotalAmount());
-        return convertToRs(receipt);
+        return convertToRs(returnReceipt);
     }
 
     @Transactional(readOnly = true)

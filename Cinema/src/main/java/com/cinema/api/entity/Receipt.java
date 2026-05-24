@@ -22,6 +22,7 @@ public class Receipt {
     private String paymentMethod;   // CASH, CARD, ONLINE
 
     private String typeOfOperation; // SALE, RETURN
+    private Long originalReceiptId;
 
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReceiptMerchandise> merchandiseItems = new ArrayList<>();
@@ -57,6 +58,8 @@ public class Receipt {
 
     public String getTypeOfOperation() { return typeOfOperation; }
     public void setTypeOfOperation(String typeOfOperation) { this.typeOfOperation = typeOfOperation; }
+    public Long getOriginalReceiptId() { return originalReceiptId; }
+    public void setOriginalReceiptId(Long originalReceiptId) { this.originalReceiptId = originalReceiptId; }
 
     public List<ReceiptMerchandise> getMerchandiseItems() { return merchandiseItems; }
     public void setMerchandiseItems(List<ReceiptMerchandise> merchandiseItems) { this.merchandiseItems = merchandiseItems; }

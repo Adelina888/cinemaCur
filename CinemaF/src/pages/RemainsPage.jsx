@@ -22,8 +22,8 @@ export const RemainsPage = () => {
   const [transferQty, setTransferQty] = useState('')
 
   // Максимальные значения
-  const MAX_QUANTITY = 999  // максимальное количество
-  const MAX_THRESHOLD = 999   // максимальный порог низких остатков
+  const MAX_QUANTITY = 999
+  const MAX_THRESHOLD = 999
 
   // Состояния для пагинации истории
   const [movementsPage, setMovementsPage] = useState(0)
@@ -97,21 +97,18 @@ export const RemainsPage = () => {
   const handleAdjustBar = async () => {
     let qty = parseInt(adjustQty)
     
-    // Проверка на число
     if (isNaN(qty)) {
       alert('Введите корректное количество')
       return
     }
     
-    // Проверка на отрицательное
     if (qty < 0) {
       alert('Количество не может быть отрицательным')
       return
     }
     
-    // Проверка на максимальное значение
     if (qty > MAX_QUANTITY) {
-      alert(`Количество не может превышать ${MAX_QUANTITY.toLocaleString()}`)
+      alert(`Количество не может превышать ${MAX_QUANTITY}`)
       return
     }
     
@@ -141,7 +138,7 @@ export const RemainsPage = () => {
     }
     
     if (qty > MAX_QUANTITY) {
-      alert(`Количество не может превышать ${MAX_QUANTITY.toLocaleString()}`)
+      alert(`Количество не может превышать ${MAX_QUANTITY}`)
       return
     }
     
@@ -172,11 +169,10 @@ export const RemainsPage = () => {
     }
     
     if (qty > MAX_QUANTITY) {
-      alert(`Количество не может превышать ${MAX_QUANTITY.toLocaleString()}`)
+      alert(`Количество не может превышать ${MAX_QUANTITY}`)
       return
     }
     
-    // Проверка, что на складе достаточно товара
     if (qty > (remains?.warehouse || 0)) {
       alert(`Недостаточно товара на складе. Доступно: ${remains?.warehouse || 0} шт`)
       return
@@ -204,7 +200,7 @@ export const RemainsPage = () => {
       newThreshold = 0
     }
     if (newThreshold > MAX_THRESHOLD) {
-      alert(`Порог не может превышать ${MAX_THRESHOLD.toLocaleString()}`)
+      alert(`Порог не может превышать ${MAX_THRESHOLD}`)
       newThreshold = MAX_THRESHOLD
     }
     setLowStockThreshold(newThreshold)
@@ -220,6 +216,17 @@ export const RemainsPage = () => {
       'INCOME': ' Поступление'
     }
     return types[type] || type
+  }
+
+  // ========== ПЕРЕВОД source И target НА РУССКИЙ ==========
+  const getLocationLabel = (location) => {
+    const locations = {
+      'WAREHOUSE': 'Склад',
+      'BAR': 'Бар',
+      '': '-',
+      null: '-'
+    }
+    return locations[location] || location || '-'
   }
 
   const getMovementTypeStyle = (type) => {
@@ -336,8 +343,8 @@ export const RemainsPage = () => {
                       <td>{new Date(move.createdAt).toLocaleString()}</td>
                       <td>{getMovementTypeLabel(move.type)}</td>
                       <td>{move.quantity}</td>
-                      <td>{move.source || '-'}</td>
-                      <td>{move.target || '-'}</td>
+                      <td>{getLocationLabel(move.source)}</td>
+                      <td>{getLocationLabel(move.target)}</td>
                       <td>{move.note || '-'}</td>
                     </tr>
                   ))}
@@ -444,7 +451,7 @@ export const RemainsPage = () => {
               max={MAX_QUANTITY}
             />
             <div style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
-              От 0 до {MAX_QUANTITY.toLocaleString()}
+              От 0 до {MAX_QUANTITY}
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button onClick={() => { setShowAdjustBar(false); setAdjustQty(''); }}>Отмена</button>
@@ -479,7 +486,7 @@ export const RemainsPage = () => {
               max={MAX_QUANTITY}
             />
             <div style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
-              От 0 до {MAX_QUANTITY.toLocaleString()}
+              От 0 до {MAX_QUANTITY}
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button onClick={() => { setShowAdjustWarehouse(false); setAdjustQty(''); }}>Отмена</button>
@@ -515,7 +522,7 @@ export const RemainsPage = () => {
               max={Math.min(remains?.warehouse || 0, MAX_QUANTITY)}
             />
             <div style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
-              От 1 до {Math.min(remains?.warehouse || 0, MAX_QUANTITY).toLocaleString()} (доступно на складе)
+              От 1 до {Math.min(remains?.warehouse || 0, MAX_QUANTITY)} (доступно на складе)
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button onClick={() => { setShowTransfer(false); setTransferQty(''); }}>Отмена</button>
