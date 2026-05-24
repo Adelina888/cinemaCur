@@ -18,6 +18,7 @@ export const Menu = () => {
       <Link to="/dashboard" style={{ color: 'white', textDecoration: 'none' }}>Главная</Link>
       <Link to="/products" style={{ color: 'white', textDecoration: 'none' }}>Товары бара</Link>
       <Link to="/merchandise" style={{ color: 'white', textDecoration: 'none' }}>Мерчендайз</Link>
+      <Link to="/combos" style={{ color: 'white', textDecoration: 'none' }}>Комбо</Link>
       <button onClick={handleLogout} style={{ marginLeft: 'auto', background: '#dc3545', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer' }}>
         Выйти
       </button>

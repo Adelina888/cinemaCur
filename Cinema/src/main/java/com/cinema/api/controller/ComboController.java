@@ -5,6 +5,9 @@ import com.cinema.api.dto.ComboRs;
 import com.cinema.api.service.ComboService;
 import com.cinema.api.util.SecurityUtils;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,12 @@ public class ComboController {
 
     public ComboController(ComboService comboService) {
         this.comboService = comboService;
+    }
+    @GetMapping("/page")
+    public Page<ComboRs> getPage(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return comboService.getAll(pageable);
     }
 
     @PostMapping

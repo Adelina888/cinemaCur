@@ -7,6 +7,7 @@ import { LoginPage } from './pages/LoginPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { ProductPage } from './pages/ProductPage'
 import { MerchandisePage } from './pages/MerchandisePage'
+import { ComboPage } from './pages/ComboPage'
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +29,11 @@ function App() {
             <Route path="/merchandise" element={
               <ProtectedRoute>
                 <MerchandisePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/combos" element={
+              <ProtectedRoute>
+                <ComboPage />
               </ProtectedRoute>
             } />
           </Routes>

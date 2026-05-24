@@ -1159,3 +1159,274 @@
 2026-05-24T21:41:37.890+04:00  INFO 22444 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:41:37 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | MerchandiseService.update() | Результат: com.cinema.api.dto.MerchandiseRs@18314ff5
 2026-05-24T21:41:37.903+04:00  INFO 22444 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:41:37 | ВЫЗОВ МЕТОДА | MerchandiseService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
 2026-05-24T21:41:37.904+04:00  INFO 22444 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:41:37 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | MerchandiseService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.MerchandiseRs instances
+2026-05-24T21:44:07.023+04:00  INFO 26612 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 26612 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T21:44:07.027+04:00  INFO 26612 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T21:44:07.834+04:00  INFO 26612 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T21:44:07.944+04:00  INFO 26612 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 101 ms. Found 10 JPA repository interfaces.
+2026-05-24T21:44:08.812+04:00  INFO 26612 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T21:44:08.827+04:00  INFO 26612 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T21:44:08.828+04:00  INFO 26612 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T21:44:08.887+04:00  INFO 26612 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1802 ms
+2026-05-24T21:44:09.066+04:00  INFO 26612 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T21:44:09.127+04:00  INFO 26612 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T21:44:09.631+04:00  INFO 26612 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T21:44:09.665+04:00  INFO 26612 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T21:44:09.776+04:00  INFO 26612 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3cf06a01
+2026-05-24T21:44:09.788+04:00  INFO 26612 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T21:44:10.073+04:00  WARN 26612 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T21:44:10.295+04:00  INFO 26612 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T21:44:11.620+04:00  INFO 26612 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T21:44:11.928+04:00  INFO 26612 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T21:44:12.047+04:00  INFO 26612 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T21:44:12.313+04:00  INFO 26612 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T21:44:13.418+04:00  WARN 26612 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T21:44:14.203+04:00  INFO 26612 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T21:44:14.208+04:00  INFO 26612 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 7.884 seconds (process running for 8.398)
+2026-05-24T21:44:17.391+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T21:44:17.391+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T21:44:17.393+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-05-24T21:44:17.639+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:17 | ВЫЗОВ МЕТОДА | MerchandiseService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T21:44:17.662+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:17 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | MerchandiseService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.MerchandiseRs instances
+2026-05-24T21:44:17.693+04:00  WARN 26612 --- [cinema-api] [http-nio-8080-exec-9] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-05-24T21:44:17.722+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:17 | ВЫЗОВ МЕТОДА | MerchandiseService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T21:44:17.725+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:17 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | MerchandiseService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.MerchandiseRs instances
+2026-05-24T21:44:45.991+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:45 | ВЫЗОВ МЕТОДА | AuthService.authenticate() | Аргументы: [com.cinema.api.dto.AuthRq@5c321ce2]
+2026-05-24T21:44:46.496+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:46 | АУТЕНТИФИКАЦИЯ | Логин: admin | УСПЕШНО
+2026-05-24T21:44:46.496+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:46 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | AuthService.authenticate() | Результат: com.cinema.api.dto.AuthRs@25fdab85
+2026-05-24T21:44:48.626+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:48 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T21:44:48.645+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:48 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 2 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T21:44:48.669+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:48 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T21:44:48.679+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:48 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 2 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T21:44:49.129+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:49 | ВЫЗОВ МЕТОДА | MerchandiseService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T21:44:49.135+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:49 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | MerchandiseService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.MerchandiseRs instances
+2026-05-24T21:44:49.152+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:49 | ВЫЗОВ МЕТОДА | MerchandiseService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T21:44:49.156+04:00  INFO 26612 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 21:44:49 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | MerchandiseService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.MerchandiseRs instances
+2026-05-24T22:17:35.035+04:00  INFO 4904 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 4904 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T22:17:35.038+04:00  INFO 4904 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T22:17:35.829+04:00  INFO 4904 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T22:17:35.932+04:00  INFO 4904 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 91 ms. Found 10 JPA repository interfaces.
+2026-05-24T22:17:36.711+04:00  INFO 4904 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T22:17:36.724+04:00  INFO 4904 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T22:17:36.725+04:00  INFO 4904 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T22:17:36.784+04:00  INFO 4904 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1697 ms
+2026-05-24T22:17:36.992+04:00  INFO 4904 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T22:17:37.056+04:00  INFO 4904 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T22:17:37.604+04:00  INFO 4904 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T22:17:37.637+04:00  INFO 4904 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T22:17:37.747+04:00  INFO 4904 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3cf06a01
+2026-05-24T22:17:37.749+04:00  INFO 4904 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T22:17:38.024+04:00  WARN 4904 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T22:17:38.252+04:00  INFO 4904 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T22:17:39.587+04:00  INFO 4904 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T22:17:39.917+04:00  INFO 4904 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T22:17:40.041+04:00  INFO 4904 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T22:17:40.322+04:00  INFO 4904 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T22:17:41.448+04:00  WARN 4904 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T22:17:42.122+04:00  INFO 4904 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T22:17:42.127+04:00  INFO 4904 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 7.654 seconds (process running for 8.198)
+2026-05-24T22:17:51.508+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T22:17:51.508+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T22:17:51.510+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-24T22:17:51.725+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:51 | ВЫЗОВ МЕТОДА | MerchandiseService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T22:17:51.747+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:51 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | MerchandiseService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.MerchandiseRs instances
+2026-05-24T22:17:51.779+04:00  WARN 4904 --- [cinema-api] [http-nio-8080-exec-3] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-05-24T22:17:51.805+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:51 | ВЫЗОВ МЕТОДА | MerchandiseService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T22:17:51.809+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:51 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | MerchandiseService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.MerchandiseRs instances
+2026-05-24T22:17:53.189+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:53 | ВЫЗОВ МЕТОДА | ComboService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T22:17:53.192+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:53 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T22:17:53.205+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:53 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@2e069990, com.cinema.api.dto.ProductRs@71ee5b82, com.cinema.api.dto.ProductRs@640112e1, com.cinema.api.dto.ProductRs@47a1ac5f, com.cinema.api.dto.ProductRs@5d717722, com.cinema.api.dto.ProductRs@5e400545, com.cinema.api.dto.ProductRs@32ba8276, com.cinema.api.dto.ProductRs@7833132a, com.cinema.api.dto.ProductRs@2e2db369, com.cinema.api.dto.ProductRs@7019e1c4, com.cinema.api.dto.ProductRs@16566483]
+2026-05-24T22:17:53.221+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:53 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T22:17:53.225+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:53 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@23bd1502, com.cinema.api.dto.ProductRs@1ea94146, com.cinema.api.dto.ProductRs@496dbecc, com.cinema.api.dto.ProductRs@6ff1e200, com.cinema.api.dto.ProductRs@242feff9, com.cinema.api.dto.ProductRs@70d8394b, com.cinema.api.dto.ProductRs@54e77242, com.cinema.api.dto.ProductRs@34666b3c, com.cinema.api.dto.ProductRs@6f6d0a6e, com.cinema.api.dto.ProductRs@5ece64a9, com.cinema.api.dto.ProductRs@31547850]
+2026-05-24T22:17:53.235+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:53 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ComboService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ComboRs instances
+2026-05-24T22:17:53.251+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:53 | ВЫЗОВ МЕТОДА | ComboService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T22:17:53.256+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:17:53 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ComboService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ComboRs instances
+2026-05-24T22:18:21.268+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:18:21 | ВЫЗОВ МЕТОДА | ComboService.update() | Аргументы: [1, com.cinema.api.dto.ComboRq@776113d3, 1]
+2026-05-24T22:18:21.405+04:00  WARN 4904 --- [cinema-api] [http-nio-8080-exec-10] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23505
+2026-05-24T22:18:21.406+04:00  WARN 4904 --- [cinema-api] [http-nio-8080-exec-10] org.hibernate.orm.jdbc.error             : ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.
+2026-05-24T22:18:21.427+04:00 ERROR 4904 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:18:21 | ОШИБКА | ComboService.update() | could not execute statement [ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.] [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; SQL [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; constraint [uki47abyxo0f2u263kcqokj91bc]
+2026-05-24T22:18:49.048+04:00  INFO 4904 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:18:49 | ВЫЗОВ МЕТОДА | ComboService.update() | Аргументы: [1, com.cinema.api.dto.ComboRq@fa523fb, 1]
+2026-05-24T22:18:49.063+04:00  WARN 4904 --- [cinema-api] [http-nio-8080-exec-9] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23505
+2026-05-24T22:18:49.063+04:00  WARN 4904 --- [cinema-api] [http-nio-8080-exec-9] org.hibernate.orm.jdbc.error             : ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.
+2026-05-24T22:18:49.064+04:00 ERROR 4904 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:18:49 | ОШИБКА | ComboService.update() | could not execute statement [ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.] [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; SQL [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; constraint [uki47abyxo0f2u263kcqokj91bc]
+2026-05-24T22:21:59.150+04:00  INFO 13280 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 13280 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T22:21:59.153+04:00  INFO 13280 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T22:21:59.885+04:00  INFO 13280 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T22:22:00.008+04:00  INFO 13280 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 114 ms. Found 10 JPA repository interfaces.
+2026-05-24T22:22:00.868+04:00  INFO 13280 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T22:22:00.884+04:00  INFO 13280 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T22:22:00.885+04:00  INFO 13280 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T22:22:00.945+04:00  INFO 13280 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1741 ms
+2026-05-24T22:22:01.136+04:00  INFO 13280 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T22:22:01.186+04:00  INFO 13280 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T22:22:01.677+04:00  INFO 13280 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T22:22:01.720+04:00  INFO 13280 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T22:22:01.828+04:00  INFO 13280 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@ca10069
+2026-05-24T22:22:01.829+04:00  INFO 13280 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T22:22:02.105+04:00  WARN 13280 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T22:22:02.342+04:00  INFO 13280 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T22:22:03.741+04:00  INFO 13280 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T22:22:04.063+04:00  INFO 13280 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T22:22:04.186+04:00  INFO 13280 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T22:22:04.479+04:00  INFO 13280 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T22:22:05.577+04:00  WARN 13280 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T22:22:06.304+04:00  INFO 13280 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T22:22:06.310+04:00  INFO 13280 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 7.846 seconds (process running for 8.474)
+2026-05-24T22:22:13.589+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T22:22:13.589+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T22:22:13.591+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-24T22:22:13.867+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:13 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T22:22:13.869+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:13 | ВЫЗОВ МЕТОДА | ComboService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T22:22:13.899+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:13 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@76300a31, com.cinema.api.dto.ProductRs@19766308, com.cinema.api.dto.ProductRs@3cd2a83c, com.cinema.api.dto.ProductRs@4392a766, com.cinema.api.dto.ProductRs@35854ca7, com.cinema.api.dto.ProductRs@1fc1073c, com.cinema.api.dto.ProductRs@367bdfb0, com.cinema.api.dto.ProductRs@6004e78e, com.cinema.api.dto.ProductRs@7ffb6f5d, com.cinema.api.dto.ProductRs@68146f79, com.cinema.api.dto.ProductRs@7aab94]
+2026-05-24T22:22:13.928+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:13 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ComboService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ComboRs instances
+2026-05-24T22:22:13.942+04:00  WARN 13280 --- [cinema-api] [http-nio-8080-exec-3] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-05-24T22:22:13.961+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:13 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T22:22:13.966+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:13 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@4f26d15f, com.cinema.api.dto.ProductRs@3a399bd1, com.cinema.api.dto.ProductRs@15832d7a, com.cinema.api.dto.ProductRs@205ea271, com.cinema.api.dto.ProductRs@598b230c, com.cinema.api.dto.ProductRs@2f9adcff, com.cinema.api.dto.ProductRs@23fedc8b, com.cinema.api.dto.ProductRs@7666bfaf, com.cinema.api.dto.ProductRs@76f5712c, com.cinema.api.dto.ProductRs@ff13629, com.cinema.api.dto.ProductRs@5a3eb9d8]
+2026-05-24T22:22:13.972+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:13 | ВЫЗОВ МЕТОДА | ComboService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T22:22:13.979+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:13 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ComboService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ComboRs instances
+2026-05-24T22:22:20.651+04:00  INFO 13280 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:20 | ВЫЗОВ МЕТОДА | ComboService.update() | Аргументы: [1, com.cinema.api.dto.ComboRq@344c6b74, 1]
+2026-05-24T22:22:20.780+04:00  WARN 13280 --- [cinema-api] [http-nio-8080-exec-7] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23505
+2026-05-24T22:22:20.781+04:00  WARN 13280 --- [cinema-api] [http-nio-8080-exec-7] org.hibernate.orm.jdbc.error             : ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.
+2026-05-24T22:22:20.798+04:00 ERROR 13280 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:22:20 | ОШИБКА | ComboService.update() | could not execute statement [ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.] [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; SQL [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; constraint [uki47abyxo0f2u263kcqokj91bc]
+2026-05-24T22:24:50.140+04:00  INFO 26972 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 26972 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T22:24:50.144+04:00  INFO 26972 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T22:24:50.916+04:00  INFO 26972 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T22:24:51.023+04:00  INFO 26972 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 99 ms. Found 10 JPA repository interfaces.
+2026-05-24T22:24:51.887+04:00  INFO 26972 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T22:24:51.902+04:00  INFO 26972 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T22:24:51.902+04:00  INFO 26972 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T22:24:51.966+04:00  INFO 26972 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1768 ms
+2026-05-24T22:24:52.175+04:00  INFO 26972 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T22:24:52.234+04:00  INFO 26972 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T22:24:52.746+04:00  INFO 26972 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T22:24:52.778+04:00  INFO 26972 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T22:24:52.900+04:00  INFO 26972 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5c740c5a
+2026-05-24T22:24:52.901+04:00  INFO 26972 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T22:24:53.186+04:00  WARN 26972 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T22:24:53.426+04:00  INFO 26972 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T22:24:54.785+04:00  INFO 26972 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T22:24:55.116+04:00  INFO 26972 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T22:24:55.238+04:00  INFO 26972 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T22:24:55.519+04:00  INFO 26972 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T22:24:56.619+04:00  WARN 26972 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T22:24:57.315+04:00  INFO 26972 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T22:24:57.321+04:00  INFO 26972 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 7.771 seconds (process running for 8.348)
+2026-05-24T22:25:04.387+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T22:25:04.388+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T22:25:04.389+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-05-24T22:25:04.625+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:04 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T22:25:04.625+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:04 | ВЫЗОВ МЕТОДА | ComboService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T22:25:04.652+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:04 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@7875043f, com.cinema.api.dto.ProductRs@31dc3288, com.cinema.api.dto.ProductRs@4851468, com.cinema.api.dto.ProductRs@6e5ad97a, com.cinema.api.dto.ProductRs@3ede6c72, com.cinema.api.dto.ProductRs@6ec65153, com.cinema.api.dto.ProductRs@42cc2eb7, com.cinema.api.dto.ProductRs@7a65be9d, com.cinema.api.dto.ProductRs@3715f05f, com.cinema.api.dto.ProductRs@6b056327, com.cinema.api.dto.ProductRs@489f5166]
+2026-05-24T22:25:04.687+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:04 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ComboService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ComboRs instances
+2026-05-24T22:25:04.704+04:00  WARN 26972 --- [cinema-api] [http-nio-8080-exec-2] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-05-24T22:25:04.724+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:04 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T22:25:04.729+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:04 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@5c217a7d, com.cinema.api.dto.ProductRs@70328c87, com.cinema.api.dto.ProductRs@26bd8d60, com.cinema.api.dto.ProductRs@3a9c66e6, com.cinema.api.dto.ProductRs@6d39115a, com.cinema.api.dto.ProductRs@98beece, com.cinema.api.dto.ProductRs@4397b412, com.cinema.api.dto.ProductRs@1a6551d0, com.cinema.api.dto.ProductRs@3ff33007, com.cinema.api.dto.ProductRs@695844a9, com.cinema.api.dto.ProductRs@17114ab4]
+2026-05-24T22:25:04.736+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:04 | ВЫЗОВ МЕТОДА | ComboService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T22:25:04.742+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:04 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ComboService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ComboRs instances
+2026-05-24T22:25:09.725+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:09 | ВЫЗОВ МЕТОДА | ComboService.update() | Аргументы: [1, com.cinema.api.dto.ComboRq@144d8d2e, 1]
+2026-05-24T22:25:09.846+04:00  WARN 26972 --- [cinema-api] [http-nio-8080-exec-8] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23505
+2026-05-24T22:25:09.846+04:00  WARN 26972 --- [cinema-api] [http-nio-8080-exec-8] org.hibernate.orm.jdbc.error             : ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.
+2026-05-24T22:25:09.853+04:00 ERROR 26972 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:09 | ОШИБКА | ComboService.update() | could not execute statement [ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.] [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; SQL [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; constraint [uki47abyxo0f2u263kcqokj91bc]
+2026-05-24T22:25:29.693+04:00  INFO 26972 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:29 | ВЫЗОВ МЕТОДА | ComboService.update() | Аргументы: [1, com.cinema.api.dto.ComboRq@20b6ee93, 1]
+2026-05-24T22:25:29.706+04:00  WARN 26972 --- [cinema-api] [http-nio-8080-exec-7] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23505
+2026-05-24T22:25:29.707+04:00  WARN 26972 --- [cinema-api] [http-nio-8080-exec-7] org.hibernate.orm.jdbc.error             : ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.
+2026-05-24T22:25:29.708+04:00 ERROR 26972 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 22:25:29 | ОШИБКА | ComboService.update() | could not execute statement [ERROR: duplicate key value violates unique constraint "uki47abyxo0f2u263kcqokj91bc"
+  Подробности: Key (combo_id, product_id)=(1, 2) already exists.] [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; SQL [insert into combo_product (combo_id,product_id,quantity) values (?,?,?)]; constraint [uki47abyxo0f2u263kcqokj91bc]
+2026-05-24T22:26:10.424+04:00  INFO 14672 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 14672 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T22:26:10.428+04:00  INFO 14672 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T22:26:11.212+04:00  INFO 14672 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T22:26:11.313+04:00  INFO 14672 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 91 ms. Found 10 JPA repository interfaces.
+2026-05-24T22:26:12.122+04:00  INFO 14672 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T22:26:12.141+04:00  INFO 14672 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T22:26:12.141+04:00  INFO 14672 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T22:26:12.200+04:00  INFO 14672 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1708 ms
+2026-05-24T22:26:12.389+04:00  INFO 14672 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T22:26:12.442+04:00  INFO 14672 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T22:26:12.950+04:00  INFO 14672 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T22:26:12.983+04:00  INFO 14672 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T22:26:13.221+04:00  INFO 14672 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@d180961
+2026-05-24T22:26:13.222+04:00  INFO 14672 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T22:26:13.499+04:00  WARN 14672 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T22:26:13.736+04:00  INFO 14672 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T22:26:15.101+04:00  INFO 14672 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T22:26:15.409+04:00  INFO 14672 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T22:26:15.528+04:00  INFO 14672 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T22:26:15.825+04:00  INFO 14672 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T22:26:17.021+04:00  WARN 14672 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T22:26:17.774+04:00  INFO 14672 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T22:26:17.781+04:00  INFO 14672 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 8.051 seconds (process running for 8.68)

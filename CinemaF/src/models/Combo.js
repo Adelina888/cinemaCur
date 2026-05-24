@@ -10,3 +10,12 @@ export class Combo {
     this.products = products || []
   }
 }
+
+export class ComboProduct {
+  constructor(productId, productName, price, quantity) {
+    this.productId = productId
+    this.productName = productName
+    this.price = price
+    this.quantity = quantity
+  }
+}

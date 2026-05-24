@@ -12,6 +12,8 @@ import com.cinema.api.exception.ValidationError;
 import com.cinema.api.repository.ComboProductRepository;
 import com.cinema.api.repository.ComboRepository;
 import com.cinema.api.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -34,7 +36,10 @@ public class ComboService {
         this.productRepository = productRepository;
         this.logger = logger;
     }
-
+    @Transactional(readOnly = true)
+    public Page<ComboRs> getAll(Pageable pageable) {
+        return comboRepository.findAll(pageable).map(this::convertToRs);
+    }
     @Transactional
     public ComboRs create(ComboRq rq, Long adminId) {
         if (comboRepository.existsByName(rq.getName())) {
@@ -72,20 +77,27 @@ public class ComboService {
     public ComboRs update(Long id, ComboRq rq, Long adminId) {
         Combo combo = comboRepository.findById(id)
                 .orElseThrow(() -> new ValidationError("id", "Комбо не найдено"));
+
+        // Проверка уникальности названия
         if (!combo.getName().equals(rq.getName()) && comboRepository.existsByName(rq.getName())) {
             throw new ValidationError("name", "Комбо с таким названием уже существует");
         }
+
+        // Проверка, что есть хотя бы один товар
         if (rq.getProducts().isEmpty()) {
             throw new ValidationError("products", "Комбо должно содержать хотя бы один товар");
         }
 
+        // Обновление полей комбо
         combo.setName(rq.getName());
         combo.setDiscountPercent(rq.getDiscountPercent());
         combo.setDescription(rq.getDescription());
 
+        // Удаляем все старые связи товаров
         comboProductRepository.deleteByComboId(id);
         combo.getComboProducts().clear();
 
+        // Добавляем новые связи
         double regularSum = 0.0;
         for (ProductInComboDto item : rq.getProducts()) {
             Product product = productRepository.findById(item.getProductId())
@@ -97,8 +109,11 @@ public class ComboService {
             combo.getComboProducts().add(comboProduct);
         }
 
+        // Пересчёт цен
         combo.setRegularPrice(regularSum);
         combo.setComboPrice(regularSum * (100 - rq.getDiscountPercent()) / 100.0);
+
+        // Сохранение
         combo = comboRepository.save(combo);
 
         logger.logProductUpdate(adminId, "Комбо: " + combo.getName());
