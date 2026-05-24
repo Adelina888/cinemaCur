@@ -6,7 +6,7 @@ import { Menu } from './components/Menu'
 import { LoginPage } from './pages/LoginPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { ProductPage } from './pages/ProductPage'
-
+import { MerchandisePage } from './pages/MerchandisePage'
 function App() {
   return (
     <BrowserRouter>
@@ -21,7 +21,15 @@ function App() {
                 <DashboardPage />
               </ProtectedRoute>
             } />
-            <Route path="/products" element={<ProductPage/>        } />
+            <Route path="/products" element={ 
+              <ProtectedRoute>
+                <ProductPage/>   
+              </ProtectedRoute>     } />
+            <Route path="/merchandise" element={
+              <ProtectedRoute>
+                <MerchandisePage />
+              </ProtectedRoute>
+            } />
           </Routes>
         </div>
       </AuthProvider>

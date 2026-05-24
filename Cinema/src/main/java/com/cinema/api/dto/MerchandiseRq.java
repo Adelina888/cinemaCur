@@ -6,25 +6,32 @@ import jakarta.validation.constraints.*;
 public class MerchandiseRq {
 
     @NotBlank(message = "Название обязательно")
-    @Size(min = 2, max = 100)
+    @Size(min = 2, max = 100, message = "Название должно быть от 2 до 100 символов")
     private String name;
 
     @NotNull(message = "Цена обязательна")
-    @DecimalMin(value = "0.01")
+    @DecimalMin(value = "0.01", message = "Цена должна быть больше 0")
+    @DecimalMax(value = "1000000.00", message = "Цена не может превышать 1 000 000 рублей")
     private Double price;
+
 
     private String imageUrl;
 
     @Min(value = 0, message = "Размер не может быть отрицательным")
+    @Max(value = 100, message = "Размер не может превышать 100")
     private Integer size;
 
+    @Size(max = 50, message = "Материал не должен превышать 50 символов")
     private String material;
 
     @NotNull(message = "Тип обязателен")
     private MerchandiseType type;
 
     @Min(value = 0, message = "Количество не может быть отрицательным")
+    @Max(value = 999999, message = "Количество не может превышать 999 999")
     private Integer count;
+
+    private Integer status;
 
     // геттеры и сеттеры
     public String getName() { return name; }
@@ -47,4 +54,7 @@ public class MerchandiseRq {
 
     public Integer getCount() { return count; }
     public void setCount(Integer count) { this.count = count; }
+
+    public Integer getStatus() { return status; }
+    public void setStatus(Integer status) { this.status = status; }
 }

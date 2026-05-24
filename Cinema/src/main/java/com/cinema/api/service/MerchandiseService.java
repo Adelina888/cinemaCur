@@ -8,20 +8,31 @@ import com.cinema.api.enums.MerchandiseType;
 import com.cinema.api.exception.InsufficientStockException;
 import com.cinema.api.exception.ValidationError;
 import com.cinema.api.repository.MerchandiseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.cinema.api.repository.ReceiptMerchandiseRepository;
 
 @Service
 public class MerchandiseService {
 
     private final MerchandiseRepository merchandiseRepository;
+    private final ReceiptMerchandiseRepository receiptMerchandiseRepository;
     private final LoggerAspect logger;
 
-    public MerchandiseService(MerchandiseRepository merchandiseRepository, LoggerAspect logger) {
+    public MerchandiseService(MerchandiseRepository merchandiseRepository,
+                              ReceiptMerchandiseRepository receiptMerchandiseRepository,
+                              LoggerAspect logger) {
         this.merchandiseRepository = merchandiseRepository;
+        this.receiptMerchandiseRepository = receiptMerchandiseRepository;
         this.logger = logger;
+    }
+    @Transactional(readOnly = true)
+    public Page<MerchandiseRs> getAll(Pageable pageable) {
+        return merchandiseRepository.findAll(pageable).map(this::convertToRs);
     }
 
     @Transactional
@@ -64,6 +75,9 @@ public class MerchandiseService {
         merch.setMaterial(rq.getMaterial());
         merch.setType(rq.getType());
         if (rq.getCount() != null) merch.setCount(rq.getCount());
+        if (rq.getStatus() != null) {
+            merch.setStatus(rq.getStatus());
+        }
 
         Merchandise updated = merchandiseRepository.save(merch);
 
@@ -76,13 +90,24 @@ public class MerchandiseService {
 
     @Transactional
     public void delete(Long id, Long adminId) {
-        if (!merchandiseRepository.existsById(id)) {
-            throw new ValidationError("id", "Товар не найден");
-        }
-        merchandiseRepository.deleteById(id);
+        Merchandise merch = merchandiseRepository.findById(id)
+                .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
+        merch.setStatus(0);  // меняем статус на неактивен
+        merchandiseRepository.save(merch);
         logger.logProductDelete(adminId, id);
     }
+    @Transactional
+    public void hardDelete(Long id) {
+        Merchandise merch = merchandiseRepository.findById(id)
+                .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
 
+        // Проверяем, есть ли связи с чеками
+        if (receiptMerchandiseRepository.existsByMerchandiseId(id)) {
+            throw new ValidationError("id", "Нельзя удалить товар, который уже был в чеках");
+        }
+
+        merchandiseRepository.deleteById(id);
+    }
     @Transactional(readOnly = true)
     public List<MerchandiseRs> getAll() {
         return merchandiseRepository.findAll().stream()

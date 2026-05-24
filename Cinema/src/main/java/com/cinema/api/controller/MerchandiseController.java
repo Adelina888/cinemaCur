@@ -6,6 +6,9 @@ import com.cinema.api.enums.MerchandiseType;
 import com.cinema.api.service.MerchandiseService;
 import com.cinema.api.util.SecurityUtils;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,12 @@ public class MerchandiseController {
 
     public MerchandiseController(MerchandiseService merchandiseService) {
         this.merchandiseService = merchandiseService;
+    }
+    @GetMapping("/page")
+    public Page<MerchandiseRs> getPage(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return merchandiseService.getAll(pageable);
     }
 
     @PostMapping
@@ -37,7 +46,11 @@ public class MerchandiseController {
         merchandiseService.delete(id, SecurityUtils.getCurrentAdminId());
         return ResponseEntity.noContent().build();
     }
-
+    @DeleteMapping("/{id}/hard")
+    public ResponseEntity<Void> hardDelete(@PathVariable Long id) {
+        merchandiseService.hardDelete(id);
+        return ResponseEntity.noContent().build();
+    }
     @GetMapping
     public ResponseEntity<List<MerchandiseRs>> getAll() {
         return ResponseEntity.ok(merchandiseService.getAll());

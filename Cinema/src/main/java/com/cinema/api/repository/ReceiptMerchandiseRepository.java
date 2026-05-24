@@ -9,6 +9,7 @@ import java.util.List;
 public interface ReceiptMerchandiseRepository extends JpaRepository<ReceiptMerchandise, Long> {
     List<ReceiptMerchandise> findByReceiptId(Long receiptId);
     void deleteByReceiptId(Long receiptId);
+    boolean existsByMerchandiseId(Long merchandiseId);
 
     @Query("SELECT SUM(rm.quantity) FROM ReceiptMerchandise rm WHERE rm.merchandise.id = :merchandiseId")
     Integer sumQuantityByMerchandiseId(@Param("merchandiseId") Long merchandiseId);
