@@ -343,7 +343,7 @@ export const MerchandisePage = () => {
   }
 
   const getStatusLabel = (status) => {
-    return status === 1 ? '✅ Активен' : '❌ Неактивен'
+    return status === 1 ? ' Активен' : ' Неактивен'
   }
 
   const getStatusStyle = (status) => {

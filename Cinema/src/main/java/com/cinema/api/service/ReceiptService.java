@@ -55,33 +55,51 @@ public class ReceiptService {
         receipt = receiptRepository.save(receipt);
         return convertToRs(receipt);
     }
+
     @Transactional
     public void removeMerchandise(Long receiptId, Long itemId) {
+        // Находим позицию
         ReceiptMerchandise item = receiptMerchandiseRepository.findById(itemId)
                 .orElseThrow(() -> new ValidationError("itemId", "Позиция не найдена"));
+
+        // Проверяем принадлежность чеку
         if (!item.getReceipt().getId().equals(receiptId)) {
             throw new ValidationError("receiptId", "Позиция не принадлежит этому чеку");
         }
+
+        // Удаляем позицию
         receiptMerchandiseRepository.delete(item);
+        receiptMerchandiseRepository.flush(); // Принудительно выполняем удаление
 
         // Обновляем итоговую сумму чека
         Receipt receipt = receiptRepository.findById(receiptId)
                 .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
+
+        // Пересчитываем сумму без удаленной позиции
         receipt.setTotalAmount(calculateTotal(receipt));
         receiptRepository.save(receipt);
     }
 
     @Transactional
     public void removeCombo(Long receiptId, Long itemId) {
+        // Находим позицию
         ReceiptCombo item = receiptComboRepository.findById(itemId)
                 .orElseThrow(() -> new ValidationError("itemId", "Позиция не найдена"));
+
+        // Проверяем принадлежность чеку
         if (!item.getReceipt().getId().equals(receiptId)) {
             throw new ValidationError("receiptId", "Позиция не принадлежит этому чеку");
         }
-        receiptComboRepository.delete(item);
 
+        // Удаляем позицию
+        receiptComboRepository.delete(item);
+        receiptComboRepository.flush(); // Принудительно выполняем удаление
+
+        // Обновляем итоговую сумму чека
         Receipt receipt = receiptRepository.findById(receiptId)
                 .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
+
+        // Пересчитываем сумму без удаленной позиции
         receipt.setTotalAmount(calculateTotal(receipt));
         receiptRepository.save(receipt);
     }
@@ -124,8 +142,6 @@ public class ReceiptService {
         receiptRepository.save(receipt);
     }
 
-// ========== МЕТОДЫ С ПАГИНАЦИЕЙ ==========
-
     @Transactional(readOnly = true)
     public Page<ReceiptRs> getAll(Pageable pageable) {
         return receiptRepository.findAll(pageable).map(this::convertToRs);
@@ -135,6 +151,7 @@ public class ReceiptService {
     public Page<ReceiptRs> getByDateRange(LocalDateTime start, LocalDateTime end, Pageable pageable) {
         return receiptRepository.findByDateRange(start, end, pageable).map(this::convertToRs);
     }
+
     @Transactional
     public void addMerchandise(Long receiptId, Long merchandiseId, Integer quantity) {
         if (quantity <= 0) {
@@ -231,7 +248,6 @@ public class ReceiptService {
 
     @Transactional
     public ReceiptRs cancel(Long originalReceiptId, Long adminId) {
-        // Находим оригинальный чек продажи
         Receipt originalReceipt = receiptRepository.findById(originalReceiptId)
                 .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
 
@@ -239,13 +255,11 @@ public class ReceiptService {
             throw new ValidationError("receiptId", "Возврат возможен только для проданных чеков");
         }
 
-        // Проверяем, не был ли уже сделан возврат по этому чеку
         boolean alreadyReturned = receiptRepository.existsByOriginalReceiptId(originalReceiptId);
         if (alreadyReturned) {
             throw new ValidationError("receiptId", "Возврат по этому чеку уже был оформлен");
         }
 
-        // Создаём НОВЫЙ чек возврата
         Receipt returnReceipt = new Receipt(adminId);
         returnReceipt.setTypeOfOperation("RETURN");
         returnReceipt.setPaymentMethod(originalReceipt.getPaymentMethod());
@@ -253,9 +267,7 @@ public class ReceiptService {
         returnReceipt.setOriginalReceiptId(originalReceiptId);
         returnReceipt = receiptRepository.save(returnReceipt);
 
-        // Копируем позиции мерча и восстанавливаем остатки
         for (ReceiptMerchandise rm : originalReceipt.getMerchandiseItems()) {
-            // Создаём копию позиции в чеке возврата
             ReceiptMerchandise returnRm = new ReceiptMerchandise(
                     returnReceipt,
                     rm.getMerchandise(),
@@ -263,14 +275,10 @@ public class ReceiptService {
                     rm.getPriceAtMoment()
             );
             receiptMerchandiseRepository.save(returnRm);
-
-            // Восстанавливаем остатки мерча
             merchandiseService.increaseCount(rm.getMerchandise().getId(), rm.getQuantity(), adminId);
         }
 
-        // Копируем позиции комбо и восстанавливаем остатки товаров бара
         for (ReceiptCombo rc : originalReceipt.getComboItems()) {
-            // Создаём копию позиции в чеке возврата
             ReceiptCombo returnRc = new ReceiptCombo(
                     returnReceipt,
                     rc.getCombo(),
@@ -279,16 +287,13 @@ public class ReceiptService {
             );
             receiptComboRepository.save(returnRc);
 
-            // Восстанавливаем остатки товаров бара
             for (ComboProduct cp : rc.getCombo().getComboProducts()) {
                 int totalQuantity = cp.getQuantity() * rc.getQuantity();
                 remainsService.increaseBar(cp.getProduct().getId(), totalQuantity, adminId);
             }
         }
 
-        // Логируем возврат
         logger.logReturn(adminId, originalReceiptId, returnReceipt.getTotalAmount());
-
         return convertToRs(returnReceipt);
     }
 
@@ -325,6 +330,7 @@ public class ReceiptService {
         List<MerchandiseItemRs> merchItems = receipt.getMerchandiseItems().stream()
                 .map(rm -> {
                     MerchandiseItemRs item = new MerchandiseItemRs();
+                    item.setId(rm.getId());
                     item.setMerchandiseId(rm.getMerchandise().getId());
                     item.setMerchandiseName(rm.getMerchandise().getName());
                     item.setPrice(rm.getPriceAtMoment());
@@ -338,6 +344,7 @@ public class ReceiptService {
         List<ComboItemRs> comboItems = receipt.getComboItems().stream()
                 .map(rc -> {
                     ComboItemRs item = new ComboItemRs();
+                    item.setId(rc.getId());
                     item.setComboId(rc.getCombo().getId());
                     item.setComboName(rc.getCombo().getName());
                     item.setPrice(rc.getPriceAtMoment());

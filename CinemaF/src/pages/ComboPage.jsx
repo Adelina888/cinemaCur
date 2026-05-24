@@ -343,7 +343,7 @@ export const ComboPage = () => {
 
   // ========== ВСПОМОГАТЕЛЬНЫЕ ==========
   const getStatusLabel = (isActive) => {
-    return isActive ? '✅ Активен' : '❌ Неактивен'
+    return isActive ? ' Активен' : ' Неактивен'
   }
 
   const getStatusStyle = (isActive) => {

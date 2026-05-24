@@ -193,11 +193,17 @@ export const ReceiptPage = () => {
   }
 
   // ========== УДАЛЕНИЕ ПОЗИЦИЙ ИЗ ЧЕКА ==========
-  const handleRemoveMerchandise = async (itemId) => {
+  const handleRemoveMerchandise = async (item) => {
     if (!window.confirm('Удалить этот товар из чека?')) return
+    
+    if (!item || !item.id) {
+      console.error('Неверный item для удаления:', item)
+      alert('Ошибка: не удалось определить ID позиции')
+      return
+    }
 
     try {
-      await ReceiptApi.removeMerchandise(currentReceipt.id, itemId)
+      await ReceiptApi.removeMerchandise(currentReceipt.id, item.id)
       const updated = await ReceiptApi.getById(currentReceipt.id)
       setCurrentReceipt(updated)
       await loadReceipts()
@@ -207,11 +213,17 @@ export const ReceiptPage = () => {
     }
   }
 
-  const handleRemoveCombo = async (itemId) => {
+  const handleRemoveCombo = async (item) => {
     if (!window.confirm('Удалить это комбо из чека?')) return
+    
+    if (!item || !item.id) {
+      console.error('Неверный item для удаления:', item)
+      alert('Ошибка: не удалось определить ID позиции')
+      return
+    }
 
     try {
-      await ReceiptApi.removeCombo(currentReceipt.id, itemId)
+      await ReceiptApi.removeCombo(currentReceipt.id, item.id)
       const updated = await ReceiptApi.getById(currentReceipt.id)
       setCurrentReceipt(updated)
       await loadReceipts()
@@ -222,8 +234,18 @@ export const ReceiptPage = () => {
   }
 
   // ========== ИЗМЕНЕНИЕ КОЛИЧЕСТВА ==========
-  const startEditQuantity = (item, type, itemId, currentQuantity) => {
-    setEditingItem({ id: itemId, type, currentQuantity })
+  const startEditQuantity = (item, type, currentQuantity) => {
+    if (!item || !item.id) {
+      console.error('Неверный item для редактирования:', item)
+      alert('Ошибка: не удалось определить ID позиции')
+      return
+    }
+    
+    setEditingItem({ 
+      id: item.id, 
+      type, 
+      currentQuantity 
+    })
     setEditQuantity(currentQuantity)
   }
 
@@ -490,10 +512,16 @@ export const ReceiptPage = () => {
                     <td>
                       {!editingItem && (
                         <>
-                          <button onClick={() => startEditQuantity(item, 'merchandise', item.id, item.quantity)} style={{ marginRight: 5 }}>
+                          <button 
+                            onClick={() => startEditQuantity(item, 'merchandise', item.quantity)} 
+                            style={{ marginRight: 5 }}
+                          >
                             ✏
                           </button>
-                          <button onClick={() => handleRemoveMerchandise(item.id)} style={{ color: 'red' }}>
+                          <button 
+                            onClick={() => handleRemoveMerchandise(item)} 
+                            style={{ color: 'red' }}
+                          >
                             ✖
                           </button>
                         </>
@@ -528,10 +556,16 @@ export const ReceiptPage = () => {
                     <td>
                       {!editingItem && (
                         <>
-                          <button onClick={() => startEditQuantity(item, 'combo', item.id, item.quantity)} style={{ marginRight: 5 }}>
+                          <button 
+                            onClick={() => startEditQuantity(item, 'combo', item.quantity)} 
+                            style={{ marginRight: 5 }}
+                          >
                             ✏
                           </button>
-                          <button onClick={() => handleRemoveCombo(item.id)} style={{ color: 'red' }}>
+                          <button 
+                            onClick={() => handleRemoveCombo(item)} 
+                            style={{ color: 'red' }}
+                          >
                             ✖
                           </button>
                         </>
@@ -564,6 +598,12 @@ export const ReceiptPage = () => {
               style={{ padding: '8px 16px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: 4 }}
             >
               {sellingReceiptId === currentReceipt.id ? 'Оформление...' : ' Оформить продажу'}
+            </button>
+            <button 
+              onClick={() => setCurrentReceipt(null)} 
+              style={{ padding: '8px 16px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: 4 }}
+            >
+              Отмена
             </button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 package com.cinema.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,28 +11,28 @@ public class ReceiptMerchandise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "receipt_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receipt_id")
+    @JsonBackReference
     private Receipt receipt;
 
-    @ManyToOne
-    @JoinColumn(name = "merchandise_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "merchandise_id")
     private Merchandise merchandise;
 
     private Integer quantity;
+    private Double priceAtMoment;
+    private Double subtotal;
 
-    private Double priceAtMoment;  // цена на момент продажи
-
-    private Double subtotal;        // = quantity * priceAtMoment
-
-    public ReceiptMerchandise() {}
+    public ReceiptMerchandise() {
+    }
 
     public ReceiptMerchandise(Receipt receipt, Merchandise merchandise, Integer quantity, Double priceAtMoment) {
         this.receipt = receipt;
         this.merchandise = merchandise;
         this.quantity = quantity;
         this.priceAtMoment = priceAtMoment;
-        this.subtotal = quantity * priceAtMoment;
+        this.subtotal = priceAtMoment * quantity;
     }
 
     // Геттеры и сеттеры
@@ -51,10 +52,7 @@ public class ReceiptMerchandise {
     }
 
     public Double getPriceAtMoment() { return priceAtMoment; }
-    public void setPriceAtMoment(Double priceAtMoment) {
-        this.priceAtMoment = priceAtMoment;
-        this.subtotal = this.priceAtMoment * this.quantity;
-    }
+    public void setPriceAtMoment(Double priceAtMoment) { this.priceAtMoment = priceAtMoment; }
 
     public Double getSubtotal() { return subtotal; }
     public void setSubtotal(Double subtotal) { this.subtotal = subtotal; }
