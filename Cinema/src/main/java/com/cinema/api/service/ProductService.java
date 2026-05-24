@@ -7,6 +7,8 @@ import com.cinema.api.entity.Product;
 import com.cinema.api.enums.Category;
 import com.cinema.api.exception.ValidationError;
 import com.cinema.api.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +28,10 @@ public class ProductService {
         this.productRepository = productRepository;
         this.logger = logger;
     }
-
+    @Transactional(readOnly = true)
+    public Page<ProductRs> getAll(Pageable pageable) {
+        return productRepository.findAll(pageable).map(this::convertToRs);
+    }
     private LocalDate getExpirationDate(Product product) {
         if (product.getExpirationDays() == null || product.getExpirationDays() <= 0) {
             return null;

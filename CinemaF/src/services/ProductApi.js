@@ -28,4 +28,8 @@ export const ProductApi = {
     const response = await api.get(`/products/filter?category=${category}`)
     return response.data
   },
+   getPage: async (page, size) => {
+    const response = await api.get(`/products/page?page=${page}&size=${size}`)
+    return response.data
+  },
 }

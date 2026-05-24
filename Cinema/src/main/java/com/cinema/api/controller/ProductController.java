@@ -6,6 +6,9 @@ import com.cinema.api.enums.Category;
 import com.cinema.api.service.ProductService;
 import com.cinema.api.util.SecurityUtils;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,12 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-
+    @GetMapping("/page")
+    public Page<ProductRs> getPage(@RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productService.getAll(pageable);
+    }
     @PostMapping
     public ResponseEntity<ProductRs> create(@Valid @RequestBody ProductRq rq) {
         return ResponseEntity.status(HttpStatus.CREATED)

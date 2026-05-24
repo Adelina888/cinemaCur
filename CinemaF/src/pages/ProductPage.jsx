@@ -1,48 +1,101 @@
+// src/pages/ProductPage.jsx
 import React, { useEffect, useState } from 'react'
 import { ProductApi } from '../services/ProductApi'
 
 export const ProductPage = () => {
+  // Состояния для данных
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  
+  // Состояния для пагинации
+  const [page, setPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [totalElements, setTotalElements] = useState(0)
+  const [pageSize] = useState(10)
+  
+  // Состояния для поиска и фильтра
   const [searchName, setSearchName] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
-
-  // Форма добавления
+  
+  // Состояния для формы добавления
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [category, setCategory] = useState('')
   const [expirationDays, setExpirationDays] = useState('')
-
-  // Редактирование
+  
+  // Состояния для редактирования
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editPrice, setEditPrice] = useState('')
   const [editCategory, setEditCategory] = useState('')
   const [editExpirationDays, setEditExpirationDays] = useState('')
 
-  // Карта для отображения русских названий категорий
-  const categoryDisplay = {
-    'SNACKS': 'Закуски',
-    'DRINKS': 'Напитки',
-    'SWEETS': 'Сладости',
-    'OTHER': 'Прочее'
+  // Список категорий (русские названия, которые принимает бэкенд)
+  const categories = [
+    { value: 'Закуски', label: 'Закуски' },
+    { value: 'Напитки', label: 'Напитки' },
+    { value: 'Сладости', label: 'Сладости' },
+    { value: 'Прочее', label: 'Прочее' }
+  ]
+
+  // ========== ВАЛИДАЦИЯ ==========
+  const validateProduct = (data, isUpdate = false) => {
+    // Проверка названия
+    if (!data.name || data.name.trim() === '') {
+      alert('Название товара обязательно')
+      return false
+    }
+    if (data.name.length < 2) {
+      alert('Название должно содержать минимум 2 символа')
+      return false
+    }
+    if (data.name.length > 100) {
+      alert('Название не должно превышать 100 символов')
+      return false
+    }
+
+    // Проверка цены
+    if (!data.price && data.price !== 0) {
+      alert('Цена обязательна')
+      return false
+    }
+    if (isNaN(data.price) || data.price <= 0) {
+      alert('Цена должна быть больше 0')
+      return false
+    }
+
+    // Проверка категории
+    if (!data.category) {
+      alert('Выберите категорию')
+      return false
+    }
+
+    // Проверка срока годности (если указан)
+    if (data.expirationDays !== undefined && data.expirationDays !== null && data.expirationDays !== '') {
+      const days = Number(data.expirationDays)
+      if (isNaN(days) || days < 0) {
+        alert('Срок годности не может быть отрицательным')
+        return false
+      }
+      if (days > 3650) {
+        alert('Срок годности не может превышать 10 лет (3650 дней)')
+        return false
+      }
+    }
+
+    return true
   }
 
-  // Список категорий для выбора (английские значения)
-const categories = [
-  { value: 'Закуски', label: 'Закуски' },
-  { value: 'Напитки', label: 'Напитки' },
-  { value: 'Сладости', label: 'Сладости' },
-  { value: 'Прочее', label: 'Прочее' }
-]
-
+  // ========== ЗАГРУЗКА ДАННЫХ ==========
   const loadProducts = async () => {
     setLoading(true)
     try {
-      const data = await ProductApi.getAll()
-      setProducts(data)
-      applyFilters(data, searchName, filterCategory)
+      const data = await ProductApi.getPage(page, pageSize)
+      setProducts(data.content)
+      setFilteredProducts(data.content)
+      setTotalPages(data.totalPages)
+      setTotalElements(data.totalElements)
     } catch (error) {
       console.error('Ошибка загрузки товаров', error)
       alert('Ошибка загрузки: ' + (error.response?.data?.message || 'Неизвестная ошибка'))
@@ -51,6 +104,7 @@ const categories = [
     }
   }
 
+  // ========== ФИЛЬТРАЦИЯ И ПОИСК (на клиенте) ==========
   const applyFilters = (data, nameFilter, categoryFilter) => {
     let filtered = [...data]
     if (nameFilter) {
@@ -80,14 +134,26 @@ const categories = [
     setFilteredProducts(products)
   }
 
+  // ========== CRUD ОПЕРАЦИИ ==========
   const handleCreate = async (e) => {
     e.preventDefault()
+    
+    // Валидация
+    if (!validateProduct({
+      name,
+      price: parseFloat(price),
+      category,
+      expirationDays: expirationDays ? parseInt(expirationDays) : null
+    })) {
+      return
+    }
+
     try {
       await ProductApi.create({
         name,
         price: parseFloat(price),
-        category,           // ← английское значение (SNACKS, DRINKS, ...)
-        expirationDays: parseInt(expirationDays)
+        category,
+        expirationDays: expirationDays ? parseInt(expirationDays) : null
       })
       setName('')
       setPrice('')
@@ -121,7 +187,7 @@ const categories = [
     setEditingId(product.id)
     setEditName(product.name)
     setEditPrice(product.price)
-    setEditCategory(product.category)      // ← английское значение
+    setEditCategory(product.category)
     setEditExpirationDays(product.expirationDays || '')
   }
 
@@ -130,12 +196,22 @@ const categories = [
   }
 
   const handleUpdate = async (id) => {
+    // Валидация
+    if (!validateProduct({
+      name: editName,
+      price: parseFloat(editPrice),
+      category: editCategory,
+      expirationDays: editExpirationDays ? parseInt(editExpirationDays) : null
+    }, true)) {
+      return
+    }
+
     try {
       await ProductApi.update(id, {
         name: editName,
         price: parseFloat(editPrice),
-        category: editCategory,              // ← английское значение
-        expirationDays: parseInt(editExpirationDays)
+        category: editCategory,
+        expirationDays: editExpirationDays ? parseInt(editExpirationDays) : null
       })
       setEditingId(null)
       loadProducts()
@@ -146,13 +222,10 @@ const categories = [
     }
   }
 
-  useEffect(() => {
-    loadProducts()
-  }, [])
-
+  // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
   const getStatusText = (product) => {
     if (product.isExpired) return ' ПРОСРОЧЕН'
-    if (product.daysLeft <= 3) return `⚠️ Истекает через ${product.daysLeft} дней`
+    if (product.daysLeft <= 3) return ` Истекает через ${product.daysLeft} дней`
     return ` Годен (ещё ${product.daysLeft} дней)`
   }
 
@@ -162,8 +235,14 @@ const categories = [
     return { color: 'green' }
   }
 
+  // ========== ЗАГРУЗКА ПРИ ИЗМЕНЕНИИ СТРАНИЦЫ ==========
+  useEffect(() => {
+    loadProducts()
+  }, [page])
+
   if (loading) return <div>Загрузка...</div>
 
+  // ========== РЕНДЕР ==========
   return (
     <div>
       <h1>Товары бара</h1>
@@ -192,15 +271,36 @@ const categories = [
       <form onSubmit={handleCreate} style={{ marginBottom: 20, padding: 15, border: '1px solid #ccc', borderRadius: 5 }}>
         <h3>Добавить товар</h3>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <input type="text" placeholder="Название" value={name} onChange={(e) => setName(e.target.value)} required style={{ padding: 8 }} />
-          <input type="number" placeholder="Цена" value={price} onChange={(e) => setPrice(e.target.value)} required style={{ padding: 8 }} step="0.01" />
+          <input
+            type="text"
+            placeholder="Название"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            style={{ padding: 8 }}
+          />
+          <input
+            type="number"
+            placeholder="Цена"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+            style={{ padding: 8 }}
+            step="0.01"
+          />
           <select value={category} onChange={(e) => setCategory(e.target.value)} required style={{ padding: 8 }}>
             <option value="">Выберите категорию</option>
             {categories.map(cat => (
               <option key={cat.value} value={cat.value}>{cat.label}</option>
             ))}
           </select>
-          <input type="number" placeholder="Срок годности (дни)" value={expirationDays} onChange={(e) => setExpirationDays(e.target.value)} required style={{ padding: 8 }} />
+          <input
+            type="number"
+            placeholder="Срок годности (дни)"
+            value={expirationDays}
+            onChange={(e) => setExpirationDays(e.target.value)}
+            style={{ padding: 8 }}
+          />
           <button type="submit">Добавить</button>
         </div>
       </form>
@@ -223,10 +323,26 @@ const categories = [
           {filteredProducts.map((product) => (
             <tr key={product.id}>
               {editingId === product.id ? (
+                // Режим редактирования
                 <>
                   <td>{product.id}</td>
-                  <td><input type="text" value={editName} onChange={(e) => setEditName(e.target.value)} style={{ width: '100%' }} /></td>
-                  <td><input type="number" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} style={{ width: '80px' }} step="0.01" /></td>
+                  <td>
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      style={{ width: '100%' }}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={editPrice}
+                      onChange={(e) => setEditPrice(e.target.value)}
+                      style={{ width: '80px' }}
+                      step="0.01"
+                    />
+                  </td>
                   <td>
                     <select value={editCategory} onChange={(e) => setEditCategory(e.target.value)}>
                       {categories.map(cat => (
@@ -234,7 +350,14 @@ const categories = [
                       ))}
                     </select>
                   </td>
-                  <td><input type="number" value={editExpirationDays} onChange={(e) => setEditExpirationDays(e.target.value)} style={{ width: '80px' }} /></td>
+                  <td>
+                    <input
+                      type="number"
+                      value={editExpirationDays}
+                      onChange={(e) => setEditExpirationDays(e.target.value)}
+                      style={{ width: '80px' }}
+                    />
+                  </td>
                   <td>{product.dateOfCreation}</td>
                   <td style={getStatusStyle(product)}>{getStatusText(product)}</td>
                   <td>
@@ -243,11 +366,12 @@ const categories = [
                   </td>
                 </>
               ) : (
+                // Режим просмотра
                 <>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
                   <td>{product.price} ₽</td>
-                  <td>{categoryDisplay[product.category] || product.category}</td>
+                  <td>{product.category}</td>
                   <td>{product.expirationDays ? `${product.expirationDays} дней` : 'Без срока'}</td>
                   <td>{product.dateOfCreation}</td>
                   <td style={getStatusStyle(product)}>{getStatusText(product)}</td>
@@ -261,6 +385,29 @@ const categories = [
           ))}
         </tbody>
       </table>
+
+      {/* Пагинация */}
+      {totalPages > 0 && (
+        <div style={{ marginTop: 20, display: 'flex', gap: 10, justifyContent: 'center', alignItems: 'center' }}>
+          <button 
+            onClick={() => setPage(p => Math.max(0, p - 1))} 
+            disabled={page === 0}
+            style={{ padding: '5px 10px' }}
+          >
+            ◀ Назад
+          </button>
+          <span>
+            Страница {page + 1} из {totalPages} (всего {totalElements} товаров)
+          </span>
+          <button 
+            onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} 
+            disabled={page >= totalPages - 1}
+            style={{ padding: '5px 10px' }}
+          >
+            Вперёд ▶
+          </button>
+        </div>
+      )}
     </div>
   )
 }
