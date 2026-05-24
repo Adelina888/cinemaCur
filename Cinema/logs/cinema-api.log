@@ -165,3 +165,243 @@
 2026-05-24T00:30:57.121+04:00  INFO 1520 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 00:30:57 | ВЫЗОВ МЕТОДА | ProductService.delete() | Аргументы: [4, 1]
 2026-05-24T00:30:57.162+04:00  INFO 1520 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 00:30:57 | УДАЛЕНИЕ ТОВАРА | Админ: 1 | ID товара: 4
 2026-05-24T00:30:57.163+04:00  INFO 1520 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 00:30:57 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.delete() | Результат: void
+2026-05-24T17:06:53.551+04:00  INFO 9680 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 9680 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T17:06:53.557+04:00  INFO 9680 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T17:06:54.675+04:00  INFO 9680 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T17:06:54.825+04:00  INFO 9680 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 136 ms. Found 10 JPA repository interfaces.
+2026-05-24T17:06:56.668+04:00  INFO 9680 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T17:06:56.708+04:00  INFO 9680 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T17:06:56.709+04:00  INFO 9680 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T17:06:56.866+04:00  INFO 9680 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 3230 ms
+2026-05-24T17:06:57.324+04:00  INFO 9680 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T17:06:57.525+04:00  INFO 9680 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T17:06:59.152+04:00  INFO 9680 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T17:06:59.262+04:00  INFO 9680 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T17:06:59.587+04:00  INFO 9680 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@30133a11
+2026-05-24T17:06:59.590+04:00  INFO 9680 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T17:06:59.995+04:00  WARN 9680 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T17:07:00.385+04:00  INFO 9680 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T17:07:03.918+04:00  INFO 9680 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T17:07:04.725+04:00  INFO 9680 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T17:07:05.015+04:00  INFO 9680 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T17:07:05.838+04:00  INFO 9680 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T17:07:08.596+04:00  WARN 9680 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T17:07:10.350+04:00  INFO 9680 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T17:07:10.364+04:00  INFO 9680 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 17.655 seconds (process running for 18.495)
+2026-05-24T17:11:26.567+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T17:11:26.568+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T17:11:26.570+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-24T17:11:26.760+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:26 | ВЫЗОВ МЕТОДА | AuthService.authenticate() | Аргументы: [com.cinema.api.dto.AuthRq@2bff9e68]
+2026-05-24T17:11:27.014+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:27 | АУТЕНТИФИКАЦИЯ | Логин: user | ОШИБКА
+2026-05-24T17:11:27.014+04:00 ERROR 9680 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:27 | ОШИБКА | AuthService.authenticate() | Неверные учетные данные пользователя
+2026-05-24T17:11:40.016+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:40 | ВЫЗОВ МЕТОДА | AuthService.authenticate() | Аргументы: [com.cinema.api.dto.AuthRq@5374b53a]
+2026-05-24T17:11:40.279+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:40 | АУТЕНТИФИКАЦИЯ | Логин: admin | УСПЕШНО
+2026-05-24T17:11:40.279+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:40 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | AuthService.authenticate() | Результат: com.cinema.api.dto.AuthRs@2e93f3be
+2026-05-24T17:11:55.088+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:55 | ВЫЗОВ МЕТОДА | AuthService.authenticate() | Аргументы: [com.cinema.api.dto.AuthRq@35e2b2ac]
+2026-05-24T17:11:55.205+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:55 | АУТЕНТИФИКАЦИЯ | Логин: admin | УСПЕШНО
+2026-05-24T17:11:55.205+04:00  INFO 9680 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:11:55 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | AuthService.authenticate() | Результат: com.cinema.api.dto.AuthRs@7a18405b
+2026-05-24T17:18:41.872+04:00  INFO 8704 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 8704 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T17:18:41.877+04:00  INFO 8704 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T17:18:43.020+04:00  INFO 8704 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T17:18:43.165+04:00  INFO 8704 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 133 ms. Found 10 JPA repository interfaces.
+2026-05-24T17:18:44.282+04:00  INFO 8704 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T17:18:44.307+04:00  INFO 8704 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T17:18:44.307+04:00  INFO 8704 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T17:18:44.388+04:00  INFO 8704 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2430 ms
+2026-05-24T17:18:44.688+04:00  INFO 8704 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T17:18:44.767+04:00  INFO 8704 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T17:18:45.503+04:00  INFO 8704 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T17:18:45.551+04:00  INFO 8704 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T17:18:45.743+04:00  INFO 8704 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3cf06a01
+2026-05-24T17:18:45.745+04:00  INFO 8704 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T17:18:46.174+04:00  WARN 8704 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T17:18:46.526+04:00  INFO 8704 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T17:18:48.713+04:00  INFO 8704 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T17:18:49.393+04:00  INFO 8704 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T17:18:49.570+04:00  INFO 8704 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T17:18:49.987+04:00  INFO 8704 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T17:18:51.523+04:00  WARN 8704 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T17:18:52.556+04:00  INFO 8704 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T17:18:52.564+04:00  INFO 8704 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 11.447 seconds (process running for 12.262)
+2026-05-24T17:18:52.858+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T17:18:52.858+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T17:18:52.861+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-24T17:18:53.118+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:18:53 | ВЫЗОВ МЕТОДА | AuthService.authenticate() | Аргументы: [com.cinema.api.dto.AuthRq@486f7ac5]
+2026-05-24T17:18:53.768+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:18:53 | АУТЕНТИФИКАЦИЯ | Логин: admin | УСПЕШНО
+2026-05-24T17:18:53.769+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:18:53 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | AuthService.authenticate() | Результат: com.cinema.api.dto.AuthRs@4bd29fac
+2026-05-24T17:19:21.381+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:19:21 | ВЫЗОВ МЕТОДА | AuthService.authenticate() | Аргументы: [com.cinema.api.dto.AuthRq@662053ad]
+2026-05-24T17:19:21.625+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:19:21 | АУТЕНТИФИКАЦИЯ | Логин: admin | УСПЕШНО
+2026-05-24T17:19:21.626+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:19:21 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | AuthService.authenticate() | Результат: com.cinema.api.dto.AuthRs@6cd838dd
+2026-05-24T17:20:40.334+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:20:40 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:20:40.399+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:20:40 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@4b396eab, com.cinema.api.dto.ProductRs@3eaeb4e7]
+2026-05-24T17:20:40.447+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:20:40 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:20:40.455+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:20:40 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@47d9e6a9, com.cinema.api.dto.ProductRs@6b9f9267]
+2026-05-24T17:23:27.426+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:27 | ВЫЗОВ МЕТОДА | ProductService.searchByName() | Аргументы: [поп]
+2026-05-24T17:23:27.469+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:27 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.searchByName() | Результат: [com.cinema.api.dto.ProductRs@44d7228f]
+2026-05-24T17:23:30.353+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:30 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:23:30.359+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:30 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@1513f359, com.cinema.api.dto.ProductRs@5e83359d]
+2026-05-24T17:23:35.975+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:35 | ВЫЗОВ МЕТОДА | ProductService.filterByCategory() | Аргументы: [SNACKS]
+2026-05-24T17:23:35.982+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:35 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.filterByCategory() | Результат: [com.cinema.api.dto.ProductRs@3e0484a3]
+2026-05-24T17:23:37.405+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:37 | ВЫЗОВ МЕТОДА | ProductService.filterByCategory() | Аргументы: [SNACKS]
+2026-05-24T17:23:37.408+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:37 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.filterByCategory() | Результат: [com.cinema.api.dto.ProductRs@dd98178]
+2026-05-24T17:23:38.555+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:38 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:23:38.560+04:00  INFO 8704 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:23:38 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@a57f8c1, com.cinema.api.dto.ProductRs@5432dc24]
+2026-05-24T17:30:10.560+04:00  INFO 32308 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 32308 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T17:30:10.565+04:00  INFO 32308 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T17:30:11.717+04:00  INFO 32308 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T17:30:11.855+04:00  INFO 32308 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 124 ms. Found 10 JPA repository interfaces.
+2026-05-24T17:30:13.015+04:00  INFO 32308 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T17:30:13.039+04:00  INFO 32308 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T17:30:13.039+04:00  INFO 32308 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T17:30:13.123+04:00  INFO 32308 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2465 ms
+2026-05-24T17:30:13.358+04:00  INFO 32308 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T17:30:13.451+04:00  INFO 32308 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T17:30:14.147+04:00  INFO 32308 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T17:30:14.198+04:00  INFO 32308 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T17:30:14.369+04:00  INFO 32308 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3639b04
+2026-05-24T17:30:14.372+04:00  INFO 32308 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T17:30:14.728+04:00  WARN 32308 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T17:30:15.034+04:00  INFO 32308 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T17:30:16.867+04:00  INFO 32308 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T17:30:17.258+04:00  INFO 32308 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T17:30:17.418+04:00  INFO 32308 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T17:30:17.791+04:00  INFO 32308 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T17:30:19.214+04:00  WARN 32308 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T17:30:20.139+04:00  INFO 32308 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T17:30:20.149+04:00  INFO 32308 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 10.471 seconds (process running for 11.151)
+2026-05-24T17:30:36.578+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T17:30:36.578+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T17:30:36.580+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-24T17:30:36.828+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:30:36 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:30:36.874+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:30:36 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@6718b7b1, com.cinema.api.dto.ProductRs@3a5418f9]
+2026-05-24T17:30:36.960+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:30:36 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:30:36.964+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:30:36 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@26865025, com.cinema.api.dto.ProductRs@3413c97a]
+2026-05-24T17:32:12.970+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:12 | ВЫЗОВ МЕТОДА | AuthService.authenticate() | Аргументы: [com.cinema.api.dto.AuthRq@40045a2b]
+2026-05-24T17:32:13.298+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:13 | АУТЕНТИФИКАЦИЯ | Логин: admin | УСПЕШНО
+2026-05-24T17:32:13.299+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:13 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | AuthService.authenticate() | Результат: com.cinema.api.dto.AuthRs@383f2126
+2026-05-24T17:32:15.641+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:15 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:32:15.651+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:15 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@476412c, com.cinema.api.dto.ProductRs@51fedcca]
+2026-05-24T17:32:15.667+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:15 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:32:15.675+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:15 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@4bfb96a, com.cinema.api.dto.ProductRs@79c6c174]
+2026-05-24T17:32:39.306+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:39 | ВЫЗОВ МЕТОДА | ProductService.update() | Аргументы: [3, com.cinema.api.dto.ProductRq@279875a0, 1]
+2026-05-24T17:32:39.321+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:39 | ИЗМЕНЕНИЕ ЦЕНЫ | Админ: 1 | Товар ID: 3 | Было: 120.0 | Стало: 125.0
+2026-05-24T17:32:39.322+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:39 | ИЗМЕНЕНИЕ ТОВАРА | Админ: 1 | Товар: Кока-Кола 0.5л
+2026-05-24T17:32:39.322+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:39 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.update() | Результат: com.cinema.api.dto.ProductRs@28926eb1
+2026-05-24T17:32:39.374+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:39 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:32:39.380+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:32:39 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@24c89f69, com.cinema.api.dto.ProductRs@2b77547]
+2026-05-24T17:33:13.760+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:13 | ВЫЗОВ МЕТОДА | ProductService.update() | Аргументы: [3, com.cinema.api.dto.ProductRq@22153995, 1]
+2026-05-24T17:33:13.765+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:13 | ИЗМЕНЕНИЕ ТОВАРА | Админ: 1 | Товар: Кока-Кола 0.5л
+2026-05-24T17:33:13.766+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:13 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.update() | Результат: com.cinema.api.dto.ProductRs@3f0eeafe
+2026-05-24T17:33:13.795+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:13 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:33:13.799+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:13 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@6ecf2f86, com.cinema.api.dto.ProductRs@454a0b04]
+2026-05-24T17:33:27.737+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:27 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:33:27.743+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:27 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@68c56ee4, com.cinema.api.dto.ProductRs@632cbd91]
+2026-05-24T17:33:27.763+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:27 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:33:27.768+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:27 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@2cdfd4dd, com.cinema.api.dto.ProductRs@6fef8884]
+2026-05-24T17:33:28.920+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:28 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:33:28.928+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:28 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@4e20eae4, com.cinema.api.dto.ProductRs@5d24a630]
+2026-05-24T17:33:28.944+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:28 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:33:28.948+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:28 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@2733d67f, com.cinema.api.dto.ProductRs@ad0877]
+2026-05-24T17:33:29.780+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:29 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:33:29.787+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:29 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@29d4b029, com.cinema.api.dto.ProductRs@3c85e1f2]
+2026-05-24T17:33:29.802+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:29 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:33:29.807+04:00  INFO 32308 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:33:29 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@384a1a21, com.cinema.api.dto.ProductRs@72cbc47a]
+2026-05-24T17:39:20.097+04:00  INFO 11068 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 11068 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T17:39:20.102+04:00  INFO 11068 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T17:39:21.275+04:00  INFO 11068 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T17:39:21.422+04:00  INFO 11068 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 136 ms. Found 10 JPA repository interfaces.
+2026-05-24T17:39:22.512+04:00  INFO 11068 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T17:39:22.534+04:00  INFO 11068 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T17:39:22.534+04:00  INFO 11068 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T17:39:22.657+04:00  INFO 11068 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2476 ms
+2026-05-24T17:39:22.939+04:00  INFO 11068 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T17:39:23.032+04:00  INFO 11068 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T17:39:23.717+04:00  INFO 11068 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T17:39:23.777+04:00  INFO 11068 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T17:39:23.938+04:00  INFO 11068 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3639b04
+2026-05-24T17:39:23.940+04:00  INFO 11068 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T17:39:24.301+04:00  WARN 11068 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T17:39:24.628+04:00  INFO 11068 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T17:39:26.590+04:00  INFO 11068 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T17:39:27.196+04:00  INFO 11068 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T17:39:27.367+04:00  INFO 11068 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T17:39:27.819+04:00  INFO 11068 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T17:39:29.429+04:00  WARN 11068 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T17:39:30.472+04:00  INFO 11068 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T17:39:30.482+04:00  INFO 11068 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 11.13 seconds (process running for 11.8)
+2026-05-24T17:39:35.983+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T17:39:35.984+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T17:39:35.988+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2026-05-24T17:39:36.360+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:39:36 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:39:36.409+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:39:36 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@62776bbd, com.cinema.api.dto.ProductRs@36fe6c12]
+2026-05-24T17:39:36.528+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:39:36 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:39:36.533+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:39:36 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@63a3d4f5, com.cinema.api.dto.ProductRs@742bd90e]
+2026-05-24T17:40:46.126+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:40:46 | ВЫЗОВ МЕТОДА | ProductService.update() | Аргументы: [2, com.cinema.api.dto.ProductRq@4bbaee99, 1]
+2026-05-24T17:40:46.157+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:40:46 | ИЗМЕНЕНИЕ ТОВАРА | Админ: 1 | Товар: Попкорн соленый
+2026-05-24T17:40:46.158+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:40:46 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.update() | Результат: com.cinema.api.dto.ProductRs@1fe44ba5
+2026-05-24T17:40:46.241+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:40:46 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:40:46.249+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:40:46 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@321679c7, com.cinema.api.dto.ProductRs@4e714173]
+2026-05-24T17:43:08.348+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:43:08 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:43:08.354+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:43:08 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@4c3495a0, com.cinema.api.dto.ProductRs@2e0e06a1]
+2026-05-24T17:43:27.117+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:43:27 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:43:27.122+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:43:27 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@4aa6b59d, com.cinema.api.dto.ProductRs@7581fb78]
+2026-05-24T17:43:27.140+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:43:27 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:43:27.146+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:43:27 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@39054242, com.cinema.api.dto.ProductRs@3dc331e3]
+2026-05-24T17:46:58.205+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:46:58 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:46:58.211+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:46:58 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@4740ee43, com.cinema.api.dto.ProductRs@18e77454]
+2026-05-24T17:46:58.231+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:46:58 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:46:58.244+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:46:58 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@5a98ac25, com.cinema.api.dto.ProductRs@2a028ea6]
+2026-05-24T17:47:14.380+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:14 | ВЫЗОВ МЕТОДА | ProductService.update() | Аргументы: [3, com.cinema.api.dto.ProductRq@2fbfabbc, 1]
+2026-05-24T17:47:14.385+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:14 | ИЗМЕНЕНИЕ ТОВАРА | Админ: 1 | Товар: Кока-Кола 0.5л
+2026-05-24T17:47:14.386+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:14 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.update() | Результат: com.cinema.api.dto.ProductRs@7a3eefe8
+2026-05-24T17:47:14.418+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:14 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:47:14.424+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:14 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@7889112c, com.cinema.api.dto.ProductRs@52d18dcd]
+2026-05-24T17:47:21.097+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:21 | ВЫЗОВ МЕТОДА | ProductService.update() | Аргументы: [3, com.cinema.api.dto.ProductRq@79ccc85e, 1]
+2026-05-24T17:47:21.102+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:21 | ИЗМЕНЕНИЕ ТОВАРА | Админ: 1 | Товар: Кока-Кола 0.5л
+2026-05-24T17:47:21.103+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:21 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.update() | Результат: com.cinema.api.dto.ProductRs@348acd60
+2026-05-24T17:47:21.135+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:21 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: []
+2026-05-24T17:47:21.140+04:00  INFO 11068 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 17:47:21 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: [com.cinema.api.dto.ProductRs@a3d7a0c, com.cinema.api.dto.ProductRs@1547a449]
