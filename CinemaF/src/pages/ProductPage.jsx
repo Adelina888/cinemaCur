@@ -31,7 +31,7 @@ export const ProductPage = () => {
   const [editCategory, setEditCategory] = useState('')
   const [editExpirationDays, setEditExpirationDays] = useState('')
 
-  // Список категорий (русские названия, которые принимает бэкенд)
+  // Список категорий
   const categories = [
     { value: 'Закуски', label: 'Закуски' },
     { value: 'Напитки', label: 'Напитки' },
@@ -40,8 +40,8 @@ export const ProductPage = () => {
   ]
 
   // ========== ВАЛИДАЦИЯ ==========
-  const validateProduct = (data, isUpdate = false) => {
-    // Проверка названия
+  const validateProduct = (data, isUpdate = false, existingProducts = []) => {
+    // 1. Проверка названия
     if (!data.name || data.name.trim() === '') {
       alert('Название товара обязательно')
       return false
@@ -55,33 +55,57 @@ export const ProductPage = () => {
       return false
     }
 
-    // Проверка цены
+    // 2. Проверка уникальности названия (нельзя дублировать)
+    const isDuplicate = existingProducts.some(p => 
+      p.name.toLowerCase() === data.name.toLowerCase() && 
+      (!isUpdate || p.id !== data.id)
+    )
+    if (isDuplicate) {
+      alert(`Товар с названием "${data.name}" уже существует!`)
+      return false
+    }
+
+    // 3. Проверка цены
     if (!data.price && data.price !== 0) {
       alert('Цена обязательна')
       return false
     }
-    if (isNaN(data.price) || data.price <= 0) {
+    if (isNaN(data.price)) {
+      alert('Цена должна быть числом')
+      return false
+    }
+    if (data.price <= 0) {
       alert('Цена должна быть больше 0')
       return false
     }
+    if (data.price > 1000000) {
+      alert('Цена не может превышать 1 000 000 рублей')
+      return false
+    }
 
-    // Проверка категории
+    // 4. Проверка категории
     if (!data.category) {
       alert('Выберите категорию')
       return false
     }
 
-    // Проверка срока годности (если указан)
-    if (data.expirationDays !== undefined && data.expirationDays !== null && data.expirationDays !== '') {
-      const days = Number(data.expirationDays)
-      if (isNaN(days) || days < 0) {
-        alert('Срок годности не может быть отрицательным')
-        return false
-      }
-      if (days > 3650) {
-        alert('Срок годности не может превышать 10 лет (3650 дней)')
-        return false
-      }
+    // 5. Проверка срока годности (обязателен)
+    if (!data.expirationDays && data.expirationDays !== 0) {
+      alert('Срок годности обязателен')
+      return false
+    }
+    const days = Number(data.expirationDays)
+    if (isNaN(days)) {
+      alert('Срок годности должен быть числом')
+      return false
+    }
+    if (days < 0) {
+      alert('Срок годности не может быть отрицательным')
+      return false
+    }
+    if (days > 3650) {
+      alert('Срок годности не может превышать 10 лет (3650 дней)')
+      return false
     }
 
     return true
@@ -138,13 +162,13 @@ export const ProductPage = () => {
   const handleCreate = async (e) => {
     e.preventDefault()
     
-    // Валидация
+    // Валидация перед отправкой
     if (!validateProduct({
       name,
       price: parseFloat(price),
       category,
-      expirationDays: expirationDays ? parseInt(expirationDays) : null
-    })) {
+      expirationDays: parseInt(expirationDays)
+    }, false, products)) {
       return
     }
 
@@ -153,7 +177,7 @@ export const ProductPage = () => {
         name,
         price: parseFloat(price),
         category,
-        expirationDays: expirationDays ? parseInt(expirationDays) : null
+        expirationDays: parseInt(expirationDays)
       })
       setName('')
       setPrice('')
@@ -163,7 +187,9 @@ export const ProductPage = () => {
     } catch (error) {
       console.error('Ошибка создания', error)
       const errorData = error.response?.data
-      if (errorData?.field) {
+      if (errorData?.field === 'name' || errorData?.message?.includes('существует')) {
+        alert(`Товар с названием "${name}" уже существует!`)
+      } else if (errorData?.field) {
         alert(`Ошибка в поле "${errorData.field}": ${errorData.message}`)
       } else {
         alert('Ошибка: ' + (errorData?.message || 'Неизвестная ошибка'))
@@ -188,7 +214,7 @@ export const ProductPage = () => {
     setEditName(product.name)
     setEditPrice(product.price)
     setEditCategory(product.category)
-    setEditExpirationDays(product.expirationDays || '')
+    setEditExpirationDays(product.expirationDays)
   }
 
   const cancelEdit = () => {
@@ -196,13 +222,14 @@ export const ProductPage = () => {
   }
 
   const handleUpdate = async (id) => {
-    // Валидация
+    // Валидация при обновлении
     if (!validateProduct({
+      id: id,
       name: editName,
       price: parseFloat(editPrice),
       category: editCategory,
-      expirationDays: editExpirationDays ? parseInt(editExpirationDays) : null
-    }, true)) {
+      expirationDays: parseInt(editExpirationDays)
+    }, true, products)) {
       return
     }
 
@@ -211,14 +238,20 @@ export const ProductPage = () => {
         name: editName,
         price: parseFloat(editPrice),
         category: editCategory,
-        expirationDays: editExpirationDays ? parseInt(editExpirationDays) : null
+        expirationDays: parseInt(editExpirationDays)
       })
       setEditingId(null)
       loadProducts()
     } catch (error) {
       console.error('Ошибка обновления', error)
       const errorData = error.response?.data
-      alert('Ошибка обновления: ' + (errorData?.message || 'Неизвестная ошибка'))
+      if (errorData?.field === 'name' || errorData?.message?.includes('существует')) {
+        alert(`Товар с названием "${editName}" уже существует!`)
+      } else if (errorData?.field) {
+        alert(`Ошибка в поле "${errorData.field}": ${errorData.message}`)
+      } else {
+        alert('Ошибка обновления: ' + (errorData?.message || 'Неизвестная ошибка'))
+      }
     }
   }
 
@@ -279,28 +312,43 @@ export const ProductPage = () => {
             required
             style={{ padding: 8 }}
           />
-          <input
-            type="number"
-            placeholder="Цена"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-            style={{ padding: 8 }}
-            step="0.01"
-          />
+          <div>
+            <input
+              type="number"
+              placeholder="Цена"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+              style={{ padding: 8 }}
+              step="0.01"
+              min="0.01"
+              max="1000000"
+            />
+            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+              От 0.01 до 1 000 000 ₽
+            </div>
+          </div>
           <select value={category} onChange={(e) => setCategory(e.target.value)} required style={{ padding: 8 }}>
             <option value="">Выберите категорию</option>
             {categories.map(cat => (
               <option key={cat.value} value={cat.value}>{cat.label}</option>
             ))}
           </select>
-          <input
-            type="number"
-            placeholder="Срок годности (дни)"
-            value={expirationDays}
-            onChange={(e) => setExpirationDays(e.target.value)}
-            style={{ padding: 8 }}
-          />
+          <div>
+            <input
+              type="number"
+              placeholder="Срок годности (дни)"
+              value={expirationDays}
+              onChange={(e) => setExpirationDays(e.target.value)}
+              required
+              style={{ padding: 8 }}
+              min="0"
+              max="3650"
+            />
+            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+              От 0 до 3650 дней (0 = без срока)
+            </div>
+          </div>
           <button type="submit">Добавить</button>
         </div>
       </form>
@@ -341,6 +389,8 @@ export const ProductPage = () => {
                       onChange={(e) => setEditPrice(e.target.value)}
                       style={{ width: '80px' }}
                       step="0.01"
+                      min="0.01"
+                      max="1000000"
                     />
                   </td>
                   <td>
@@ -356,6 +406,8 @@ export const ProductPage = () => {
                       value={editExpirationDays}
                       onChange={(e) => setEditExpirationDays(e.target.value)}
                       style={{ width: '80px' }}
+                      min="0"
+                      max="3650"
                     />
                   </td>
                   <td>{product.dateOfCreation}</td>
@@ -372,7 +424,7 @@ export const ProductPage = () => {
                   <td>{product.name}</td>
                   <td>{product.price} ₽</td>
                   <td>{product.category}</td>
-                  <td>{product.expirationDays ? `${product.expirationDays} дней` : 'Без срока'}</td>
+                  <td>{product.expirationDays} дней</td>
                   <td>{product.dateOfCreation}</td>
                   <td style={getStatusStyle(product)}>{getStatusText(product)}</td>
                   <td>
