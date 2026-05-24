@@ -13,6 +13,12 @@ export const ReceiptPage = () => {
   const [loading, setLoading] = useState(false)
   const [showReceiptModal, setShowReceiptModal] = useState(false)
 
+  // Состояния для пагинации истории
+  const [page, setPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [totalElements, setTotalElements] = useState(0)
+  const [pageSize] = useState(10)
+
   // Состояния для добавления товаров
   const [selectedMerchandiseId, setSelectedMerchandiseId] = useState('')
   const [selectedMerchandiseQuantity, setSelectedMerchandiseQuantity] = useState(1)
@@ -27,13 +33,17 @@ export const ReceiptPage = () => {
   // Состояния для фильтрации истории
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const [filteredReceipts, setFilteredReceipts] = useState([])
+  const [isFiltered, setIsFiltered] = useState(false)
 
-  // Максимальные значения
-  const MAX_QUANTITY = 999
+  // Состояния для редактирования количества
+  const [editingItem, setEditingItem] = useState(null)
+  const [editQuantity, setEditQuantity] = useState('')
 
   // Множество ID чеков, по которым уже сделан возврат
   const [returnedReceiptIds, setReturnedReceiptIds] = useState([])
+
+  // Максимальные значения
+  const MAX_QUANTITY = 999
 
   // ========== ЗАГРУЗКА ДАННЫХ ==========
   const loadMerchandise = async () => {
@@ -57,12 +67,19 @@ export const ReceiptPage = () => {
   const loadReceipts = async () => {
     setLoading(true)
     try {
-      const data = await ReceiptApi.getAll()
-      setReceipts(data)
-      setFilteredReceipts(data)
-      
-      // Находим все чеки возврата и их оригинальные ID
-      const returned = data
+      let data
+      if (isFiltered && startDate && endDate) {
+        const formattedStart = `${startDate}T00:00:00`
+        const formattedEnd = `${endDate}T23:59:59`
+        data = await ReceiptApi.getByDateRange(formattedStart, formattedEnd, page, pageSize)
+      } else {
+        data = await ReceiptApi.getAll(page, pageSize)
+      }
+      setReceipts(data.content || [])
+      setTotalPages(data.totalPages || 0)
+      setTotalElements(data.totalElements || 0)
+
+      const returned = (data.content || [])
         .filter(r => r.typeOfOperation === 'RETURN' && r.originalReceiptId)
         .map(r => r.originalReceiptId)
       setReturnedReceiptIds(returned)
@@ -76,25 +93,21 @@ export const ReceiptPage = () => {
 
   // ========== ФИЛЬТРАЦИЯ ПО ДАТАМ ==========
   const applyDateFilter = () => {
-    if (!startDate && !endDate) {
-      setFilteredReceipts(receipts)
+    if (!startDate || !endDate) {
+      alert('Выберите обе даты')
       return
     }
-
-    let filtered = [...receipts]
-    if (startDate) {
-      filtered = filtered.filter(r => new Date(r.date) >= new Date(startDate))
-    }
-    if (endDate) {
-      filtered = filtered.filter(r => new Date(r.date) <= new Date(endDate + 'T23:59:59'))
-    }
-    setFilteredReceipts(filtered)
+    setIsFiltered(true)
+    setPage(0)
+    setTimeout(() => loadReceipts(), 0)
   }
 
   const clearDateFilter = () => {
     setStartDate('')
     setEndDate('')
-    setFilteredReceipts(receipts)
+    setIsFiltered(false)
+    setPage(0)
+    setTimeout(() => loadReceipts(), 0)
   }
 
   // ========== РАБОТА С ЧЕКОМ ==========
@@ -102,7 +115,6 @@ export const ReceiptPage = () => {
     setLoading(true)
     try {
       const receipt = await ReceiptApi.createDraft()
-      console.log('Создан чек:', receipt)
       setCurrentReceipt(receipt)
       await loadReceipts()
       alert(`Чек №${receipt.id} создан`)
@@ -117,10 +129,11 @@ export const ReceiptPage = () => {
   const loadDraftReceipt = async () => {
     setLoading(true)
     try {
-      const allReceipts = await ReceiptApi.getAll()
-      const draft = allReceipts.find(r => r.typeOfOperation === 'DRAFT' || !r.typeOfOperation)
+      const allReceipts = await ReceiptApi.getAll(0, 100)
+      const draft = allReceipts.content?.find(r => r.typeOfOperation === 'DRAFT' || !r.typeOfOperation)
       if (draft) {
-        setCurrentReceipt(draft)
+        const fullReceipt = await ReceiptApi.getById(draft.id)
+        setCurrentReceipt(fullReceipt)
         alert(`Загружен черновик чека №${draft.id}`)
       } else {
         alert('Нет черновиков. Создайте новый чек.')
@@ -133,6 +146,7 @@ export const ReceiptPage = () => {
     }
   }
 
+  // ========== ДОБАВЛЕНИЕ ТОВАРОВ ==========
   const handleAddMerchandise = async () => {
     if (!selectedMerchandiseId) {
       alert('Выберите товар')
@@ -179,6 +193,73 @@ export const ReceiptPage = () => {
     }
   }
 
+  // ========== УДАЛЕНИЕ ПОЗИЦИЙ ИЗ ЧЕКА ==========
+  const handleRemoveMerchandise = async (itemId) => {
+    if (!window.confirm('Удалить этот товар из чека?')) return
+
+    try {
+      await ReceiptApi.removeMerchandise(currentReceipt.id, itemId)
+      const updated = await ReceiptApi.getById(currentReceipt.id)
+      setCurrentReceipt(updated)
+      await loadReceipts()
+    } catch (error) {
+      console.error('Ошибка удаления', error)
+      alert('Ошибка удаления: ' + (error.response?.data?.message || 'Неизвестная ошибка'))
+    }
+  }
+
+  const handleRemoveCombo = async (itemId) => {
+    if (!window.confirm('Удалить это комбо из чека?')) return
+
+    try {
+      await ReceiptApi.removeCombo(currentReceipt.id, itemId)
+      const updated = await ReceiptApi.getById(currentReceipt.id)
+      setCurrentReceipt(updated)
+      await loadReceipts()
+    } catch (error) {
+      console.error('Ошибка удаления', error)
+      alert('Ошибка удаления: ' + (error.response?.data?.message || 'Неизвестная ошибка'))
+    }
+  }
+
+  // ========== ИЗМЕНЕНИЕ КОЛИЧЕСТВА ==========
+  const startEditQuantity = (item, type, itemId, currentQuantity) => {
+    setEditingItem({ id: itemId, type, currentQuantity })
+    setEditQuantity(currentQuantity)
+  }
+
+  const saveQuantity = async () => {
+    if (!editingItem) return
+
+    const newQuantity = parseInt(editQuantity)
+    if (isNaN(newQuantity) || newQuantity < 1 || newQuantity > MAX_QUANTITY) {
+      alert(`Количество должно быть от 1 до ${MAX_QUANTITY}`)
+      return
+    }
+
+    try {
+      if (editingItem.type === 'merchandise') {
+        await ReceiptApi.updateMerchandiseQuantity(currentReceipt.id, editingItem.id, newQuantity)
+      } else {
+        await ReceiptApi.updateComboQuantity(currentReceipt.id, editingItem.id, newQuantity)
+      }
+      const updated = await ReceiptApi.getById(currentReceipt.id)
+      setCurrentReceipt(updated)
+      setEditingItem(null)
+      setEditQuantity('')
+      await loadReceipts()
+    } catch (error) {
+      console.error('Ошибка обновления количества', error)
+      alert('Ошибка обновления: ' + (error.response?.data?.message || 'Неизвестная ошибка'))
+    }
+  }
+
+  const cancelEdit = () => {
+    setEditingItem(null)
+    setEditQuantity('')
+  }
+
+  // ========== ПРОДАЖА ==========
   const handleSell = async () => {
     if (!currentReceipt) return
     if (currentReceipt.merchandiseItems.length === 0 && currentReceipt.comboItems.length === 0) {
@@ -208,6 +289,7 @@ export const ReceiptPage = () => {
     }
   }
 
+  // ========== ВОЗВРАТ ==========
   const handleCancelReceipt = async (receiptId) => {
     if (!receiptId) {
       alert('Чек не найден')
@@ -234,6 +316,7 @@ export const ReceiptPage = () => {
     }
   }
 
+  // ========== ПРОСМОТР ЧЕКА ==========
   const handleViewReceipt = (receipt) => {
     setCurrentReceipt(receipt)
     setShowReceiptModal(true)
@@ -279,12 +362,7 @@ export const ReceiptPage = () => {
     loadMerchandise()
     loadCombos()
     loadReceipts()
-  }, [])
-
-  // ========== ФИЛЬТРАЦИЯ ПРИ ИЗМЕНЕНИИ ДАТ ==========
-  useEffect(() => {
-    applyDateFilter()
-  }, [startDate, endDate, receipts])
+  }, [page, isFiltered])
 
   return (
     <div>
@@ -302,7 +380,7 @@ export const ReceiptPage = () => {
         </div>
       </div>
 
-      {/* Текущий чек – показываем если это черновик или статус не определён */}
+      {/* Текущий чек */}
       {currentReceipt && (!currentReceipt.typeOfOperation || currentReceipt.typeOfOperation === 'DRAFT') && (
         <div style={{ marginBottom: 20, padding: 15, border: '2px solid #007bff', borderRadius: 5, backgroundColor: '#f0f8ff' }}>
           <h3>
@@ -312,9 +390,8 @@ export const ReceiptPage = () => {
             </span>
           </h3>
 
-          {/* Две колонки для добавления товаров */}
+          {/* Добавление товаров */}
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 15 }}>
-            {/* Добавление мерча */}
             <div style={{ flex: 1, padding: 10, border: '1px solid #ddd', borderRadius: 5 }}>
               <h4>📦 Добавить мерч</h4>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -341,7 +418,6 @@ export const ReceiptPage = () => {
               </div>
             </div>
 
-            {/* Добавление комбо */}
             <div style={{ flex: 1, padding: 10, border: '1px solid #ddd', borderRadius: 5 }}>
               <h4>🍿 Добавить комбо</h4>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -369,7 +445,7 @@ export const ReceiptPage = () => {
             </div>
           </div>
 
-          {/* Таблица товаров в чеке */}
+          {/* Таблица позиций в чеке */}
           <h4>📋 Позиции в чеке:</h4>
           {currentReceipt.merchandiseItems.length === 0 && currentReceipt.comboItems.length === 0 ? (
             <div style={{ textAlign: 'center', padding: 20, color: '#666', border: '1px dashed #ccc', borderRadius: 5 }}>
@@ -384,30 +460,89 @@ export const ReceiptPage = () => {
                   <th>Цена</th>
                   <th>Количество</th>
                   <th>Сумма</th>
+                  <th>Действия</th>
                 </tr>
               </thead>
               <tbody>
                 {currentReceipt.merchandiseItems.map((item, idx) => (
-                  <tr key={idx}>
+                  <tr key={`merch-${idx}`}>
                     <td>📦 Мерч</td>
                     <td>{item.merchandiseName}</td>
                     <td>{item.price} ₽</td>
-                    <td>{item.quantity}</td>
+                    <td>
+                      {editingItem?.id === item.id && editingItem?.type === 'merchandise' ? (
+                        <div style={{ display: 'flex', gap: 5 }}>
+                          <input
+                            type="number"
+                            value={editQuantity}
+                            onChange={(e) => setEditQuantity(e.target.value)}
+                            min="1"
+                            max={MAX_QUANTITY}
+                            style={{ width: '70px', padding: 4 }}
+                          />
+                          <button onClick={saveQuantity} style={{ padding: '2px 6px' }}>✓</button>
+                          <button onClick={cancelEdit} style={{ padding: '2px 6px' }}>✗</button>
+                        </div>
+                      ) : (
+                        <span>{item.quantity}</span>
+                      )}
+                    </td>
                     <td>{item.subtotal} ₽</td>
+                    <td>
+                      {!editingItem && (
+                        <>
+                          <button onClick={() => startEditQuantity(item, 'merchandise', item.id, item.quantity)} style={{ marginRight: 5 }}>
+                            ✏
+                          </button>
+                          <button onClick={() => handleRemoveMerchandise(item.id)} style={{ color: 'red' }}>
+                            ✖
+                          </button>
+                        </>
+                      )}
+                    </td>
                   </tr>
                 ))}
                 {currentReceipt.comboItems.map((item, idx) => (
-                  <tr key={idx}>
+                  <tr key={`combo-${idx}`}>
                     <td>🍿 Комбо</td>
                     <td>{item.comboName}</td>
                     <td>{item.price} ₽</td>
-                    <td>{item.quantity}</td>
+                    <td>
+                      {editingItem?.id === item.id && editingItem?.type === 'combo' ? (
+                        <div style={{ display: 'flex', gap: 5 }}>
+                          <input
+                            type="number"
+                            value={editQuantity}
+                            onChange={(e) => setEditQuantity(e.target.value)}
+                            min="1"
+                            max={MAX_QUANTITY}
+                            style={{ width: '70px', padding: 4 }}
+                          />
+                          <button onClick={saveQuantity} style={{ padding: '2px 6px' }}>✓</button>
+                          <button onClick={cancelEdit} style={{ padding: '2px 6px' }}>✗</button>
+                        </div>
+                      ) : (
+                        <span>{item.quantity}</span>
+                      )}
+                    </td>
                     <td>{item.subtotal} ₽</td>
+                    <td>
+                      {!editingItem && (
+                        <>
+                          <button onClick={() => startEditQuantity(item, 'combo', item.id, item.quantity)} style={{ marginRight: 5 }}>
+                            ✏
+                          </button>
+                          <button onClick={() => handleRemoveCombo(item.id)} style={{ color: 'red' }}>
+                            ✖
+                          </button>
+                        </>
+                      )}
+                    </td>
                   </tr>
                 ))}
                 <tr style={{ fontWeight: 'bold', backgroundColor: '#e8f4f8' }}>
                   <td colSpan="4" align="right">ИТОГО:</td>
-                  <td>{currentReceipt.totalAmount} ₽</td>
+                  <td colSpan="2">{currentReceipt.totalAmount} ₽</td>
                 </tr>
               </tbody>
             </table>
@@ -455,53 +590,79 @@ export const ReceiptPage = () => {
             onChange={(e) => setEndDate(e.target.value)}
             style={{ padding: 5 }}
           />
+          <button onClick={applyDateFilter}>Применить</button>
           <button onClick={clearDateFilter}>Сбросить</button>
         </div>
 
         {loading && receipts.length === 0 ? (
           <div>Загрузка...</div>
-        ) : filteredReceipts.length === 0 ? (
+        ) : receipts.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 20, color: '#666' }}>Нет чеков</div>
         ) : (
-          <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ backgroundColor: '#f0f0f0' }}>
-              <tr>
-                <th>ID</th>
-                <th>Дата</th>
-                <th>Сумма</th>
-                <th>Оплата</th>
-                <th>Статус</th>
-                <th>Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredReceipts.map((receipt) => (
-                <tr key={receipt.id} style={getStatusStyle(receipt.typeOfOperation)}>
-                  <td>{receipt.id}</td>
-                  <td>{new Date(receipt.date).toLocaleString()}</td>
-                  <td>{receipt.totalAmount} ₽</td>
-                  <td>{getPaymentMethodLabel(receipt.paymentMethod)}</td>
-                  <td>{getStatusLabel(receipt.typeOfOperation)}</td>
-                  <td>
-                    <button onClick={() => handleViewReceipt(receipt)} style={{ marginRight: 5 }}>
-                      📄 Просмотр
-                    </button>
-                    {receipt.typeOfOperation === 'SALE' && !returnedReceiptIds.includes(receipt.id) && (
-                      <button
-                        onClick={() => handleCancelReceipt(receipt.id)}
-                        disabled={cancellingReceiptId === receipt.id}
-                      >
-                        {cancellingReceiptId === receipt.id ? 'Отмена...' : '🔄 Вернуть'}
-                      </button>
-                    )}
-                    {receipt.typeOfOperation === 'SALE' && returnedReceiptIds.includes(receipt.id) && (
-                      <span style={{ color: '#999', fontSize: '12px' }}>✅ Возврат оформлен</span>
-                    )}
-                  </td>
+          <>
+            <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead style={{ backgroundColor: '#f0f0f0' }}>
+                <tr>
+                  <th>ID</th>
+                  <th>Дата</th>
+                  <th>Сумма</th>
+                  <th>Оплата</th>
+                  <th>Статус</th>
+                  <th>Действия</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {receipts.map((receipt) => (
+                  <tr key={receipt.id} style={getStatusStyle(receipt.typeOfOperation)}>
+                    <td>{receipt.id}</td>
+                    <td>{new Date(receipt.date).toLocaleString()}</td>
+                    <td>{receipt.totalAmount} ₽</td>
+                    <td>{getPaymentMethodLabel(receipt.paymentMethod)}</td>
+                    <td>{getStatusLabel(receipt.typeOfOperation)}</td>
+                    <td>
+                      <button onClick={() => handleViewReceipt(receipt)} style={{ marginRight: 5 }}>
+                        📄 Просмотр
+                      </button>
+                      {receipt.typeOfOperation === 'SALE' && !returnedReceiptIds.includes(receipt.id) && (
+                        <button
+                          onClick={() => handleCancelReceipt(receipt.id)}
+                          disabled={cancellingReceiptId === receipt.id}
+                        >
+                          {cancellingReceiptId === receipt.id ? 'Отмена...' : '🔄 Вернуть'}
+                        </button>
+                      )}
+                      {receipt.typeOfOperation === 'SALE' && returnedReceiptIds.includes(receipt.id) && (
+                        <span style={{ color: '#999', fontSize: '12px' }}>✅ Возврат оформлен</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Пагинация */}
+            {totalPages > 0 && (
+              <div style={{ marginTop: 15, display: 'flex', gap: 10, justifyContent: 'center', alignItems: 'center' }}>
+                <button
+                  onClick={() => setPage(p => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  style={{ padding: '5px 10px' }}
+                >
+                  ◀ Назад
+                </button>
+                <span>
+                  Страница {page + 1} из {totalPages} (всего {totalElements} чеков)
+                </span>
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                  disabled={page >= totalPages - 1}
+                  style={{ padding: '5px 10px' }}
+                >
+                  Вперёд ▶
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -538,7 +699,7 @@ export const ReceiptPage = () => {
                 </thead>
                 <tbody>
                   {currentReceipt.merchandiseItems.map((item, idx) => (
-                    <tr key={idx}>
+                    <tr key={`merch-modal-${idx}`}>
                       <td>📦 Мерч</td>
                       <td>{item.merchandiseName}</td>
                       <td>{item.price} ₽</td>
@@ -547,7 +708,7 @@ export const ReceiptPage = () => {
                     </tr>
                   ))}
                   {currentReceipt.comboItems.map((item, idx) => (
-                    <tr key={idx}>
+                    <tr key={`combo-modal-${idx}`}>
                       <td>🍿 Комбо</td>
                       <td>{item.comboName}</td>
                       <td>{item.price} ₽</td>
@@ -557,7 +718,7 @@ export const ReceiptPage = () => {
                   ))}
                   <tr style={{ fontWeight: 'bold', backgroundColor: '#e8f4f8' }}>
                     <td colSpan="4" align="right">ИТОГО:</td>
-                    <td>{currentReceipt.totalAmount} ₽</td>
+                    <td colSpan="2">{currentReceipt.totalAmount} ₽</td>
                   </tr>
                 </tbody>
               </table>

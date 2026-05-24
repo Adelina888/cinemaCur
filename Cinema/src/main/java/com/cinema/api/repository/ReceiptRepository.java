@@ -10,13 +10,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
+
     Page<Receipt> findAll(Pageable pageable);
 
     @Query("SELECT r FROM Receipt r WHERE r.date BETWEEN :start AND :end")
-    List<Receipt> findByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    Page<Receipt> findByDateRange(@Param("start") LocalDateTime start,
+                                  @Param("end") LocalDateTime end,
+                                  Pageable pageable);
+
+    @Query("SELECT r FROM Receipt r WHERE r.date BETWEEN :start AND :end")
+    List<Receipt> findByDateRange(@Param("start") LocalDateTime start,
+                                  @Param("end") LocalDateTime end);
 
     List<Receipt> findByAdministratorId(Long administratorId);
 
     List<Receipt> findByTypeOfOperation(String typeOfOperation);
+
     boolean existsByOriginalReceiptId(Long originalReceiptId);
 }

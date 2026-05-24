@@ -7,6 +7,8 @@ import com.cinema.api.exception.ExpiredProductException;
 import com.cinema.api.exception.InsufficientStockException;
 import com.cinema.api.exception.ValidationError;
 import com.cinema.api.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -53,7 +55,86 @@ public class ReceiptService {
         receipt = receiptRepository.save(receipt);
         return convertToRs(receipt);
     }
+    @Transactional
+    public void removeMerchandise(Long receiptId, Long itemId) {
+        ReceiptMerchandise item = receiptMerchandiseRepository.findById(itemId)
+                .orElseThrow(() -> new ValidationError("itemId", "Позиция не найдена"));
+        if (!item.getReceipt().getId().equals(receiptId)) {
+            throw new ValidationError("receiptId", "Позиция не принадлежит этому чеку");
+        }
+        receiptMerchandiseRepository.delete(item);
 
+        // Обновляем итоговую сумму чека
+        Receipt receipt = receiptRepository.findById(receiptId)
+                .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
+        receipt.setTotalAmount(calculateTotal(receipt));
+        receiptRepository.save(receipt);
+    }
+
+    @Transactional
+    public void removeCombo(Long receiptId, Long itemId) {
+        ReceiptCombo item = receiptComboRepository.findById(itemId)
+                .orElseThrow(() -> new ValidationError("itemId", "Позиция не найдена"));
+        if (!item.getReceipt().getId().equals(receiptId)) {
+            throw new ValidationError("receiptId", "Позиция не принадлежит этому чеку");
+        }
+        receiptComboRepository.delete(item);
+
+        Receipt receipt = receiptRepository.findById(receiptId)
+                .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
+        receipt.setTotalAmount(calculateTotal(receipt));
+        receiptRepository.save(receipt);
+    }
+
+    @Transactional
+    public void updateMerchandiseQuantity(Long receiptId, Long itemId, Integer quantity) {
+        if (quantity <= 0) {
+            throw new ValidationError("quantity", "Количество должно быть положительным");
+        }
+        ReceiptMerchandise item = receiptMerchandiseRepository.findById(itemId)
+                .orElseThrow(() -> new ValidationError("itemId", "Позиция не найдена"));
+        if (!item.getReceipt().getId().equals(receiptId)) {
+            throw new ValidationError("receiptId", "Позиция не принадлежит этому чеку");
+        }
+        item.setQuantity(quantity);
+        receiptMerchandiseRepository.save(item);
+
+        Receipt receipt = receiptRepository.findById(receiptId)
+                .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
+        receipt.setTotalAmount(calculateTotal(receipt));
+        receiptRepository.save(receipt);
+    }
+
+    @Transactional
+    public void updateComboQuantity(Long receiptId, Long itemId, Integer quantity) {
+        if (quantity <= 0) {
+            throw new ValidationError("quantity", "Количество должно быть положительным");
+        }
+        ReceiptCombo item = receiptComboRepository.findById(itemId)
+                .orElseThrow(() -> new ValidationError("itemId", "Позиция не найдена"));
+        if (!item.getReceipt().getId().equals(receiptId)) {
+            throw new ValidationError("receiptId", "Позиция не принадлежит этому чеку");
+        }
+        item.setQuantity(quantity);
+        receiptComboRepository.save(item);
+
+        Receipt receipt = receiptRepository.findById(receiptId)
+                .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
+        receipt.setTotalAmount(calculateTotal(receipt));
+        receiptRepository.save(receipt);
+    }
+
+// ========== МЕТОДЫ С ПАГИНАЦИЕЙ ==========
+
+    @Transactional(readOnly = true)
+    public Page<ReceiptRs> getAll(Pageable pageable) {
+        return receiptRepository.findAll(pageable).map(this::convertToRs);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ReceiptRs> getByDateRange(LocalDateTime start, LocalDateTime end, Pageable pageable) {
+        return receiptRepository.findByDateRange(start, end, pageable).map(this::convertToRs);
+    }
     @Transactional
     public void addMerchandise(Long receiptId, Long merchandiseId, Integer quantity) {
         if (quantity <= 0) {
