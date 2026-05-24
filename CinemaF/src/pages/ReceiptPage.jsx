@@ -1,4 +1,3 @@
-// src/pages/ReceiptPage.jsx
 import React, { useEffect, useState } from 'react'
 import { ReceiptApi } from '../services/ReceiptApi'
 import { MerchandiseApi } from '../services/MerchandiseApi'
@@ -330,11 +329,11 @@ export const ReceiptPage = () => {
   // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
   const getStatusLabel = (type) => {
     const statuses = {
-      'DRAFT': '📝 Черновик',
-      'SALE': '✅ Продано',
-      'RETURN': '🔄 Возврат'
+      'DRAFT': ' Черновик',
+      'SALE': ' Продано',
+      'RETURN': ' Возврат'
     }
-    if (!type) return '📝 Черновик'
+    if (!type) return ' Черновик'
     return statuses[type] || type
   }
 
@@ -350,9 +349,9 @@ export const ReceiptPage = () => {
 
   const getPaymentMethodLabel = (method) => {
     const methods = {
-      'CASH': '💰 Наличные',
-      'CARD': '💳 Карта',
-      'ONLINE': '🌐 Онлайн'
+      'CASH': ' Наличные',
+      'CARD': ' Карта',
+      'ONLINE': ' Онлайн'
     }
     return methods[method] || method || '-'
   }
@@ -372,10 +371,10 @@ export const ReceiptPage = () => {
       <div style={{ marginBottom: 20, padding: 15, border: '1px solid #ccc', borderRadius: 5 }}>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <button onClick={handleCreateReceipt} disabled={loading}>
-            🧾 Новый чек
+             Новый чек
           </button>
           <button onClick={loadDraftReceipt} disabled={loading}>
-            📋 Загрузить черновик
+             Загрузить черновик
           </button>
         </div>
       </div>
@@ -384,7 +383,7 @@ export const ReceiptPage = () => {
       {currentReceipt && (!currentReceipt.typeOfOperation || currentReceipt.typeOfOperation === 'DRAFT') && (
         <div style={{ marginBottom: 20, padding: 15, border: '2px solid #007bff', borderRadius: 5, backgroundColor: '#f0f8ff' }}>
           <h3>
-            🧾 Текущий чек №{currentReceipt.id}
+             Текущий чек №{currentReceipt.id}
             <span style={{ fontSize: '14px', marginLeft: '10px', color: '#666' }}>
               (товаров: {currentReceipt.merchandiseItems.length + currentReceipt.comboItems.length})
             </span>
@@ -393,7 +392,7 @@ export const ReceiptPage = () => {
           {/* Добавление товаров */}
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 15 }}>
             <div style={{ flex: 1, padding: 10, border: '1px solid #ddd', borderRadius: 5 }}>
-              <h4>📦 Добавить мерч</h4>
+              <h4> Добавить мерч</h4>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
                 <select
                   value={selectedMerchandiseId}
@@ -414,12 +413,12 @@ export const ReceiptPage = () => {
                   max={MAX_QUANTITY}
                   style={{ padding: 8, width: 100 }}
                 />
-                <button onClick={handleAddMerchandise}>➕ Добавить</button>
+                <button onClick={handleAddMerchandise}> Добавить</button>
               </div>
             </div>
 
             <div style={{ flex: 1, padding: 10, border: '1px solid #ddd', borderRadius: 5 }}>
-              <h4>🍿 Добавить комбо</h4>
+              <h4> Добавить комбо</h4>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
                 <select
                   value={selectedComboId}
@@ -440,13 +439,13 @@ export const ReceiptPage = () => {
                   max={MAX_QUANTITY}
                   style={{ padding: 8, width: 100 }}
                 />
-                <button onClick={handleAddCombo}>➕ Добавить</button>
+                <button onClick={handleAddCombo}> Добавить</button>
               </div>
             </div>
           </div>
 
           {/* Таблица позиций в чеке */}
-          <h4>📋 Позиции в чеке:</h4>
+          <h4> Позиции в чеке:</h4>
           {currentReceipt.merchandiseItems.length === 0 && currentReceipt.comboItems.length === 0 ? (
             <div style={{ textAlign: 'center', padding: 20, color: '#666', border: '1px dashed #ccc', borderRadius: 5 }}>
               Чек пуст. Добавьте товары выше.
@@ -466,7 +465,7 @@ export const ReceiptPage = () => {
               <tbody>
                 {currentReceipt.merchandiseItems.map((item, idx) => (
                   <tr key={`merch-${idx}`}>
-                    <td>📦 Мерч</td>
+                    <td> Мерч</td>
                     <td>{item.merchandiseName}</td>
                     <td>{item.price} ₽</td>
                     <td>
@@ -504,7 +503,7 @@ export const ReceiptPage = () => {
                 ))}
                 {currentReceipt.comboItems.map((item, idx) => (
                   <tr key={`combo-${idx}`}>
-                    <td>🍿 Комбо</td>
+                    <td> Комбо</td>
                     <td>{item.comboName}</td>
                     <td>{item.price} ₽</td>
                     <td>
@@ -555,16 +554,16 @@ export const ReceiptPage = () => {
               onChange={(e) => setPaymentMethod(e.target.value)}
               style={{ padding: 8 }}
             >
-              <option value="CASH">💰 Наличные</option>
-              <option value="CARD">💳 Карта</option>
-              <option value="ONLINE">🌐 Онлайн</option>
+              <option value="CASH"> Наличные</option>
+              <option value="CARD"> Карта</option>
+              <option value="ONLINE"> Онлайн</option>
             </select>
             <button 
               onClick={handleSell} 
               disabled={loading || sellingReceiptId === currentReceipt.id || (currentReceipt.merchandiseItems.length === 0 && currentReceipt.comboItems.length === 0)}
               style={{ padding: '8px 16px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: 4 }}
             >
-              {sellingReceiptId === currentReceipt.id ? 'Оформление...' : '✅ Оформить продажу'}
+              {sellingReceiptId === currentReceipt.id ? 'Оформление...' : ' Оформить продажу'}
             </button>
           </div>
         </div>
@@ -621,18 +620,18 @@ export const ReceiptPage = () => {
                     <td>{getStatusLabel(receipt.typeOfOperation)}</td>
                     <td>
                       <button onClick={() => handleViewReceipt(receipt)} style={{ marginRight: 5 }}>
-                        📄 Просмотр
+                         Просмотр
                       </button>
                       {receipt.typeOfOperation === 'SALE' && !returnedReceiptIds.includes(receipt.id) && (
                         <button
                           onClick={() => handleCancelReceipt(receipt.id)}
                           disabled={cancellingReceiptId === receipt.id}
                         >
-                          {cancellingReceiptId === receipt.id ? 'Отмена...' : '🔄 Вернуть'}
+                          {cancellingReceiptId === receipt.id ? 'Отмена...' : ' Вернуть'}
                         </button>
                       )}
                       {receipt.typeOfOperation === 'SALE' && returnedReceiptIds.includes(receipt.id) && (
-                        <span style={{ color: '#999', fontSize: '12px' }}>✅ Возврат оформлен</span>
+                        <span style={{ color: '#999', fontSize: '12px' }}> Возврат оформлен</span>
                       )}
                     </td>
                   </tr>
@@ -700,7 +699,7 @@ export const ReceiptPage = () => {
                 <tbody>
                   {currentReceipt.merchandiseItems.map((item, idx) => (
                     <tr key={`merch-modal-${idx}`}>
-                      <td>📦 Мерч</td>
+                      <td> Мерч</td>
                       <td>{item.merchandiseName}</td>
                       <td>{item.price} ₽</td>
                       <td>{item.quantity}</td>
@@ -709,7 +708,7 @@ export const ReceiptPage = () => {
                   ))}
                   {currentReceipt.comboItems.map((item, idx) => (
                     <tr key={`combo-modal-${idx}`}>
-                      <td>🍿 Комбо</td>
+                      <td> Комбо</td>
                       <td>{item.comboName}</td>
                       <td>{item.price} ₽</td>
                       <td>{item.quantity}</td>
