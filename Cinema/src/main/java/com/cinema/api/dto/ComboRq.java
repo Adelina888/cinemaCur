@@ -15,6 +15,7 @@ public class ComboRq {
     private Integer discountPercent;
 
     private String description;
+    private Boolean isActive = true;
 
     @NotNull(message = "Товары в комбо обязательны")
     private List<ProductInComboDto> products = new ArrayList<>();
@@ -30,4 +31,6 @@ public class ComboRq {
 
     public List<ProductInComboDto> getProducts() { return products; }
     public void setProducts(List<ProductInComboDto> products) { this.products = products; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }

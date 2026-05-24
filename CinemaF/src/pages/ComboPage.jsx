@@ -45,6 +45,12 @@ export const ComboPage = () => {
     { value: 'false', label: 'Неактивные' }
   ]
 
+  // ========== ФОРМАТИРОВАНИЕ СОСТАВА ==========
+  const formatProductsList = (products) => {
+    if (!products || products.length === 0) return '-'
+    return products.map(p => `${p.productName} (${p.quantity} шт)`).join(', ')
+  }
+
   // ========== ЗАГРУЗКА ДАННЫХ ==========
   const loadProducts = async () => {
     try {
@@ -105,7 +111,7 @@ export const ComboPage = () => {
     return regularPrice * (100 - discountPercent) / 100
   }
 
-  // ========== УПРАВЛЕНИЕ ТОВАРАМИ В КОМБО (при создании) ==========
+  // ========== УПРАВЛЕНИЕ ТОВАРАМИ (создание) ==========
   const addProductToCombo = () => {
     if (!selectedProductId) {
       alert('Выберите товар')
@@ -147,7 +153,7 @@ export const ComboPage = () => {
     setSelectedProducts(updated)
   }
 
-  // ========== УПРАВЛЕНИЕ ТОВАРАМИ В КОМБО (при редактировании) ==========
+  // ========== УПРАВЛЕНИЕ ТОВАРАМИ (редактирование) ==========
   const addProductToEditCombo = () => {
     if (!editSelectedProductId) {
       alert('Выберите товар')
@@ -231,7 +237,7 @@ export const ComboPage = () => {
     return true
   }
 
-  // ========== CRUD ОПЕРАЦИИ ==========
+  // ========== CRUD ==========
   const handleCreate = async (e) => {
     e.preventDefault()
 
@@ -264,10 +270,22 @@ export const ComboPage = () => {
     }
   }
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Удалить комбо?')) {
+  const handleDeactivate = async (id) => {
+    if (window.confirm('Деактивировать комбо?')) {
       try {
         await ComboApi.delete(id)
+        loadCombos()
+      } catch (error) {
+        console.error('Ошибка деактивации', error)
+        alert('Ошибка деактивации: ' + (error.response?.data?.message || 'Неизвестная ошибка'))
+      }
+    }
+  }
+
+  const handleHardDelete = async (id) => {
+    if (window.confirm('Удалить комбо полностью? Это действие нельзя отменить.')) {
+      try {
+        await ComboApi.hardDelete(id)
         loadCombos()
       } catch (error) {
         console.error('Ошибка удаления', error)
@@ -323,7 +341,7 @@ export const ComboPage = () => {
     }
   }
 
-  // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+  // ========== ВСПОМОГАТЕЛЬНЫЕ ==========
   const getStatusLabel = (isActive) => {
     return isActive ? '✅ Активен' : '❌ Неактивен'
   }
@@ -392,7 +410,6 @@ export const ComboPage = () => {
             />
           </div>
           
-          {/* Выбор товаров для комбо (при создании) */}
           <div style={{ padding: 10, border: '1px solid #ddd', borderRadius: 5 }}>
             <h4>Товары в комбо</h4>
             <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
@@ -471,6 +488,7 @@ export const ComboPage = () => {
           <tr>
             <th>ID</th>
             <th>Название</th>
+            <th>Состав</th>
             <th>Обычная цена</th>
             <th>Цена со скидкой</th>
             <th>Скидка</th>
@@ -483,7 +501,7 @@ export const ComboPage = () => {
           {filteredCombos.map((item) => (
             <tr key={item.id} style={{ backgroundColor: item.isActive ? 'white' : '#ffe6e6' }}>
               {editingId === item.id ? (
-                <td colSpan="8" style={{ padding: '15px', backgroundColor: '#f9f9f9' }}>
+                <td colSpan="9" style={{ padding: '15px', backgroundColor: '#f9f9f9' }}>
                   <div>
                     <h4>Редактирование комбо</h4>
                     <div style={{ display: 'flex', gap: 10, marginBottom: 15, flexWrap: 'wrap' }}>
@@ -527,7 +545,6 @@ export const ComboPage = () => {
                       </div>
                     </div>
 
-                    {/* Управление товарами в комбо при редактировании */}
                     <div style={{ marginTop: 15, padding: 10, border: '1px solid #ddd', borderRadius: 5 }}>
                       <h5>Товары в комбо</h5>
                       <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
@@ -606,6 +623,9 @@ export const ComboPage = () => {
                 <>
                   <td>{item.id}</td>
                   <td>{item.name}</td>
+                  <td style={{ maxWidth: '250px', fontSize: '12px' }}>
+                    {formatProductsList(item.products)}
+                  </td>
                   <td>{item.regularPrice} ₽</td>
                   <td>{item.comboPrice} ₽</td>
                   <td>{item.discountPercent}%</td>
@@ -613,7 +633,15 @@ export const ComboPage = () => {
                   <td style={getStatusStyle(item.isActive)}>{getStatusLabel(item.isActive)}</td>
                   <td>
                     <button onClick={() => startEdit(item)} style={{ marginRight: 5 }}>✏</button>
-                    <button onClick={() => handleDelete(item.id)}>🗑</button>
+                    {item.isActive ? (
+                      <button onClick={() => handleDeactivate(item.id)} style={{ marginRight: 5 }}>
+                        🗑 Деактивировать
+                      </button>
+                    ) : (
+                      <button onClick={() => handleHardDelete(item.id)} style={{ color: 'red' }}>
+                        🗑 Удалить навсегда
+                      </button>
+                    )}
                   </td>
                 </>
               )}

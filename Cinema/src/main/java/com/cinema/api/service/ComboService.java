@@ -92,7 +92,7 @@ public class ComboService {
         combo.setName(rq.getName());
         combo.setDiscountPercent(rq.getDiscountPercent());
         combo.setDescription(rq.getDescription());
-
+        combo.setIsActive(rq.getIsActive());
         // Удаляем все старые связи товаров
         comboProductRepository.deleteByComboId(id);
         combo.getComboProducts().clear();
@@ -120,14 +120,30 @@ public class ComboService {
         return convertToRs(combo);
     }
 
+    // Мягкое удаление (деактивация)
     @Transactional
-    public void delete(Long id, Long adminId) {
+    public void deactivate(Long id, Long adminId) {
+        Combo combo = comboRepository.findById(id)
+                .orElseThrow(() -> new ValidationError("id", "Комбо не найдено"));
+        combo.setIsActive(false);
+        comboRepository.save(combo);
+        logger.logProductUpdate(adminId, "Комбо деактивировано: " + combo.getName());
+    }
+
+    // Физическое удаление
+    @Transactional
+    public void hardDelete(Long id, Long adminId) {
         if (!comboRepository.existsById(id)) {
             throw new ValidationError("id", "Комбо не найдено");
         }
         comboProductRepository.deleteByComboId(id);
         comboRepository.deleteById(id);
         logger.logProductDelete(adminId, id);
+    }
+
+    @Transactional
+    public void delete(Long id, Long adminId) {
+        deactivate(id, adminId); // по умолчанию деактивация
     }
 
     @Transactional(readOnly = true)

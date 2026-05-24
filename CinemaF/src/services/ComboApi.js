@@ -35,6 +35,9 @@ export const ComboApi = {
   delete: async (id) => {
     await api.delete(`/combos/${id}`)
   },
+  hardDelete: async (id) => {
+  await api.delete(`/combos/${id}/hard`)
+},
 
   // Поиск по названию
   search: async (name) => {

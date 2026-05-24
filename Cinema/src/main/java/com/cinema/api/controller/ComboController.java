@@ -42,7 +42,13 @@ public class ComboController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        comboService.delete(id, SecurityUtils.getCurrentAdminId());
+        comboService.deactivate(id, SecurityUtils.getCurrentAdminId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/hard")
+    public ResponseEntity<Void> hardDelete(@PathVariable Long id) {
+        comboService.hardDelete(id, SecurityUtils.getCurrentAdminId());
         return ResponseEntity.noContent().build();
     }
 
