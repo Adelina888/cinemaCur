@@ -346,7 +346,7 @@ export const ProductPage = () => {
               max="3650"
             />
             <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-              От 0 до 3650 дней (0 = без срока)
+              От 0 до 3650 дней 
             </div>
           </div>
           <button type="submit">Добавить</button>

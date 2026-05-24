@@ -474,3 +474,97 @@
 2026-05-24T18:01:44.979+04:00  INFO 12088 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:01:44 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
 2026-05-24T18:01:44.993+04:00  INFO 12088 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:01:44 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
 2026-05-24T18:01:44.997+04:00  INFO 12088 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:01:44 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:21:11.907+04:00  INFO 33568 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Starting CinemaApiApplication using Java 21.0.2 with PID 33568 (E:\PIAPSCUR\Cinema\build\classes\java\main started by User in E:\PIAPSCUR\Cinema)
+2026-05-24T18:21:11.910+04:00  INFO 33568 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-05-24T18:21:12.669+04:00  INFO 33568 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24T18:21:12.797+04:00  INFO 33568 --- [cinema-api] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 118 ms. Found 10 JPA repository interfaces.
+2026-05-24T18:21:13.631+04:00  INFO 33568 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-24T18:21:13.646+04:00  INFO 33568 --- [cinema-api] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-24T18:21:13.647+04:00  INFO 33568 --- [cinema-api] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-24T18:21:13.706+04:00  INFO 33568 --- [cinema-api] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1741 ms
+2026-05-24T18:21:13.884+04:00  INFO 33568 --- [cinema-api] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24T18:21:13.951+04:00  INFO 33568 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24T18:21:14.490+04:00  INFO 33568 --- [cinema-api] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24T18:21:14.524+04:00  INFO 33568 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-24T18:21:14.657+04:00  INFO 33568 --- [cinema-api] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3400d6fa
+2026-05-24T18:21:14.658+04:00  INFO 33568 --- [cinema-api] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-24T18:21:14.956+04:00  WARN 33568 --- [cinema-api] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-24T18:21:15.200+04:00  INFO 33568 --- [cinema-api] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/cinema_db]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.0
+	Default catalog/schema: cinema_db/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24T18:21:16.542+04:00  INFO 33568 --- [cinema-api] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24T18:21:16.871+04:00  INFO 33568 --- [cinema-api] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24T18:21:16.991+04:00  INFO 33568 --- [cinema-api] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24T18:21:17.266+04:00  INFO 33568 --- [cinema-api] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-05-24T18:21:18.357+04:00  WARN 33568 --- [cinema-api] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-24T18:21:19.029+04:00  INFO 33568 --- [cinema-api] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24T18:21:19.037+04:00  INFO 33568 --- [cinema-api] [main] com.cinema.api.CinemaApiApplication      : Started CinemaApiApplication in 7.754 seconds (process running for 8.431)
+2026-05-24T18:21:47.454+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24T18:21:47.454+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-24T18:21:47.456+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-05-24T18:21:47.639+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:21:47 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:21:47.671+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:21:47 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:21:47.710+04:00  WARN 33568 --- [cinema-api] [http-nio-8080-exec-2] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+2026-05-24T18:21:47.734+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:21:47 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:21:47.737+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:21:47 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:22:12.864+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:12 | ВЫЗОВ МЕТОДА | ProductService.create() | Аргументы: [com.cinema.api.dto.ProductRq@5c4035c0, 1]
+2026-05-24T18:22:12.942+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:12 | СОЗДАНИЕ ТОВАРА | Админ: 1 | Товар: Стакан
+2026-05-24T18:22:12.943+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:12 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.create() | Результат: com.cinema.api.dto.ProductRs@43796b6d
+2026-05-24T18:22:12.990+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:12 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:22:12.994+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:12 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:22:31.099+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:31 | ВЫЗОВ МЕТОДА | ProductService.delete() | Аргументы: [7, 1]
+2026-05-24T18:22:31.147+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:31 | УДАЛЕНИЕ ТОВАРА | Админ: 1 | ID товара: 7
+2026-05-24T18:22:31.147+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:31 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.delete() | Результат: void
+2026-05-24T18:22:31.193+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:31 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:22:31.198+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:22:31 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:25:44.459+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:25:44 | ВЫЗОВ МЕТОДА | ProductService.create() | Аргументы: [com.cinema.api.dto.ProductRq@7b34a94c, 1]
+2026-05-24T18:25:44.464+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:25:44 | СОЗДАНИЕ ТОВАРА | Админ: 1 | Товар: Спрайт 0.5л
+2026-05-24T18:25:44.465+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:25:44 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.create() | Результат: com.cinema.api.dto.ProductRs@297cd096
+2026-05-24T18:25:44.485+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:25:44 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:25:44.492+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:25:44 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:26:14.216+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:14 | ВЫЗОВ МЕТОДА | ProductService.create() | Аргументы: [com.cinema.api.dto.ProductRq@736f9044, 1]
+2026-05-24T18:26:14.224+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:14 | СОЗДАНИЕ ТОВАРА | Админ: 1 | Товар: Чипсы с беконом
+2026-05-24T18:26:14.225+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:14 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.create() | Результат: com.cinema.api.dto.ProductRs@19e7a4cb
+2026-05-24T18:26:14.241+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:14 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:26:14.247+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:14 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:26:42.382+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:42 | ВЫЗОВ МЕТОДА | ProductService.create() | Аргументы: [com.cinema.api.dto.ProductRq@7a174c33, 1]
+2026-05-24T18:26:42.388+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:42 | СОЗДАНИЕ ТОВАРА | Админ: 1 | Товар: Шоколадный батончик
+2026-05-24T18:26:42.389+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:42 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.create() | Результат: com.cinema.api.dto.ProductRs@1d88fce6
+2026-05-24T18:26:42.405+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:42 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:26:42.409+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:26:42 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:27:03.336+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:03 | ВЫЗОВ МЕТОДА | ProductService.create() | Аргументы: [com.cinema.api.dto.ProductRq@cae7d2f, 1]
+2026-05-24T18:27:03.341+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:03 | СОЗДАНИЕ ТОВАРА | Админ: 1 | Товар: Минеральная вода
+2026-05-24T18:27:03.341+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-9] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:03 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.create() | Результат: com.cinema.api.dto.ProductRs@2cebdf84
+2026-05-24T18:27:03.362+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:03 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:27:03.370+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-6] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:03 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:27:23.788+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:23 | ВЫЗОВ МЕТОДА | ProductService.create() | Аргументы: [com.cinema.api.dto.ProductRq@1c75c95c, 1]
+2026-05-24T18:27:23.795+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:23 | СОЗДАНИЕ ТОВАРА | Админ: 1 | Товар: Чипсы с луком
+2026-05-24T18:27:23.796+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-7] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:23 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.create() | Результат: com.cinema.api.dto.ProductRs@f940e22
+2026-05-24T18:27:23.815+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:23 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:27:23.821+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-8] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:23 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:27:59.180+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:59 | ВЫЗОВ МЕТОДА | ProductService.create() | Аргументы: [com.cinema.api.dto.ProductRq@11ae5434, 1]
+2026-05-24T18:27:59.185+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:59 | СОЗДАНИЕ ТОВАРА | Админ: 1 | Товар: Чипсы с перцем
+2026-05-24T18:27:59.185+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-5] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:59 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.create() | Результат: com.cinema.api.dto.ProductRs@4ae61a3b
+2026-05-24T18:27:59.201+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:59 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:27:59.210+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-10] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:27:59 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 1 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:28:29.935+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:29 | ВЫЗОВ МЕТОДА | ProductService.create() | Аргументы: [com.cinema.api.dto.ProductRq@2f8a1a5d, 1]
+2026-05-24T18:28:29.942+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:29 | СОЗДАНИЕ ТОВАРА | Админ: 1 | Товар: Волжанка 0,5л
+2026-05-24T18:28:29.943+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-1] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:29 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.create() | Результат: com.cinema.api.dto.ProductRs@229da016
+2026-05-24T18:28:29.964+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:29 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:28:29.976+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-3] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:29 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 2 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:28:31.824+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:31 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 1, size 10, sort: UNSORTED]]
+2026-05-24T18:28:31.829+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-2] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:31 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 2 of 2 containing com.cinema.api.dto.ProductRs instances
+2026-05-24T18:28:34.226+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:34 | ВЫЗОВ МЕТОДА | ProductService.getAll() | Аргументы: [Page request [number: 0, size 10, sort: UNSORTED]]
+2026-05-24T18:28:34.235+04:00  INFO 33568 --- [cinema-api] [http-nio-8080-exec-4] com.cinema.api.aspect.LoggerAspect       : 2026-05-24 18:28:34 | УСПЕШНОЕ ВЫПОЛНЕНИЕ | ProductService.getAll() | Результат: Page 1 of 2 containing com.cinema.api.dto.ProductRs instances
