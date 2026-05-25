@@ -17,6 +17,7 @@ export const Menu = () => {
     { path: '/remains', label: 'Остатки' },
     { path: '/receipts', label: 'Продажи' },
     { path: '/reports', label: 'Отчёты' },
+    { path: '/profile', label: 'Профиль' },
   ]
 
   return (

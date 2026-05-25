@@ -2,6 +2,8 @@ package com.cinema.api.controller;
 
 import com.cinema.api.dto.AuthRq;
 import com.cinema.api.dto.AuthRs;
+import com.cinema.api.dto.ChangePasswordRq;
+import com.cinema.api.dto.ProfileRs;
 import com.cinema.api.service.AuthService;
 import com.cinema.api.util.SecurityUtils;
 import jakarta.validation.Valid;
@@ -25,5 +27,18 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<Long> getCurrentAdminId() {
         return ResponseEntity.ok(SecurityUtils.getCurrentAdminId());
+    }
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileRs> getProfile() {
+        Long adminId = SecurityUtils.getCurrentAdminId();
+        return ResponseEntity.ok(authService.getProfile(adminId));
+    }
+
+    // Смена пароля
+    @PostMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRq request) {
+        Long adminId = SecurityUtils.getCurrentAdminId();
+        authService.changePassword(adminId, request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok().build();
     }
 }

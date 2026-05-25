@@ -11,6 +11,8 @@ import { ComboPage } from './pages/ComboPage/ComboPage'
 import { RemainsPage } from './pages/RemainsPage/RemainsPage'
 import { ReceiptPage } from './pages/ReceiptPage/ReceiptPage'
 import { ReportPage } from './pages/ReportPage/ReportPage'
+import { AdminPage } from './pages/AdminPage'
+
 function App() {
   return (
     <BrowserRouter>
@@ -52,6 +54,11 @@ function App() {
             <Route path="/reports" element={
               <ProtectedRoute>
                 <ReportPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <AdminPage />
               </ProtectedRoute>
             } />
           </Routes>

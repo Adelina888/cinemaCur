@@ -1,24 +1,40 @@
 // src/pages/DashboardPage.jsx
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { AuthApi } from '../services/AuthApi'
 
 export const DashboardPage = () => {
-  const { user } = useAuth()
+  const { user: authUser, token } = useAuth()
+  const [profile, setProfile] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // Если пользователь ещё не загрузился
-  if (!user) {
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const data = await AuthApi.getProfile()
+        setProfile(data)
+      } catch (error) {
+        console.error('Ошибка загрузки профиля', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadProfile()
+  }, [])
+
+  if (loading) {
     return (
       <div style={containerStyle}>
         <div style={cardStyle}>
           <h1 style={titleStyle}>Панель управления</h1>
-          <p style={textStyle}>Загрузка данных пользователя...</p>
+          <p style={textStyle}>Загрузка...</p>
         </div>
       </div>
     )
   }
 
-  // Берём имя из любого возможного поля (универсально)
-  const userName = user.fullName || user.name || user.username || user.login || user.email || 'Пользователь'
+ 
+  const userName = profile?.fullName || authUser?.fullName || authUser?.login 
 
   return (
     <div style={containerStyle}>
@@ -32,7 +48,6 @@ export const DashboardPage = () => {
   )
 }
 
-// Стили вынесены отдельно, чтобы не загромождать JSX
 const containerStyle = {
   maxWidth: '1400px',
   margin: '0 auto',
