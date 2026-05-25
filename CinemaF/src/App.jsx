@@ -5,12 +5,12 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { Menu } from './components/Menu'
 import { LoginPage } from './pages/LoginPage'
 import { DashboardPage } from './pages/DashboardPage'
-import { ProductPage } from './pages/ProductPage'
-import { MerchandisePage } from './pages/MerchandisePage'
-import { ComboPage } from './pages/ComboPage'
-import { RemainsPage } from './pages/RemainsPage'
-import { ReceiptPage } from './pages/ReceiptPage'
-import { ReportPage } from './pages/ReportPage'
+import { ProductPage } from './pages/ProductPage/ProductPage'
+import { MerchandisePage } from './pages/MerchandisePage/MerchandisePage'
+import { ComboPage } from './pages/ComboPage/ComboPage'
+import { RemainsPage } from './pages/RemainsPage/RemainsPage'
+import { ReceiptPage } from './pages/ReceiptPage/ReceiptPage'
+import { ReportPage } from './pages/ReportPage/ReportPage'
 function App() {
   return (
     <BrowserRouter>

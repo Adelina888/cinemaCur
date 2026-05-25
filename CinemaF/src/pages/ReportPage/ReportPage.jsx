@@ -1,23 +1,20 @@
 import React, { useState } from 'react'
-import { ReportApi } from '../services/ReportApi'
+import { ReportApi } from '../../services/ReportApi'
+import './ReportPage.css'
 
 export const ReportPage = () => {
-  // Состояния для отчёта по продажам
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [salesData, setSalesData] = useState([])
   const [loadingSales, setLoadingSales] = useState(false)
 
-  // Состояния для топа товаров
   const [topLimit, setTopLimit] = useState(10)
   const [topProducts, setTopProducts] = useState([])
   const [topMerchandise, setTopMerchandise] = useState([])
   const [loadingTop, setLoadingTop] = useState(false)
 
-  // Состояния для активной вкладки
-  const [activeTab, setActiveTab] = useState('sales') // 'sales', 'topProducts', 'topMerchandise'
+  const [activeTab, setActiveTab] = useState('sales')
 
-  // ========== ЗАГРУЗКА ДАННЫХ ==========
   const loadSalesData = async () => {
     if (!startDate || !endDate) {
       alert('Выберите начальную и конечную дату')
@@ -52,7 +49,6 @@ export const ReportPage = () => {
     }
   }
 
-  // ========== ЭКСПОРТ ==========
   const downloadFile = (blob, filename) => {
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -65,10 +61,7 @@ export const ReportPage = () => {
   }
 
   const exportSalesToExcel = async () => {
-    if (!startDate || !endDate) {
-      alert('Выберите начальную и конечную дату')
-      return
-    }
+    if (!startDate || !endDate) { alert('Выберите начальную и конечную дату'); return }
     try {
       const formattedStart = `${startDate}T00:00:00`
       const formattedEnd = `${endDate}T23:59:59`
@@ -81,10 +74,7 @@ export const ReportPage = () => {
   }
 
   const exportSalesToPdf = async () => {
-    if (!startDate || !endDate) {
-      alert('Выберите начальную и конечную дату')
-      return
-    }
+    if (!startDate || !endDate) { alert('Выберите начальную и конечную дату'); return }
     try {
       const formattedStart = `${startDate}T00:00:00`
       const formattedEnd = `${endDate}T23:59:59`
@@ -115,15 +105,16 @@ export const ReportPage = () => {
       alert('Ошибка экспорта')
     }
   }
+
   const exportTopMerchandiseToExcel = async () => {
-  try {
-    const blob = await ReportApi.exportTopMerchandiseToExcel(topLimit)
-    downloadFile(blob, `top_merchandise_${topLimit}.xlsx`)
-  } catch (error) {
-    console.error('Ошибка экспорта мерча в Excel', error)
-    alert('Ошибка экспорта')
+    try {
+      const blob = await ReportApi.exportTopMerchandiseToExcel(topLimit)
+      downloadFile(blob, `top_merchandise_${topLimit}.xlsx`)
+    } catch (error) {
+      console.error('Ошибка экспорта мерча в Excel', error)
+      alert('Ошибка экспорта')
+    }
   }
-}
 
   const exportTopMerchandiseToPdf = async () => {
     try {
@@ -135,119 +126,89 @@ export const ReportPage = () => {
     }
   }
 
-  // ========== ФОРМАТИРОВАНИЕ ==========
-  const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleString()
-  }
+  const formatDate = (dateStr) => new Date(dateStr).toLocaleString()
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(amount)
-  }
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(amount)
 
   const getPaymentMethodLabel = (method) => {
-    const methods = {
-      'CASH': ' Наличные',
-      'CARD': ' Карта',
-      'ONLINE': ' Онлайн'
-    }
+    const methods = { 'CASH': 'Наличные', 'CARD': 'Карта', 'ONLINE': 'Онлайн' }
     return methods[method] || method || '-'
   }
 
-  // ========== РЕНДЕР ==========
   return (
-    <div>
-      <h1>Отчёты и аналитика</h1>
+    <div className="report-page">
+      <h1 className="report-page__header">Отчёты и аналитика</h1>
 
-      {/* Вкладки */}
-      <div style={{ marginBottom: 20, display: 'flex', gap: 10, borderBottom: '1px solid #ccc' }}>
+      <div className="report-page__tabs">
         <button
           onClick={() => setActiveTab('sales')}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: activeTab === 'sales' ? '#007bff' : 'transparent',
-            color: activeTab === 'sales' ? 'white' : 'black',
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: '5px 5px 0 0'
-          }}
+          className={`report-page__tab ${activeTab === 'sales' ? 'report-page__tab--active' : ''}`}
         >
-           Отчёт по продажам
+          Отчёт по продажам
         </button>
         <button
           onClick={() => { setActiveTab('topProducts'); loadTopProducts() }}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: activeTab === 'topProducts' ? '#007bff' : 'transparent',
-            color: activeTab === 'topProducts' ? 'white' : 'black',
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: '5px 5px 0 0'
-          }}
+          className={`report-page__tab ${activeTab === 'topProducts' ? 'report-page__tab--active' : ''}`}
         >
-           Топ товаров бара
+          Топ товаров бара
         </button>
         <button
           onClick={() => { setActiveTab('topMerchandise'); loadTopProducts() }}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: activeTab === 'topMerchandise' ? '#007bff' : 'transparent',
-            color: activeTab === 'topMerchandise' ? 'white' : 'black',
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: '5px 5px 0 0'
-          }}
+          className={`report-page__tab ${activeTab === 'topMerchandise' ? 'report-page__tab--active' : ''}`}
         >
-           Топ мерча
+          Топ мерча
         </button>
       </div>
 
-      {/* Отчёт по продажам */}
       {activeTab === 'sales' && (
-        <div style={{ padding: 15, border: '1px solid #ccc', borderRadius: 5 }}>
-          <h3>Отчёт по продажам</h3>
+        <div className="report-page__card">
+          <h3 className="report-page__card-title">Отчёт по продажам</h3>
 
-          <div style={{ marginBottom: 20, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="report-page__filter-row" style={{ marginBottom: 20 }}>
             <div>
-              <label>С даты:</label>
+              <label className="report-page__label">С даты:</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                style={{ marginLeft: 5, padding: 5 }}
+                className="report-page__input"
+                style={{ marginLeft: 8 }}
               />
             </div>
             <div>
-              <label>По дату:</label>
+              <label className="report-page__label">По дату:</label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                style={{ marginLeft: 5, padding: 5 }}
+                className="report-page__input"
+                style={{ marginLeft: 8 }}
               />
             </div>
-            <button onClick={loadSalesData} disabled={loadingSales}>
-              {loadingSales ? 'Загрузка...' : ' Показать'}
+            <button onClick={loadSalesData} disabled={loadingSales} className="report-page__btn">
+              {loadingSales ? 'Загрузка...' : 'Показать'}
             </button>
-            <button onClick={exportSalesToExcel} disabled={!startDate || !endDate}>
-               Экспорт Excel
+            <button onClick={exportSalesToExcel} disabled={!startDate || !endDate} className="report-page__btn-secondary">
+              Экспорт Excel
             </button>
-            <button onClick={exportSalesToPdf} disabled={!startDate || !endDate}>
-               Экспорт PDF
+            <button onClick={exportSalesToPdf} disabled={!startDate || !endDate} className="report-page__btn-secondary">
+              Экспорт PDF
             </button>
           </div>
 
           {salesData.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#666' }}>
+            <div className="report-page__empty">
               Нет данных. Выберите период и нажмите "Показать".
             </div>
           ) : (
             <>
-              <div style={{ marginBottom: 15, padding: 10, backgroundColor: '#e8f4f8', borderRadius: 5 }}>
+              <div className="report-page__summary">
                 <strong>Всего продаж:</strong> {salesData.length} |{' '}
                 <strong style={{ marginLeft: 20 }}>Общая выручка:</strong> {formatCurrency(salesData.reduce((sum, s) => sum + s.totalAmount, 0))}
               </div>
-              <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead style={{ backgroundColor: '#f0f0f0' }}>
+              <table className="report-page__table">
+                <thead>
                   <tr>
                     <th>ID чека</th>
                     <th>Дата</th>
@@ -258,10 +219,10 @@ export const ReportPage = () => {
                 <tbody>
                   {salesData.map((sale) => (
                     <tr key={sale.receiptId}>
-                      <td>{sale.receiptId}</td>
-                      <td>{formatDate(sale.date)}</td>
-                      <td>{getPaymentMethodLabel(sale.paymentMethod)}</td>
-                      <td>{formatCurrency(sale.totalAmount)}</td>
+                      <td className="report-page__table-cell">{sale.receiptId}</td>
+                      <td className="report-page__table-cell">{formatDate(sale.date)}</td>
+                      <td className="report-page__table-cell">{getPaymentMethodLabel(sale.paymentMethod)}</td>
+                      <td className="report-page__table-cell">{formatCurrency(sale.totalAmount)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -271,43 +232,41 @@ export const ReportPage = () => {
         </div>
       )}
 
-      {/* Топ товаров бара */}
       {activeTab === 'topProducts' && (
-        <div style={{ padding: 15, border: '1px solid #ccc', borderRadius: 5 }}>
-          <h3>Топ товаров бара</h3>
+        <div className="report-page__card">
+          <h3 className="report-page__card-title">Топ товаров бара</h3>
 
-          <div style={{ marginBottom: 20, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="report-page__filter-row" style={{ marginBottom: 20 }}>
             <div>
-              <label>Количество в топе:</label>
+              <label className="report-page__label">Количество в топе:</label>
               <input
                 type="number"
                 value={topLimit}
                 onChange={(e) => setTopLimit(Math.min(100, Math.max(1, parseInt(e.target.value) || 10)))}
                 min="1"
                 max="100"
-                style={{ marginLeft: 5, padding: 5, width: 70 }}
+                className="report-page__input report-page__w-70"
+                style={{ marginLeft: 8 }}
               />
             </div>
-            <button onClick={loadTopProducts} disabled={loadingTop}>
-              {loadingTop ? 'Загрузка...' : ' Показать'}
+            <button onClick={loadTopProducts} disabled={loadingTop} className="report-page__btn">
+              {loadingTop ? 'Загрузка...' : 'Показать'}
             </button>
-            <button onClick={exportTopProductsToExcel}>
-               Экспорт Excel
+            <button onClick={exportTopProductsToExcel} className="report-page__btn-secondary">
+              Экспорт Excel
             </button>
-            <button onClick={exportTopProductsToPdf}>
-               Экспорт PDF
+            <button onClick={exportTopProductsToPdf} className="report-page__btn-secondary">
+              Экспорт PDF
             </button>
           </div>
 
           {loadingTop ? (
-            <div>Загрузка...</div>
+            <div className="report-page__empty">Загрузка...</div>
           ) : topProducts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#666' }}>
-              Нет данных. Нажмите "Показать".
-            </div>
+            <div className="report-page__empty">Нет данных. Нажмите "Показать".</div>
           ) : (
-            <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead style={{ backgroundColor: '#f0f0f0' }}>
+            <table className="report-page__table">
+              <thead>
                 <tr>
                   <th>#</th>
                   <th>ID</th>
@@ -319,11 +278,11 @@ export const ReportPage = () => {
               <tbody>
                 {topProducts.map((product, index) => (
                   <tr key={product.productId}>
-                    <td>{index + 1}</td>
-                    <td>{product.productId}</td>
-                    <td>{product.productName}</td>
-                    <td style={{ fontWeight: 'bold' }}>{product.totalQuantity} шт</td>
-                    <td>{formatCurrency(product.totalRevenue)}</td>
+                    <td className="report-page__table-cell">{index + 1}</td>
+                    <td className="report-page__table-cell">{product.productId}</td>
+                    <td className="report-page__table-cell">{product.productName}</td>
+                    <td className="report-page__table-cell" style={{ fontWeight: 600 }}>{product.totalQuantity} шт</td>
+                    <td className="report-page__table-cell">{formatCurrency(product.totalRevenue)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -332,43 +291,41 @@ export const ReportPage = () => {
         </div>
       )}
 
-      {/* Топ мерча */}
       {activeTab === 'topMerchandise' && (
-        <div style={{ padding: 15, border: '1px solid #ccc', borderRadius: 5 }}>
-          <h3>Топ мерчендайза</h3>
+        <div className="report-page__card">
+          <h3 className="report-page__card-title">Топ мерчендайза</h3>
 
-          <div style={{ marginBottom: 20, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="report-page__filter-row" style={{ marginBottom: 20 }}>
             <div>
-              <label>Количество в топе:</label>
+              <label className="report-page__label">Количество в топе:</label>
               <input
                 type="number"
                 value={topLimit}
                 onChange={(e) => setTopLimit(Math.min(100, Math.max(1, parseInt(e.target.value) || 10)))}
                 min="1"
                 max="100"
-                style={{ marginLeft: 5, padding: 5, width: 70 }}
+                className="report-page__input report-page__w-70"
+                style={{ marginLeft: 8 }}
               />
             </div>
-            <button onClick={loadTopProducts} disabled={loadingTop}>
-              {loadingTop ? 'Загрузка...' : ' Показать'}
+            <button onClick={loadTopProducts} disabled={loadingTop} className="report-page__btn">
+              {loadingTop ? 'Загрузка...' : 'Показать'}
             </button>
-            <button onClick={exportTopMerchandiseToExcel}>
-            Экспорт Excel
+            <button onClick={exportTopMerchandiseToExcel} className="report-page__btn-secondary">
+              Экспорт Excel
             </button>
-            <button onClick={exportTopMerchandiseToPdf}>
-            Экспорт PDF
+            <button onClick={exportTopMerchandiseToPdf} className="report-page__btn-secondary">
+              Экспорт PDF
             </button>
           </div>
 
           {loadingTop ? (
-            <div>Загрузка...</div>
+            <div className="report-page__empty">Загрузка...</div>
           ) : topMerchandise.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#666' }}>
-              Нет данных. Нажмите "Показать".
-            </div>
+            <div className="report-page__empty">Нет данных. Нажмите "Показать".</div>
           ) : (
-            <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead style={{ backgroundColor: '#f0f0f0' }}>
+            <table className="report-page__table">
+              <thead>
                 <tr>
                   <th>#</th>
                   <th>ID</th>
@@ -380,11 +337,11 @@ export const ReportPage = () => {
               <tbody>
                 {topMerchandise.map((item, index) => (
                   <tr key={item.merchandiseId}>
-                    <td>{index + 1}</td>
-                    <td>{item.merchandiseId}</td>
-                    <td>{item.merchandiseName}</td>
-                    <td style={{ fontWeight: 'bold' }}>{item.totalQuantity} шт</td>
-                    <td>{formatCurrency(item.totalRevenue)}</td>
+                    <td className="report-page__table-cell">{index + 1}</td>
+                    <td className="report-page__table-cell">{item.merchandiseId}</td>
+                    <td className="report-page__table-cell">{item.merchandiseName}</td>
+                    <td className="report-page__table-cell" style={{ fontWeight: 600 }}>{item.totalQuantity} шт</td>
+                    <td className="report-page__table-cell">{formatCurrency(item.totalRevenue)}</td>
                   </tr>
                 ))}
               </tbody>
