@@ -16,7 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByNameContainingIgnoreCase(String name);
     List<Product> findByCategory(Category category);
     List<Product> findByStatus(Integer status);
-    @Query(value = "SELECT * FROM products WHERE expiration_days IS NOT NULL AND expiration_days > 0 AND (date_of_creation + (expiration_days * INTERVAL '1 day')) < CURRENT_DATE", nativeQuery = true)
+    @Query(value = "SELECT * FROM products WHERE expiration_days IS NOT NULL AND expiration_days > 0 AND (date_of_creation + (expiration_days * INTERVAL '1 day')) <= CURRENT_DATE", nativeQuery = true)
     List<Product> findExpiredProducts();
 
     @Query(value = "SELECT * FROM products WHERE expiration_days IS NOT NULL AND expiration_days > 0 AND (date_of_creation + (expiration_days * INTERVAL '1 day')) < :date", nativeQuery = true)

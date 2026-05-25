@@ -9,6 +9,7 @@ import com.cinema.api.exception.ValidationError;
 import com.cinema.api.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,8 @@ public class ProductService {
 
     public boolean isExpired(Product product) {
         LocalDate expDate = getExpirationDate(product);
-        return expDate != null && expDate.isBefore(LocalDate.now());
+        if (expDate == null) return false;
+        return !expDate.isAfter(LocalDate.now());
     }
 
     private int getDaysLeft(Product product) {
@@ -153,7 +155,21 @@ public class ProductService {
                 })
                 .collect(Collectors.toList());
     }
+    public List<String> getExpiredProductNames() {
+        return productRepository.findExpiredProducts().stream()
+                .map(Product::getName)
+                .collect(Collectors.toList());
+    }
 
+    public List<String> getExpiringSoonProductNames(int daysThreshold) {
+        return productRepository.findAll().stream()
+                .filter(p -> {
+                    int daysLeft = getDaysLeft(p);
+                    return daysLeft > 0 && daysLeft <= daysThreshold;
+                })
+                .map(Product::getName)
+                .collect(Collectors.toList());
+    }
 
     //@Scheduled(cron = "0 0 8 * * *")  // каждый день в 8:00
     public void checkExpiringProducts() {

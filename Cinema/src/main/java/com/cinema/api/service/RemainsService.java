@@ -133,6 +133,12 @@ public class RemainsService {
                 .map(this::convertToRs)
                 .collect(Collectors.toList());
     }
+    public List<String> getLowStockProductNames(int threshold) {
+        return remainsRepository.findAll().stream()
+                .filter(r -> r.getBar() < threshold)
+                .map(r -> r.getProduct().getName() + " (остаток: " + r.getBar() + " шт)")
+                .collect(Collectors.toList());
+    }
 
     private RemainsRs convertToRs(Remains remains) {
         RemainsRs rs = new RemainsRs();
