@@ -32,4 +32,8 @@ export const ProductApi = {
     const response = await api.get(`/products/page?page=${page}&size=${size}`)
     return response.data
   },
+  getExpired: async () => {
+  const response = await api.get('/products/expired')
+  return response.data
+},
 }

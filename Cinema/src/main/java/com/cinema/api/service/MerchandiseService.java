@@ -92,7 +92,7 @@ public class MerchandiseService {
     public void delete(Long id, Long adminId) {
         Merchandise merch = merchandiseRepository.findById(id)
                 .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
-        merch.setStatus(0);  // меняем статус на неактивен
+        merch.setStatus(0);
         merchandiseRepository.save(merch);
         logger.logProductDelete(adminId, id);
     }
@@ -101,7 +101,6 @@ public class MerchandiseService {
         Merchandise merch = merchandiseRepository.findById(id)
                 .orElseThrow(() -> new ValidationError("id", "Товар не найден"));
 
-        // Проверяем, есть ли связи с чеками
         if (receiptMerchandiseRepository.existsByMerchandiseId(id)) {
             throw new ValidationError("id", "Нельзя удалить товар, который уже был в чеках");
         }

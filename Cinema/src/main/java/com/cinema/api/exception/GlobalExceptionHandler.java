@@ -6,13 +6,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Обработка валидации @Valid (аннотации в DTO)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -24,7 +25,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    // Обработка кастомного ValidationError
     @ExceptionHandler(ValidationError.class)
     public ResponseEntity<Map<String, String>> handleValidationError(ValidationError ex) {
         Map<String, String> error = new HashMap<>();
@@ -33,7 +33,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    // Обработка недостатка остатков (для будущих сценариев)
     @ExceptionHandler(InsufficientStockException.class)
     public ResponseEntity<Map<String, String>> handleInsufficientStock(InsufficientStockException ex) {
         Map<String, String> error = new HashMap<>();
@@ -42,7 +41,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    // Обработка просроченного товара
     @ExceptionHandler(ExpiredProductException.class)
     public ResponseEntity<Map<String, String>> handleExpiredProduct(ExpiredProductException ex) {
         Map<String, String> error = new HashMap<>();
@@ -51,7 +49,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    // Общий обработчик для непредвиденных ошибок
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
         Map<String, String> error = new HashMap<>();

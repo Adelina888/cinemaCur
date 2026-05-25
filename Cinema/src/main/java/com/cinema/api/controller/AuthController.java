@@ -33,8 +33,6 @@ public class AuthController {
         Long adminId = SecurityUtils.getCurrentAdminId();
         return ResponseEntity.ok(authService.getProfile(adminId));
     }
-
-    // Смена пароля
     @PostMapping("/change-password")
     public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRq request) {
         Long adminId = SecurityUtils.getCurrentAdminId();

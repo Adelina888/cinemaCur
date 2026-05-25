@@ -8,14 +8,13 @@ public class ProductRs {
     private Long id;
     private String name;
     private Double price;
-    private Category category;   // ← enum
+    private Category category;
     private Integer expirationDays;
     private LocalDate dateOfCreation;
     private Integer status;
     private Integer daysLeft;
     private Boolean isExpired;
 
-    // конструкторы, геттеры, сеттеры
     public ProductRs() {}
 
     public ProductRs(Long id, String name, Double price, Category category,
@@ -32,7 +31,6 @@ public class ProductRs {
         this.isExpired = isExpired;
     }
 
-    // геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

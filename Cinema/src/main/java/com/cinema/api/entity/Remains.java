@@ -15,10 +15,10 @@ public class Remains {
     @JoinColumn(name = "product_id", nullable = false, unique = true)
     private Product product;
 
-    private Integer bar;        // остаток в баре
-    private Integer warehouse;  // остаток на складе
+    private Integer bar;
+    private Integer warehouse;
 
-    private LocalDateTime lastModified;  // дата последнего изменения
+    private LocalDateTime lastModified;
 
     public Remains() {
         this.bar = 0;
@@ -31,7 +31,6 @@ public class Remains {
         this.product = product;
     }
 
-    // геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

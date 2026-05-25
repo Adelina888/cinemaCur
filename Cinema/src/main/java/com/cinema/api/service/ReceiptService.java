@@ -58,48 +58,38 @@ public class ReceiptService {
 
     @Transactional
     public void removeMerchandise(Long receiptId, Long itemId) {
-        // Находим позицию
         ReceiptMerchandise item = receiptMerchandiseRepository.findById(itemId)
                 .orElseThrow(() -> new ValidationError("itemId", "Позиция не найдена"));
 
-        // Проверяем принадлежность чеку
         if (!item.getReceipt().getId().equals(receiptId)) {
             throw new ValidationError("receiptId", "Позиция не принадлежит этому чеку");
         }
 
-        // Удаляем позицию
         receiptMerchandiseRepository.delete(item);
-        receiptMerchandiseRepository.flush(); // Принудительно выполняем удаление
+        receiptMerchandiseRepository.flush();
 
-        // Обновляем итоговую сумму чека
         Receipt receipt = receiptRepository.findById(receiptId)
                 .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
 
-        // Пересчитываем сумму без удаленной позиции
         receipt.setTotalAmount(calculateTotal(receipt));
         receiptRepository.save(receipt);
     }
 
     @Transactional
     public void removeCombo(Long receiptId, Long itemId) {
-        // Находим позицию
         ReceiptCombo item = receiptComboRepository.findById(itemId)
                 .orElseThrow(() -> new ValidationError("itemId", "Позиция не найдена"));
 
-        // Проверяем принадлежность чеку
         if (!item.getReceipt().getId().equals(receiptId)) {
             throw new ValidationError("receiptId", "Позиция не принадлежит этому чеку");
         }
 
-        // Удаляем позицию
         receiptComboRepository.delete(item);
-        receiptComboRepository.flush(); // Принудительно выполняем удаление
+        receiptComboRepository.flush();
 
-        // Обновляем итоговую сумму чека
         Receipt receipt = receiptRepository.findById(receiptId)
                 .orElseThrow(() -> new ValidationError("receiptId", "Чек не найден"));
 
-        // Пересчитываем сумму без удаленной позиции
         receipt.setTotalAmount(calculateTotal(receipt));
         receiptRepository.save(receipt);
     }
@@ -213,7 +203,6 @@ public class ReceiptService {
             throw new ValidationError("receiptId", "Чек уже продан");
         }
 
-        // Проверка и списание для мерча
         for (ReceiptMerchandise rm : receipt.getMerchandiseItems()) {
             Merchandise merch = rm.getMerchandise();
             if (merch.getCount() < rm.getQuantity()) {
@@ -222,7 +211,6 @@ public class ReceiptService {
             merchandiseService.sell(merch.getId(), rm.getQuantity(), adminId);
         }
 
-        // Проверка и списание для комбо
         for (ReceiptCombo rc : receipt.getComboItems()) {
             Combo combo = rc.getCombo();
             for (ComboProduct cp : combo.getComboProducts()) {

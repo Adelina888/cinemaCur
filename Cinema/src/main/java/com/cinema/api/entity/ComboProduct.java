@@ -20,9 +20,8 @@ public class ComboProduct {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private Integer quantity;  // количество единиц товара в комбо
+    private Integer quantity;
 
-    // Конструкторы
     public ComboProduct() {}
 
     public ComboProduct(Combo combo, Product product, Integer quantity) {
@@ -31,7 +30,6 @@ public class ComboProduct {
         this.quantity = quantity;
     }
 
-    // Геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

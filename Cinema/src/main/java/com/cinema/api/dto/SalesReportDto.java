@@ -17,7 +17,6 @@ public class SalesReportDto {
         this.totalAmount = totalAmount;
     }
 
-    // Геттеры и сеттеры
     public Long getReceiptId() { return receiptId; }
     public void setReceiptId(Long receiptId) { this.receiptId = receiptId; }
 

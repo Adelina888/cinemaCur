@@ -15,7 +15,6 @@ public class TopMerchandiseDto {
         this.totalRevenue = totalRevenue;
     }
 
-    // Геттеры и сеттеры
     public Long getMerchandiseId() { return merchandiseId; }
     public void setMerchandiseId(Long merchandiseId) { this.merchandiseId = merchandiseId; }
 

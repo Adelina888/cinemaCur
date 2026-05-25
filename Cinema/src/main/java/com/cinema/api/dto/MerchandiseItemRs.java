@@ -8,11 +8,9 @@ public class MerchandiseItemRs {
     private Integer quantity;
     private Double subtotal;
 
-    // Конструктор по умолчанию
     public MerchandiseItemRs() {
     }
 
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }

@@ -20,7 +20,6 @@ public class LoggerAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggerAspect.class);
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    // Логирование всех методов в сервисах
     @Before("execution(* com.cinema.api.service.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
         logger.info("{} | ВЫЗОВ МЕТОДА | {}.{}() | Аргументы: {}",
@@ -48,7 +47,6 @@ public class LoggerAspect {
                 error.getMessage());
     }
 
-    // Специфические методы для бизнес-логирования
     public void logAuthentication(String login, boolean success) {
         logger.info("{} | АУТЕНТИФИКАЦИЯ | Логин: {} | {}",
                 LocalDateTime.now().format(formatter), login, success ? "УСПЕШНО" : "ОШИБКА");

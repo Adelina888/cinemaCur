@@ -9,7 +9,6 @@ public class RemainsRs {
     private Integer warehouse;
     private LocalDateTime lastModified;
 
-    // геттеры и сеттеры
     public Long getProductId() { return productId; }
     public void setProductId(Long productId) { this.productId = productId; }
 

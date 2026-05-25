@@ -89,7 +89,6 @@ public class ReceiptController {
         return ResponseEntity.ok(receiptService.cancel(receiptId, SecurityUtils.getCurrentAdminId()));
     }
 
-    // ========== ПОЛУЧЕНИЕ ЧЕКОВ С ПАГИНАЦИЕЙ ==========
     @GetMapping
     public ResponseEntity<Page<ReceiptRs>> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -103,7 +102,6 @@ public class ReceiptController {
         return ResponseEntity.ok(receiptService.getById(id));
     }
 
-    // ========== ПОЛУЧЕНИЕ ЧЕКОВ ПО ДАТАМ С ПАГИНАЦИЕЙ ==========
     @GetMapping("/report")
     public ResponseEntity<Page<ReceiptRs>> getByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,

@@ -24,8 +24,6 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    // ========== JSON данные для аналитики (фронт) ==========
-
     @GetMapping("/top-products")
     public ResponseEntity<List<TopProductDto>> getTopProducts(@RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(reportService.getTopProducts(limit));
@@ -42,8 +40,6 @@ public class ReportController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return ResponseEntity.ok(reportService.getSalesReportData(start, end));
     }
-
-    // ========== Экспорт Excel ==========
 
     @GetMapping("/sales/excel")
     public ResponseEntity<byte[]> exportSalesToExcel(
@@ -72,8 +68,6 @@ public class ReportController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(excel);
     }
-
-    // ========== Экспорт PDF ==========
 
     @GetMapping("/sales/pdf")
     public ResponseEntity<byte[]> exportSalesToPdf(

@@ -78,26 +78,21 @@ public class ComboService {
         Combo combo = comboRepository.findById(id)
                 .orElseThrow(() -> new ValidationError("id", "Комбо не найдено"));
 
-        // Проверка уникальности названия
         if (!combo.getName().equals(rq.getName()) && comboRepository.existsByName(rq.getName())) {
             throw new ValidationError("name", "Комбо с таким названием уже существует");
         }
 
-        // Проверка, что есть хотя бы один товар
         if (rq.getProducts().isEmpty()) {
             throw new ValidationError("products", "Комбо должно содержать хотя бы один товар");
         }
 
-        // Обновление полей комбо
         combo.setName(rq.getName());
         combo.setDiscountPercent(rq.getDiscountPercent());
         combo.setDescription(rq.getDescription());
         combo.setIsActive(rq.getIsActive());
-        // Удаляем все старые связи товаров
         comboProductRepository.deleteByComboId(id);
         combo.getComboProducts().clear();
 
-        // Добавляем новые связи
         double regularSum = 0.0;
         for (ProductInComboDto item : rq.getProducts()) {
             Product product = productRepository.findById(item.getProductId())
@@ -109,18 +104,15 @@ public class ComboService {
             combo.getComboProducts().add(comboProduct);
         }
 
-        // Пересчёт цен
         combo.setRegularPrice(regularSum);
         combo.setComboPrice(regularSum * (100 - rq.getDiscountPercent()) / 100.0);
 
-        // Сохранение
         combo = comboRepository.save(combo);
 
         logger.logProductUpdate(adminId, "Комбо: " + combo.getName());
         return convertToRs(combo);
     }
 
-    // Мягкое удаление (деактивация)
     @Transactional
     public void deactivate(Long id, Long adminId) {
         Combo combo = comboRepository.findById(id)
@@ -130,7 +122,6 @@ public class ComboService {
         logger.logProductUpdate(adminId, "Комбо деактивировано: " + combo.getName());
     }
 
-    // Физическое удаление
     @Transactional
     public void hardDelete(Long id, Long adminId) {
         if (!comboRepository.existsById(id)) {
@@ -143,7 +134,7 @@ public class ComboService {
 
     @Transactional
     public void delete(Long id, Long adminId) {
-        deactivate(id, adminId); // по умолчанию деактивация
+        deactivate(id, adminId);
     }
 
     @Transactional(readOnly = true)

@@ -26,7 +26,7 @@ public class Administrator implements UserDetails {
     private Boolean active = true;
 
     @Column(nullable = false)
-    private String role = "ROLE_ADMIN";  // по умолчанию ADMIN
+    private String role = "ROLE_ADMIN";
 
     public Administrator() {}
 
@@ -37,7 +37,6 @@ public class Administrator implements UserDetails {
         this.role = "ROLE_ADMIN";
     }
 
-    // Геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -56,7 +55,6 @@ public class Administrator implements UserDetails {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
 
-    // Реализация UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));

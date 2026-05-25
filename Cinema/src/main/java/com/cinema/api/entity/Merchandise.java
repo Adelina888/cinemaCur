@@ -35,7 +35,6 @@ public class Merchandise {
         this.count = 0;
     }
 
-    // геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -48,8 +48,6 @@ public class ReportService {
         this.merchandiseRepository = merchandiseRepository;
     }
 
-    // ========== Анализ популярности ==========
-
     @Transactional(readOnly = true)
     public List<TopProductDto> getTopProducts(int limit) {
         List<Product> products = productRepository.findAll();
@@ -113,40 +111,31 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
-    // ========== ВСПОМОГАТЕЛЬНЫЙ МЕТОД ДЛЯ ШРИФТОВ С КИРИЛЛИЦЕЙ ==========
-
     private Font getCyrillicFont(String fontName, float size, int style) {
         try {
             return FontFactory.getFont(fontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, size, style);
         } catch (Exception e) {
-            // Fallback на стандартный шрифт (кириллица может не отобразиться)
             return FontFactory.getFont(FontFactory.HELVETICA, size, style);
         }
     }
-
-    // ========== Экспорт в Excel ==========
-
     public byte[] exportSalesReportToExcel(LocalDateTime start, LocalDateTime end) throws IOException {
         List<SalesReportDto> data = getSalesReportData(start, end);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Отчёт по продажам");
 
-        // Стили
         CellStyle titleStyle = createTitleStyle(workbook);
         CellStyle headerStyle = createHeaderStyle(workbook);
         CellStyle dataStyle = createDataStyle(workbook);
         CellStyle currencyStyle = createCurrencyStyle(workbook);
 
-        // ===== ЗАГОЛОВОК ОТЧЁТА (строка 0) =====
         Row titleRow = sheet.createRow(0);
         Cell titleCell = titleRow.createCell(0);
         titleCell.setCellValue("ОТЧЁТ ПО ПРОДАЖАМ");
         titleCell.setCellStyle(titleStyle);
-        // Объединяем 4 ячейки для заголовка
+
         sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 3));
 
-        // ===== Период (строка 1) =====
         Row periodRow = sheet.createRow(1);
         Cell periodCell = periodRow.createCell(0);
         periodCell.setCellValue("Период: " +
@@ -155,10 +144,8 @@ public class ReportService {
         periodCell.setCellStyle(dataStyle);
         sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(1, 1, 0, 3));
 
-        // Пустая строка для отступа (строка 2)
         sheet.createRow(2);
 
-        // ===== Заголовки таблицы (строка 3) =====
         Row header = sheet.createRow(3);
         String[] columns = {"ID чека", "Дата", "Способ оплаты", "Сумма, ₽"};
         for (int i = 0; i < columns.length; i++) {
@@ -167,7 +154,6 @@ public class ReportService {
             cell.setCellStyle(headerStyle);
         }
 
-        // ===== Данные (начинаем со строки 4) =====
         int rowNum = 4;
         for (SalesReportDto dto : data) {
             Row row = sheet.createRow(rowNum++);
@@ -189,7 +175,6 @@ public class ReportService {
             amountCell.setCellStyle(currencyStyle);
         }
 
-        // ===== Итоговая строка =====
         Row totalRow = sheet.createRow(rowNum);
         Cell totalLabelCell = totalRow.createCell(2);
         totalLabelCell.setCellValue("Общая выручка:");
@@ -200,14 +185,12 @@ public class ReportService {
         totalAmountCell.setCellValue(totalAmount);
         totalAmountCell.setCellStyle(currencyStyle);
 
-        // ===== Футер с датой генерации =====
         Row footerRow = sheet.createRow(rowNum + 1);
         Cell footerCell = footerRow.createCell(0);
         footerCell.setCellValue("Отчёт сгенерирован: " +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
         footerCell.setCellStyle(dataStyle);
 
-        // Автоширина колонок
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);
             sheet.setColumnWidth(i, Math.min(sheet.getColumnWidth(i) + 512, 15000));
@@ -230,15 +213,13 @@ public class ReportService {
         CellStyle dataStyle = createDataStyle(workbook);
         CellStyle currencyStyle = createCurrencyStyle(workbook);
 
-        // Заголовок
         Row titleRow = sheet.createRow(0);
         titleRow.createCell(0).setCellValue("ТОП " + limit + " ТОВАРОВ БАРА");
         titleRow.getCell(0).setCellStyle(titleStyle);
         sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 4));
 
-        sheet.createRow(1); // отступ
+        sheet.createRow(1);
 
-        // Заголовки таблицы
         Row header = sheet.createRow(2);
         String[] columns = {"№", "ID", "Название", "Продано, шт", "Выручка, ₽"};
         for (int i = 0; i < columns.length; i++) {
@@ -247,7 +228,6 @@ public class ReportService {
             cell.setCellStyle(headerStyle);
         }
 
-        // Данные
         int rowNum = 3;
         for (int i = 0; i < data.size(); i++) {
             TopProductDto dto = data.get(i);
@@ -262,7 +242,6 @@ public class ReportService {
             revenueCell.setCellValue(dto.getTotalRevenue());
             revenueCell.setCellStyle(currencyStyle);
 
-            // Применяем границы ко всем ячейкам строки
             for (int c = 0; c < 5; c++) {
                 row.getCell(c).setCellStyle(i % 2 == 0 ? dataStyle : workbook.createCellStyle());
                 if (i % 2 != 0) {
@@ -275,7 +254,6 @@ public class ReportService {
             }
         }
 
-        // Итог
         Row totalRow = sheet.createRow(rowNum);
         totalRow.createCell(3).setCellValue("Общая выручка:");
         totalRow.getCell(3).setCellStyle(headerStyle);
@@ -284,7 +262,6 @@ public class ReportService {
         totalCell.setCellValue(total);
         totalCell.setCellStyle(currencyStyle);
 
-        // Футер
         Row footerRow = sheet.createRow(rowNum + 1);
         footerRow.createCell(0).setCellValue("Отчёт сгенерирован: " +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
@@ -301,7 +278,6 @@ public class ReportService {
         return out.toByteArray();
     }
 
-    //  экспорт мерча в Excel
     public byte[] exportTopMerchandiseToExcel(int limit) throws IOException {
         List<TopMerchandiseDto> data = getTopMerchandise(limit);
 
@@ -313,7 +289,6 @@ public class ReportService {
         CellStyle dataStyle = createDataStyle(workbook);
         CellStyle currencyStyle = createCurrencyStyle(workbook);
 
-        // Заголовок
         Row titleRow = sheet.createRow(0);
         titleRow.createCell(0).setCellValue("ТОП " + limit + " ТОВАРОВ МЕРЧА");
         titleRow.getCell(0).setCellStyle(titleStyle);
@@ -321,7 +296,6 @@ public class ReportService {
 
         sheet.createRow(1);
 
-        // Заголовки
         Row header = sheet.createRow(2);
         String[] columns = {"№", "ID", "Название", "Продано, шт", "Выручка, ₽"};
         for (int i = 0; i < columns.length; i++) {
@@ -330,7 +304,6 @@ public class ReportService {
             cell.setCellStyle(headerStyle);
         }
 
-        // Данные
         int rowNum = 3;
         for (int i = 0; i < data.size(); i++) {
             TopMerchandiseDto dto = data.get(i);
@@ -350,7 +323,6 @@ public class ReportService {
             }
         }
 
-        // Итог
         Row totalRow = sheet.createRow(rowNum);
         totalRow.createCell(3).setCellValue("Общая выручка:");
         totalRow.getCell(3).setCellStyle(headerStyle);
@@ -359,7 +331,6 @@ public class ReportService {
         totalCell.setCellValue(total);
         totalCell.setCellStyle(currencyStyle);
 
-        // Футер
         Row footerRow = sheet.createRow(rowNum + 1);
         footerRow.createCell(0).setCellValue("Отчёт сгенерирован: " +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
@@ -376,7 +347,6 @@ public class ReportService {
         return out.toByteArray();
     }
 
-    // ========== ВСПОМОГАТЕЛЬНЫЙ МЕТОД ==========
     private String translatePaymentMethod(String method) {
         if (method == null) return "-";
         switch (method) {
@@ -387,8 +357,6 @@ public class ReportService {
         }
     }
 
-    // ========== Экспорт в PDF (с кириллицей!) ==========
-
     public byte[] exportSalesReportToPdf(LocalDateTime start, LocalDateTime end) throws DocumentException {
         List<SalesReportDto> data = getSalesReportData(start, end);
 
@@ -397,19 +365,16 @@ public class ReportService {
         PdfWriter.getInstance(document, out);
         document.open();
 
-        // Шрифты с поддержкой кириллицы
         Font titleFont = getCyrillicFont("Arial", 18, Font.BOLD);
         Font normalFont = getCyrillicFont("Arial", 10, Font.NORMAL);
         Font boldFont = getCyrillicFont("Arial", 10, Font.BOLD);
 
-        // Заголовок
         Paragraph title = new Paragraph("ОТЧЁТ ПО ПРОДАЖАМ", titleFont);
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
 
         document.add(new Paragraph(" "));
 
-        // Период
         Paragraph period = new Paragraph(
                 "Период: " + start.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
                         " – " + end.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
@@ -418,17 +383,14 @@ public class ReportService {
         document.add(period);
         document.add(new Paragraph(" "));
 
-        // Таблица
         PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100);
 
-        // Заголовки столбцов
         table.addCell(new PdfPCell(new Phrase("ID чека", boldFont)));
         table.addCell(new PdfPCell(new Phrase("Дата", boldFont)));
         table.addCell(new PdfPCell(new Phrase("Способ оплаты", boldFont)));
         table.addCell(new PdfPCell(new Phrase("Сумма, ₽", boldFont)));
 
-        // Данные
         for (SalesReportDto dto : data) {
             table.addCell(new PdfPCell(new Phrase(String.valueOf(dto.getReceiptId()), normalFont)));
             table.addCell(new PdfPCell(new Phrase(
@@ -439,7 +401,6 @@ public class ReportService {
                     String.format("%.2f", dto.getTotalAmount()), normalFont)));
         }
 
-        // Итоговая строка
         double total = data.stream().mapToDouble(SalesReportDto::getTotalAmount).sum();
         PdfPCell totalLabel = new PdfPCell(new Phrase("Общая выручка:", boldFont));
         totalLabel.setColspan(3);
@@ -484,7 +445,6 @@ public class ReportService {
             table.addCell(new PdfPCell(new Phrase(String.format("%.2f", dto.getTotalRevenue()), normalFont)));
         }
 
-        // Итог
         double total = data.stream().mapToDouble(TopProductDto::getTotalRevenue).sum();
         PdfPCell totalLabel = new PdfPCell(new Phrase("Общая выручка:", boldFont));
         totalLabel.setColspan(3);
@@ -529,7 +489,6 @@ public class ReportService {
             table.addCell(new PdfPCell(new Phrase(String.format("%.2f", dto.getTotalRevenue()), normalFont)));
         }
 
-        // Итог
         double total = data.stream().mapToDouble(TopMerchandiseDto::getTotalRevenue).sum();
         PdfPCell totalLabel = new PdfPCell(new Phrase("Общая выручка:", boldFont));
         totalLabel.setColspan(3);
@@ -541,7 +500,6 @@ public class ReportService {
         document.close();
         return out.toByteArray();
     }
-    // ===== СТИЛИ ДЛЯ EXCEL: границы + жирный шрифт + выравнивание =====
     private CellStyle createHeaderStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
         org.apache.poi.ss.usermodel.Font font = workbook.createFont();
@@ -549,17 +507,14 @@ public class ReportService {
         font.setFontHeightInPoints((short) 11);
         style.setFont(font);
 
-        // Границы со всех сторон
         style.setBorderTop(BorderStyle.THIN);
         style.setBorderBottom(BorderStyle.THIN);
         style.setBorderLeft(BorderStyle.THIN);
         style.setBorderRight(BorderStyle.THIN);
 
-        // Серый фон для заголовков
         style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-        // Выравнивание по центру
         style.setAlignment(HorizontalAlignment.CENTER);
         return style;
     }

@@ -171,7 +171,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    //@Scheduled(cron = "0 0 8 * * *")  // каждый день в 8:00
+    //@Scheduled(cron = "0 0 8 * * *")
     public void checkExpiringProducts() {
         List<Product> expiringSoon = getExpiringProducts(3);
         if (expiringSoon.isEmpty()) {

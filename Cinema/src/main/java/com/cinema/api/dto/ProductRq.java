@@ -21,7 +21,6 @@ public class ProductRq {
     @Max(value = 3650, message = "Срок годности не может превышать 10 лет (3650 дней)")
     private Integer expirationDays;
 
-    // Геттеры и сеттеры
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

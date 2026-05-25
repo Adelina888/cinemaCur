@@ -19,12 +19,12 @@ public class StockMovement {
     @Enumerated(EnumType.STRING)
     private MovementType type;
 
-    private Integer quantity;        // количество (положительное)
-    private String source;           // "WAREHOUSE", "BAR" (откуда)
-    private String target;           // "WAREHOUSE", "BAR" (куда)
-    private Long adminId;            // кто выполнил операцию
+    private Integer quantity;
+    private String source;
+    private String target;
+    private Long adminId;
     private LocalDateTime createdAt;
-    private String note;             // примечание (например, "инвентаризация")
+    private String note;
 
     public StockMovement() {
         this.createdAt = LocalDateTime.now();
@@ -38,7 +38,6 @@ public class StockMovement {
         this.adminId = adminId;
     }
 
-    // геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -19,9 +19,9 @@ public class Receipt {
 
     private Double totalAmount;
 
-    private String paymentMethod;   // CASH, CARD, ONLINE
+    private String paymentMethod;
 
-    private String typeOfOperation; // DRAFT, SALE, RETURN
+    private String typeOfOperation;
     private Long originalReceiptId;
 
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -40,7 +40,6 @@ public class Receipt {
         this.administratorId = administratorId;
     }
 
-    // Геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

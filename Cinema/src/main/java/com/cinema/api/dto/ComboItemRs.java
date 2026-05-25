@@ -8,11 +8,9 @@ public class ComboItemRs {
     private Integer quantity;
     private Double subtotal;
 
-    // Конструктор по умолчанию
     public ComboItemRs() {
     }
 
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }

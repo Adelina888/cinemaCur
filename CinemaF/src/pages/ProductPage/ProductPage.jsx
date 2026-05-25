@@ -375,12 +375,13 @@ export const ProductPage = () => {
               </tr>
             ) : (
               filteredProducts.map((product) => {
-                const statusClass = product.isExpired 
+                const statusClass = product.isExpired || product.daysLeft <= 0
                   ? 'product-page__badge--danger'
                   : product.daysLeft <= 3 
                     ? 'product-page__badge--warning' 
                     : 'product-page__badge--success'
-                const statusText = product.isExpired
+
+                const statusText = product.isExpired || product.daysLeft <= 0
                   ? 'Просрочен'
                   : product.daysLeft <= 3 
                     ? `Истекает: ${product.daysLeft} дн.` 

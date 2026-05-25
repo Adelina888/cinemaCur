@@ -13,11 +13,9 @@ public class MerchandiseRs {
     private Integer count;
     private Integer status;
 
-    // Конструктор по умолчанию
     public MerchandiseRs() {
     }
 
-    // Конструктор со всеми полями
     public MerchandiseRs(Long id, String name, Double price, String imageUrl,
                          Integer size, String material, MerchandiseType type,
                          Integer count, Integer status) {
@@ -32,7 +30,6 @@ public class MerchandiseRs {
         this.status = status;
     }
 
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }

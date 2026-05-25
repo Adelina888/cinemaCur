@@ -15,7 +15,6 @@ public class NotificationDto {
         this.lowStockProducts = lowStockProducts;
     }
 
-    // Геттеры и сеттеры
     public List<String> getExpiredProducts() { return expiredProducts; }
     public void setExpiredProducts(List<String> expiredProducts) { this.expiredProducts = expiredProducts; }
 

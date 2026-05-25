@@ -14,8 +14,8 @@ public class Combo {
 
     private String name;
 
-    private Double regularPrice;   // сумма цен товаров без скидки
-    private Double comboPrice;     // итоговая цена со скидкой
+    private Double regularPrice;
+    private Double comboPrice;
 
     private Integer discountPercent;
 
@@ -26,7 +26,6 @@ public class Combo {
     @OneToMany(mappedBy = "combo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ComboProduct> comboProducts = new ArrayList<>();
 
-    // Конструкторы
     public Combo() {}
 
     public Combo(String name, Integer discountPercent) {
@@ -34,7 +33,6 @@ public class Combo {
         this.discountPercent = discountPercent;
     }
 
-    // Геттеры и сеттеры
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
