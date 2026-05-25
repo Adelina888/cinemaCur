@@ -64,6 +64,14 @@ public class ReportController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(excel);
     }
+    @GetMapping("/top-merchandise/excel")
+    public ResponseEntity<byte[]> exportTopMerchandiseToExcel(@RequestParam(defaultValue = "10") int limit) throws IOException {
+        byte[] excel = reportService.exportTopMerchandiseToExcel(limit);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=top_merchandise.xlsx")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(excel);
+    }
 
     // ========== Экспорт PDF ==========
 

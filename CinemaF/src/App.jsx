@@ -10,6 +10,7 @@ import { MerchandisePage } from './pages/MerchandisePage'
 import { ComboPage } from './pages/ComboPage'
 import { RemainsPage } from './pages/RemainsPage'
 import { ReceiptPage } from './pages/ReceiptPage'
+import { ReportPage } from './pages/ReportPage'
 function App() {
   return (
     <BrowserRouter>
@@ -46,6 +47,11 @@ function App() {
             <Route path="/receipts" element={
               <ProtectedRoute>
                 <ReceiptPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/reports" element={
+              <ProtectedRoute>
+                <ReportPage />
               </ProtectedRoute>
             } />
           </Routes>
