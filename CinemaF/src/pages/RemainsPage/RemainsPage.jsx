@@ -13,6 +13,11 @@ export const RemainsPage = () => {
   const [movementsLoading, setMovementsLoading] = useState(false)
   const [lowStockThreshold, setLowStockThreshold] = useState(5)
 
+  // Пагинация для низких остатков
+  const [lowStockPage, setLowStockPage] = useState(0)
+  const [lowStockTotalPages, setLowStockTotalPages] = useState(0)
+  const [lowStockPageSize] = useState(10)
+
   const [showAdjustBar, setShowAdjustBar] = useState(false)
   const [showAdjustWarehouse, setShowAdjustWarehouse] = useState(false)
   const [showTransfer, setShowTransfer] = useState(false)
@@ -69,8 +74,11 @@ export const RemainsPage = () => {
 
   const loadLowStock = async () => {
     try {
-      const data = await RemainsApi.checkLowStock(lowStockThreshold)
-      setLowStockProducts(data)
+      const allData = await RemainsApi.checkLowStock(lowStockThreshold)
+      const start = lowStockPage * lowStockPageSize
+      const end = start + lowStockPageSize
+      setLowStockProducts(allData.slice(start, end))
+      setLowStockTotalPages(Math.ceil(allData.length / lowStockPageSize))
     } catch (error) {
       console.error('Ошибка загрузки низких остатков', error)
     }
@@ -145,6 +153,7 @@ export const RemainsPage = () => {
     if (newThreshold < 0) newThreshold = 0
     if (newThreshold > MAX_THRESHOLD) { alert(`Порог не может превышать ${MAX_THRESHOLD}`); newThreshold = MAX_THRESHOLD }
     setLowStockThreshold(newThreshold)
+    setLowStockPage(0)
   }
 
   const getMovementTypeLabel = (type) => {
@@ -185,7 +194,7 @@ export const RemainsPage = () => {
 
   useEffect(() => {
     loadLowStock()
-  }, [lowStockThreshold])
+  }, [lowStockThreshold, lowStockPage])
 
   return (
     <div className="remains-page">
@@ -320,37 +329,61 @@ export const RemainsPage = () => {
             max={MAX_THRESHOLD}
             className="remains-page__input remains-page__w-100"
           />
-          <button onClick={loadLowStock} className="remains-page__btn-secondary">Обновить</button>
+          <button onClick={() => { setLowStockPage(0); loadLowStock(); }} className="remains-page__btn-secondary">Обновить</button>
         </div>
         {lowStockProducts.length === 0 ? (
           <div className="remains-page__empty">Нет товаров с низкими остатками</div>
         ) : (
-          <table className="remains-page__table">
-            <thead>
-              <tr>
-                <th>Товар</th>
-                <th>Остаток в баре</th>
-                <th>Остаток на складе</th>
-                <th>Всего</th>
-                <th>Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {lowStockProducts.map((item) => (
-                <tr key={item.productId}>
-                  <td className="remains-page__table-cell">{item.productName}</td>
-                  <td className="remains-page__table-cell" style={{ fontWeight: 600, color: '#9a3412' }}>{item.bar} шт</td>
-                  <td className="remains-page__table-cell">{item.warehouse} шт</td>
-                  <td className="remains-page__table-cell">{(item.bar + item.warehouse)} шт</td>
-                  <td className="remains-page__table-cell">
-                    <button onClick={() => handleSelectProduct(item.productId)} className="remains-page__btn-secondary">
-                      Перейти к товару
-                    </button>
-                  </td>
+          <>
+            <table className="remains-page__table">
+              <thead>
+                <tr>
+                  <th>Товар</th>
+                  <th>Остаток в баре</th>
+                  <th>Остаток на складе</th>
+                  <th>Всего</th>
+                  <th>Действия</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {lowStockProducts.map((item) => (
+                  <tr key={item.productId}>
+                    <td className="remains-page__table-cell">{item.productName}</td>
+                    <td className="remains-page__table-cell" style={{ fontWeight: 600, color: '#9a3412' }}>{item.bar} шт</td>
+                    <td className="remains-page__table-cell">{item.warehouse} шт</td>
+                    <td className="remains-page__table-cell">{(item.bar + item.warehouse)} шт</td>
+                    <td className="remains-page__table-cell">
+                      <button onClick={() => handleSelectProduct(item.productId)} className="remains-page__btn-secondary">
+                        Перейти к товару
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            
+            {lowStockTotalPages > 1 && (
+              <div className="remains-page__pagination">
+                <button
+                  onClick={() => setLowStockPage(p => Math.max(0, p - 1))}
+                  disabled={lowStockPage === 0}
+                  className="remains-page__btn-secondary"
+                >
+                  Назад
+                </button>
+                <span className="remains-page__pagination-info">
+                  Страница {lowStockPage + 1} из {lowStockTotalPages}
+                </span>
+                <button
+                  onClick={() => setLowStockPage(p => Math.min(lowStockTotalPages - 1, p + 1))}
+                  disabled={lowStockPage >= lowStockTotalPages - 1}
+                  className="remains-page__btn-secondary"
+                >
+                  Вперёд
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
