@@ -4,10 +4,10 @@ export class Product {
     this.name = name
     this.price = price
     this.category = category
-    this.expirationDays = expirationDays      // срок годности в днях
-    this.dateOfCreation = dateOfCreation      // дата производства
-    this.daysLeft = daysLeft                  // сколько дней осталось
-    this.isExpired = isExpired                // просрочен или нет
-    this.status = status                      // 1 - активен, 0 - неактивен
+    this.expirationDays = expirationDays      
+    this.dateOfCreation = dateOfCreation      
+    this.daysLeft = daysLeft                  
+    this.isExpired = isExpired                
+    this.status = status                     
   }
 }

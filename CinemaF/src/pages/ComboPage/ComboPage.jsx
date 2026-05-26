@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { ComboApi } from '../../services/ComboApi'
 import { ProductApi } from '../../services/ProductApi'
+import { Pagination } from '../../components/Pagination'
 import './ComboPage.css'
 
 export const ComboPage = () => {
@@ -8,22 +9,18 @@ export const ComboPage = () => {
   const [filteredCombos, setFilteredCombos] = useState([])
   const [loading, setLoading] = useState(true)
   const [availableProducts, setAvailableProducts] = useState([])
-
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [totalElements, setTotalElements] = useState(0)
   const [pageSize] = useState(10)
-
   const [searchName, setSearchName] = useState('')
   const [filterActive, setFilterActive] = useState('')
-
   const [name, setName] = useState('')
   const [discountPercent, setDiscountPercent] = useState('')
   const [description, setDescription] = useState('')
   const [selectedProducts, setSelectedProducts] = useState([])
   const [selectedProductId, setSelectedProductId] = useState('')
   const [selectedProductQuantity, setSelectedProductQuantity] = useState(1)
-
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editDiscountPercent, setEditDiscountPercent] = useState('')
@@ -44,16 +41,16 @@ export const ComboPage = () => {
     return products.map(p => `${p.productName} (${p.quantity} шт)`).join(', ')
   }
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       const data = await ProductApi.getAll()
       setAvailableProducts(data)
     } catch (error) {
       console.error('Ошибка загрузки товаров', error)
     }
-  }
+  }, [])
 
-  const loadCombos = async () => {
+  const loadCombos = useCallback(async () => {
     setLoading(true)
     try {
       const data = await ComboApi.getPage(page, pageSize)
@@ -67,9 +64,9 @@ export const ComboPage = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, pageSize])
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...combos]
     if (searchName) {
       filtered = filtered.filter(item => 
@@ -80,16 +77,19 @@ export const ComboPage = () => {
       filtered = filtered.filter(item => item.isActive === (filterActive === 'true'))
     }
     setFilteredCombos(filtered)
-  }
-
-  useEffect(() => {
-    applyFilters()
-  }, [searchName, filterActive, combos])
+  }, [combos, searchName, filterActive])
 
   useEffect(() => {
     loadCombos()
+  }, [loadCombos])
+
+  useEffect(() => {
     loadProducts()
-  }, [page])
+  }, [loadProducts])
+
+  useEffect(() => {
+    applyFilters()
+  }, [applyFilters])
 
   const calculateRegularPrice = (products) => {
     return products.reduce((sum, p) => sum + (p.price * p.quantity), 0)
@@ -106,7 +106,6 @@ export const ComboPage = () => {
     }
     const product = availableProducts.find(p => p.id === parseInt(selectedProductId))
     if (!product) return
-
     const existingIndex = selectedProducts.findIndex(p => p.productId === product.id)
     if (existingIndex !== -1) {
       const updated = [...selectedProducts]
@@ -147,7 +146,6 @@ export const ComboPage = () => {
     }
     const product = availableProducts.find(p => p.id === parseInt(editSelectedProductId))
     if (!product) return
-
     const existingIndex = editSelectedProducts.findIndex(p => p.productId === product.id)
     if (existingIndex !== -1) {
       const updated = [...editSelectedProducts]
@@ -194,7 +192,6 @@ export const ComboPage = () => {
       alert('Название не должно превышать 100 символов')
       return false
     }
-
     const isDuplicate = existingCombos.some(item =>
       item.name.toLowerCase() === data.name.toLowerCase() &&
       (!isUpdate || item.id !== data.id)
@@ -203,7 +200,6 @@ export const ComboPage = () => {
       alert(`Комбо с названием "${data.name}" уже существует!`)
       return false
     }
-
     if (data.discountPercent === undefined || data.discountPercent === '') {
       alert('Скидка обязательна')
       return false
@@ -213,18 +209,15 @@ export const ComboPage = () => {
       alert('Скидка должна быть от 0 до 100 процентов')
       return false
     }
-
     if (!data.products || data.products.length === 0) {
       alert('Добавьте хотя бы один товар в комбо')
       return false
     }
-
     return true
   }
 
   const handleCreate = async (e) => {
     e.preventDefault()
-
     if (!validateCombo({
       name,
       discountPercent: parseFloat(discountPercent),
@@ -232,7 +225,6 @@ export const ComboPage = () => {
     }, false, combos)) {
       return
     }
-
     try {
       await ComboApi.create({
         name,
@@ -305,7 +297,6 @@ export const ComboPage = () => {
     }, true, combos)) {
       return
     }
-
     try {
       await ComboApi.update(id, {
         name: editName,
@@ -531,7 +522,6 @@ export const ComboPage = () => {
                 const statusClass = item.isActive 
                   ? 'combo-page__badge--success'
                   : 'combo-page__badge--danger'
-                
                 return (
                   <tr key={item.id} className={!item.isActive ? 'combo-page__row-inactive' : ''}>
                     {editingId === item.id ? (
@@ -733,30 +723,13 @@ export const ComboPage = () => {
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="combo-page__pagination">
-          <button 
-            onClick={() => setPage(p => Math.max(0, p - 1))} 
-            disabled={page === 0}
-            className="combo-page__btn-secondary"
-          >
-            Назад
-          </button>
-          <span className="combo-page__pagination-info">
-            Страница <strong>{page + 1}</strong> из {totalPages} 
-            <span style={{ color: '#94a3b8', marginLeft: 4 }}>
-              (всего {totalElements} комбо)
-            </span>
-          </span>
-          <button 
-            onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} 
-            disabled={page >= totalPages - 1}
-            className="combo-page__btn-secondary"
-          >
-            Вперёд
-          </button>
-        </div>
-      )}
+      <Pagination 
+        page={page} 
+        totalPages={totalPages} 
+        totalElements={totalElements} 
+        onPageChange={setPage} 
+        label="комбо" 
+      />
     </div>
   )
 }

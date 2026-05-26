@@ -7,12 +7,10 @@ export const ReportPage = () => {
   const [endDate, setEndDate] = useState('')
   const [salesData, setSalesData] = useState([])
   const [loadingSales, setLoadingSales] = useState(false)
-
   const [topLimit, setTopLimit] = useState(10)
   const [topProducts, setTopProducts] = useState([])
   const [topMerchandise, setTopMerchandise] = useState([])
   const [loadingTop, setLoadingTop] = useState(false)
-
   const [activeTab, setActiveTab] = useState('sales')
 
   const loadSalesData = async () => {
@@ -127,10 +125,7 @@ export const ReportPage = () => {
   }
 
   const formatDate = (dateStr) => new Date(dateStr).toLocaleString()
-
-  const formatCurrency = (amount) =>
-    new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(amount)
-
+  const formatCurrency = (amount) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(amount)
   const getPaymentMethodLabel = (method) => {
     const methods = { 'CASH': 'Наличные', 'CARD': 'Карта', 'ONLINE': 'Онлайн' }
     return methods[method] || method || '-'
@@ -164,43 +159,21 @@ export const ReportPage = () => {
       {activeTab === 'sales' && (
         <div className="report-page__card">
           <h3 className="report-page__card-title">Отчёт по продажам</h3>
-
           <div className="report-page__filter-row" style={{ marginBottom: 20 }}>
             <div>
               <label className="report-page__label">С даты:</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="report-page__input"
-                style={{ marginLeft: 8 }}
-              />
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="report-page__input" style={{ marginLeft: 8 }} />
             </div>
             <div>
               <label className="report-page__label">По дату:</label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="report-page__input"
-                style={{ marginLeft: 8 }}
-              />
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="report-page__input" style={{ marginLeft: 8 }} />
             </div>
-            <button onClick={loadSalesData} disabled={loadingSales} className="report-page__btn">
-              {loadingSales ? 'Загрузка...' : 'Показать'}
-            </button>
-            <button onClick={exportSalesToExcel} disabled={!startDate || !endDate} className="report-page__btn-secondary">
-              Экспорт Excel
-            </button>
-            <button onClick={exportSalesToPdf} disabled={!startDate || !endDate} className="report-page__btn-secondary">
-              Экспорт PDF
-            </button>
+            <button onClick={loadSalesData} disabled={loadingSales} className="report-page__btn">{loadingSales ? 'Загрузка...' : 'Показать'}</button>
+            <button onClick={exportSalesToExcel} disabled={!startDate || !endDate} className="report-page__btn-secondary">Экспорт Excel</button>
+            <button onClick={exportSalesToPdf} disabled={!startDate || !endDate} className="report-page__btn-secondary">Экспорт PDF</button>
           </div>
-
           {salesData.length === 0 ? (
-            <div className="report-page__empty">
-              Нет данных. Выберите период и нажмите "Показать".
-            </div>
+            <div className="report-page__empty">Нет данных. Выберите период и нажмите "Показать".</div>
           ) : (
             <>
               <div className="report-page__summary">
@@ -209,12 +182,7 @@ export const ReportPage = () => {
               </div>
               <table className="report-page__table">
                 <thead>
-                  <tr>
-                    <th>ID чека</th>
-                    <th>Дата</th>
-                    <th>Способ оплаты</th>
-                    <th>Сумма</th>
-                  </tr>
+                  <tr><th>ID чека</th><th>Дата</th><th>Способ оплаты</th><th>Сумма</th></tr>
                 </thead>
                 <tbody>
                   {salesData.map((sale) => (
@@ -235,31 +203,15 @@ export const ReportPage = () => {
       {activeTab === 'topProducts' && (
         <div className="report-page__card">
           <h3 className="report-page__card-title">Топ товаров бара</h3>
-
           <div className="report-page__filter-row" style={{ marginBottom: 20 }}>
             <div>
               <label className="report-page__label">Количество в топе:</label>
-              <input
-                type="number"
-                value={topLimit}
-                onChange={(e) => setTopLimit(Math.min(100, Math.max(1, parseInt(e.target.value) || 10)))}
-                min="1"
-                max="100"
-                className="report-page__input report-page__w-70"
-                style={{ marginLeft: 8 }}
-              />
+              <input type="number" value={topLimit} onChange={(e) => setTopLimit(Math.min(100, Math.max(1, parseInt(e.target.value) || 10)))} min="1" max="100" className="report-page__input report-page__w-70" style={{ marginLeft: 8 }} />
             </div>
-            <button onClick={loadTopProducts} disabled={loadingTop} className="report-page__btn">
-              {loadingTop ? 'Загрузка...' : 'Показать'}
-            </button>
-            <button onClick={exportTopProductsToExcel} className="report-page__btn-secondary">
-              Экспорт Excel
-            </button>
-            <button onClick={exportTopProductsToPdf} className="report-page__btn-secondary">
-              Экспорт PDF
-            </button>
+            <button onClick={loadTopProducts} disabled={loadingTop} className="report-page__btn">{loadingTop ? 'Загрузка...' : 'Показать'}</button>
+            <button onClick={exportTopProductsToExcel} className="report-page__btn-secondary">Экспорт Excel</button>
+            <button onClick={exportTopProductsToPdf} className="report-page__btn-secondary">Экспорт PDF</button>
           </div>
-
           {loadingTop ? (
             <div className="report-page__empty">Загрузка...</div>
           ) : topProducts.length === 0 ? (
@@ -267,13 +219,7 @@ export const ReportPage = () => {
           ) : (
             <table className="report-page__table">
               <thead>
-                <tr>
-                  <th>#</th>
-                  <th>ID</th>
-                  <th>Название</th>
-                  <th>Продано, шт</th>
-                  <th>Выручка</th>
-                </tr>
+                <tr><th>#</th><th>ID</th><th>Название</th><th>Продано, шт</th><th>Выручка</th></tr>
               </thead>
               <tbody>
                 {topProducts.map((product, index) => (
@@ -294,31 +240,15 @@ export const ReportPage = () => {
       {activeTab === 'topMerchandise' && (
         <div className="report-page__card">
           <h3 className="report-page__card-title">Топ мерчендайза</h3>
-
           <div className="report-page__filter-row" style={{ marginBottom: 20 }}>
             <div>
               <label className="report-page__label">Количество в топе:</label>
-              <input
-                type="number"
-                value={topLimit}
-                onChange={(e) => setTopLimit(Math.min(100, Math.max(1, parseInt(e.target.value) || 10)))}
-                min="1"
-                max="100"
-                className="report-page__input report-page__w-70"
-                style={{ marginLeft: 8 }}
-              />
+              <input type="number" value={topLimit} onChange={(e) => setTopLimit(Math.min(100, Math.max(1, parseInt(e.target.value) || 10)))} min="1" max="100" className="report-page__input report-page__w-70" style={{ marginLeft: 8 }} />
             </div>
-            <button onClick={loadTopProducts} disabled={loadingTop} className="report-page__btn">
-              {loadingTop ? 'Загрузка...' : 'Показать'}
-            </button>
-            <button onClick={exportTopMerchandiseToExcel} className="report-page__btn-secondary">
-              Экспорт Excel
-            </button>
-            <button onClick={exportTopMerchandiseToPdf} className="report-page__btn-secondary">
-              Экспорт PDF
-            </button>
+            <button onClick={loadTopProducts} disabled={loadingTop} className="report-page__btn">{loadingTop ? 'Загрузка...' : 'Показать'}</button>
+            <button onClick={exportTopMerchandiseToExcel} className="report-page__btn-secondary">Экспорт Excel</button>
+            <button onClick={exportTopMerchandiseToPdf} className="report-page__btn-secondary">Экспорт PDF</button>
           </div>
-
           {loadingTop ? (
             <div className="report-page__empty">Загрузка...</div>
           ) : topMerchandise.length === 0 ? (
@@ -326,13 +256,7 @@ export const ReportPage = () => {
           ) : (
             <table className="report-page__table">
               <thead>
-                <tr>
-                  <th>#</th>
-                  <th>ID</th>
-                  <th>Название</th>
-                  <th>Продано, шт</th>
-                  <th>Выручка</th>
-                </tr>
+                <tr><th>#</th><th>ID</th><th>Название</th><th>Продано, шт</th><th>Выручка</th></tr>
               </thead>
               <tbody>
                 {topMerchandise.map((item, index) => (

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { RemainsApi } from '../../services/RemainsApi'
 import { ProductApi } from '../../services/ProductApi'
+import { Pagination } from '../../components/Pagination'
 import './RemainsPage.css'
 
 export const RemainsPage = () => {
@@ -12,27 +13,22 @@ export const RemainsPage = () => {
   const [loading, setLoading] = useState(false)
   const [movementsLoading, setMovementsLoading] = useState(false)
   const [lowStockThreshold, setLowStockThreshold] = useState(5)
-
-  // Пагинация для низких остатков
   const [lowStockPage, setLowStockPage] = useState(0)
   const [lowStockTotalPages, setLowStockTotalPages] = useState(0)
   const [lowStockPageSize] = useState(10)
-
   const [showAdjustBar, setShowAdjustBar] = useState(false)
   const [showAdjustWarehouse, setShowAdjustWarehouse] = useState(false)
   const [showTransfer, setShowTransfer] = useState(false)
   const [adjustQty, setAdjustQty] = useState('')
   const [transferQty, setTransferQty] = useState('')
-
   const MAX_QUANTITY = 999
   const MAX_THRESHOLD = 999
-
   const [movementsPage, setMovementsPage] = useState(0)
   const [movementsTotalPages, setMovementsTotalPages] = useState(0)
   const [movementsTotalElements, setMovementsTotalElements] = useState(0)
   const [pageSize] = useState(10)
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       const data = await ProductApi.getAll()
       setProducts(data)
@@ -40,9 +36,21 @@ export const RemainsPage = () => {
       console.error('Ошибка загрузки товаров', error)
       alert('Ошибка загрузки товаров')
     }
-  }
+  }, [])
 
-  const loadRemains = async (productId) => {
+  const loadLowStock = useCallback(async () => {
+    try {
+      const allData = await RemainsApi.checkLowStock(lowStockThreshold)
+      const start = lowStockPage * lowStockPageSize
+      const end = start + lowStockPageSize
+      setLowStockProducts(allData.slice(start, end))
+      setLowStockTotalPages(Math.ceil(allData.length / lowStockPageSize))
+    } catch (error) {
+      console.error('Ошибка загрузки низких остатков', error)
+    }
+  }, [lowStockThreshold, lowStockPage, lowStockPageSize])
+
+  const loadRemains = useCallback(async (productId) => {
     setLoading(true)
     try {
       const data = await RemainsApi.getByProductId(productId)
@@ -53,9 +61,9 @@ export const RemainsPage = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const loadMovements = async (productId, page) => {
+  const loadMovements = useCallback(async (productId, page) => {
     setMovementsLoading(true)
     try {
       const data = await RemainsApi.getMovements(productId, page, pageSize)
@@ -70,34 +78,35 @@ export const RemainsPage = () => {
     } finally {
       setMovementsLoading(false)
     }
-  }
+  }, [pageSize])
 
-  const loadLowStock = async () => {
-    try {
-      const allData = await RemainsApi.checkLowStock(lowStockThreshold)
-      const start = lowStockPage * lowStockPageSize
-      const end = start + lowStockPageSize
-      setLowStockProducts(allData.slice(start, end))
-      setLowStockTotalPages(Math.ceil(allData.length / lowStockPageSize))
-    } catch (error) {
-      console.error('Ошибка загрузки низких остатков', error)
-    }
-  }
-
-  const handleSelectProduct = async (productId) => {
+  const handleSelectProduct = useCallback(async (productId) => {
     const product = products.find(p => p.id === parseInt(productId))
     setSelectedProduct(product)
     await loadRemains(productId)
     await loadMovements(productId, 0)
     setMovementsPage(0)
-  }
+  }, [products, loadRemains, loadMovements])
+
+  useEffect(() => {
+    loadProducts()
+  }, [loadProducts])
+
+  useEffect(() => {
+    loadLowStock()
+  }, [loadLowStock])
+
+  useEffect(() => {
+    if (selectedProduct) {
+      loadMovements(selectedProduct.id, movementsPage)
+    }
+  }, [movementsPage, selectedProduct, loadMovements])
 
   const handleAdjustBar = async () => {
     let qty = parseInt(adjustQty)
     if (isNaN(qty)) { alert('Введите корректное количество'); return }
     if (qty < 0) { alert('Количество не может быть отрицательным'); return }
     if (qty > MAX_QUANTITY) { alert(`Количество не может превышать ${MAX_QUANTITY}`); return }
-    
     try {
       await RemainsApi.adjustBarStock(selectedProduct.id, qty)
       await loadRemains(selectedProduct.id)
@@ -115,7 +124,6 @@ export const RemainsPage = () => {
     if (isNaN(qty)) { alert('Введите корректное количество'); return }
     if (qty < 0) { alert('Количество не может быть отрицательным'); return }
     if (qty > MAX_QUANTITY) { alert(`Количество не может превышать ${MAX_QUANTITY}`); return }
-    
     try {
       await RemainsApi.adjustWarehouseStock(selectedProduct.id, qty)
       await loadRemains(selectedProduct.id)
@@ -134,7 +142,6 @@ export const RemainsPage = () => {
     if (qty <= 0) { alert('Количество должно быть больше 0'); return }
     if (qty > MAX_QUANTITY) { alert(`Количество не может превышать ${MAX_QUANTITY}`); return }
     if (qty > (remains?.warehouse || 0)) { alert(`Недостаточно товара на складе. Доступно: ${remains?.warehouse || 0} шт`); return }
-    
     try {
       await RemainsApi.transferToBar(selectedProduct.id, qty)
       await loadRemains(selectedProduct.id)
@@ -183,19 +190,6 @@ export const RemainsPage = () => {
     return classes[type] || ''
   }
 
-  useEffect(() => {
-    loadProducts()
-    loadLowStock()
-  }, [])
-
-  useEffect(() => {
-    if (selectedProduct) loadMovements(selectedProduct.id, movementsPage)
-  }, [movementsPage])
-
-  useEffect(() => {
-    loadLowStock()
-  }, [lowStockThreshold, lowStockPage])
-
   return (
     <div className="remains-page">
       <h1 className="remains-page__header">Учет остатков</h1>
@@ -240,7 +234,6 @@ export const RemainsPage = () => {
                   <p className="remains-page__stock-value">{(remains?.bar || 0) + (remains?.warehouse || 0)} шт</p>
                 </div>
               </div>
-
               <div className="remains-page__btn-group">
                 <button onClick={() => setShowAdjustBar(true)} className="remains-page__btn-secondary">Корректировать бар</button>
                 <button onClick={() => setShowAdjustWarehouse(true)} className="remains-page__btn-secondary">Корректировать склад</button>
@@ -287,31 +280,13 @@ export const RemainsPage = () => {
                   ))}
                 </tbody>
               </table>
-
-              {movementsTotalPages > 0 && (
-                <div className="remains-page__pagination">
-                  <button
-                    onClick={() => setMovementsPage(p => Math.max(0, p - 1))}
-                    disabled={movementsPage === 0}
-                    className="remains-page__btn-secondary"
-                  >
-                    Назад
-                  </button>
-                  <span className="remains-page__pagination-info">
-                    Страница {movementsPage + 1} из {movementsTotalPages}
-                  </span>
-                  <button
-                    onClick={() => setMovementsPage(p => Math.min(movementsTotalPages - 1, p + 1))}
-                    disabled={movementsPage >= movementsTotalPages - 1}
-                    className="remains-page__btn-secondary"
-                  >
-                    Вперёд
-                  </button>
-                  <span style={{ marginLeft: 20, color: '#64748b' }}>
-                    Всего записей: {movementsTotalElements}
-                  </span>
-                </div>
-              )}
+              <Pagination 
+                page={movementsPage} 
+                totalPages={movementsTotalPages} 
+                totalElements={movementsTotalElements} 
+                onPageChange={setMovementsPage} 
+                label="записей" 
+              />
             </>
           )}
         </div>
@@ -361,28 +336,12 @@ export const RemainsPage = () => {
                 ))}
               </tbody>
             </table>
-            
-            {lowStockTotalPages > 1 && (
-              <div className="remains-page__pagination">
-                <button
-                  onClick={() => setLowStockPage(p => Math.max(0, p - 1))}
-                  disabled={lowStockPage === 0}
-                  className="remains-page__btn-secondary"
-                >
-                  Назад
-                </button>
-                <span className="remains-page__pagination-info">
-                  Страница {lowStockPage + 1} из {lowStockTotalPages}
-                </span>
-                <button
-                  onClick={() => setLowStockPage(p => Math.min(lowStockTotalPages - 1, p + 1))}
-                  disabled={lowStockPage >= lowStockTotalPages - 1}
-                  className="remains-page__btn-secondary"
-                >
-                  Вперёд
-                </button>
-              </div>
-            )}
+            <Pagination 
+              page={lowStockPage} 
+              totalPages={lowStockTotalPages} 
+              onPageChange={setLowStockPage} 
+              label="" 
+            />
           </>
         )}
       </div>
@@ -403,9 +362,7 @@ export const RemainsPage = () => {
               min="0"
               max={MAX_QUANTITY}
             />
-            <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>
-              От 0 до {MAX_QUANTITY}
-            </div>
+            <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>От 0 до {MAX_QUANTITY}</div>
             <div className="remains-page__btn-group" style={{ justifyContent: 'flex-end' }}>
               <button onClick={() => { setShowAdjustBar(false); setAdjustQty(''); }} className="remains-page__btn-secondary">Отмена</button>
               <button onClick={handleAdjustBar} className="remains-page__btn">Сохранить</button>
@@ -430,9 +387,7 @@ export const RemainsPage = () => {
               min="0"
               max={MAX_QUANTITY}
             />
-            <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>
-              От 0 до {MAX_QUANTITY}
-            </div>
+            <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>От 0 до {MAX_QUANTITY}</div>
             <div className="remains-page__btn-group" style={{ justifyContent: 'flex-end' }}>
               <button onClick={() => { setShowAdjustWarehouse(false); setAdjustQty(''); }} className="remains-page__btn-secondary">Отмена</button>
               <button onClick={handleAdjustWarehouse} className="remains-page__btn">Сохранить</button>

@@ -228,6 +228,7 @@ public class ReceiptService {
         receipt.setTypeOfOperation("SALE");
         receipt.setPaymentMethod(paymentMethod);
         receipt.setTotalAmount(calculateTotal(receipt));
+        receipt.setDate(LocalDateTime.now());
         receiptRepository.save(receipt);
 
         logger.logSale(adminId, receiptId, receipt.getTotalAmount());

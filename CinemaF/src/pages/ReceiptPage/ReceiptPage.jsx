@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { ReceiptApi } from '../../services/ReceiptApi'
 import { MerchandiseApi } from '../../services/MerchandiseApi'
 import { ComboApi } from '../../services/ComboApi'
+import { Pagination } from '../../components/Pagination'
 import './ReceiptPage.css'
 
 export const ReceiptPage = () => {
@@ -11,51 +12,44 @@ export const ReceiptPage = () => {
   const [comboList, setComboList] = useState([])
   const [loading, setLoading] = useState(false)
   const [showReceiptModal, setShowReceiptModal] = useState(false)
-
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [totalElements, setTotalElements] = useState(0)
   const [pageSize] = useState(10)
-
   const [selectedMerchandiseId, setSelectedMerchandiseId] = useState('')
   const [selectedMerchandiseQuantity, setSelectedMerchandiseQuantity] = useState(1)
   const [selectedComboId, setSelectedComboId] = useState('')
   const [selectedComboQuantity, setSelectedComboQuantity] = useState(1)
-
   const [paymentMethod, setPaymentMethod] = useState('CASH')
   const [sellingReceiptId, setSellingReceiptId] = useState(null)
   const [cancellingReceiptId, setCancellingReceiptId] = useState(null)
-
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [isFiltered, setIsFiltered] = useState(false)
-
   const [editingItem, setEditingItem] = useState(null)
   const [editQuantity, setEditQuantity] = useState('')
-
   const [returnedReceiptIds, setReturnedReceiptIds] = useState([])
-
   const MAX_QUANTITY = 999
 
-  const loadMerchandise = async () => {
+  const loadMerchandise = useCallback(async () => {
     try {
       const data = await MerchandiseApi.getAll()
       setMerchandiseList(data)
     } catch (error) {
       console.error('Ошибка загрузки мерча', error)
     }
-  }
+  }, [])
 
-  const loadCombos = async () => {
+  const loadCombos = useCallback(async () => {
     try {
       const data = await ComboApi.getAll()
       setComboList(data)
     } catch (error) {
       console.error('Ошибка загрузки комбо', error)
     }
-  }
+  }, [])
 
-  const loadReceipts = async () => {
+  const loadReceipts = useCallback(async () => {
     setLoading(true)
     try {
       let data
@@ -69,7 +63,6 @@ export const ReceiptPage = () => {
       setReceipts(data.content || [])
       setTotalPages(data.totalPages || 0)
       setTotalElements(data.totalElements || 0)
-
       const returned = (data.content || [])
         .filter(r => r.typeOfOperation === 'RETURN' && r.originalReceiptId)
         .map(r => r.originalReceiptId)
@@ -80,7 +73,13 @@ export const ReceiptPage = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, pageSize, isFiltered, startDate, endDate])
+
+  useEffect(() => {
+    loadMerchandise()
+    loadCombos()
+    loadReceipts()
+  }, [loadMerchandise, loadCombos, loadReceipts])
 
   const applyDateFilter = () => {
     if (!startDate || !endDate) {
@@ -89,7 +88,6 @@ export const ReceiptPage = () => {
     }
     setIsFiltered(true)
     setPage(0)
-    setTimeout(() => loadReceipts(), 0)
   }
 
   const clearDateFilter = () => {
@@ -97,7 +95,6 @@ export const ReceiptPage = () => {
     setEndDate('')
     setIsFiltered(false)
     setPage(0)
-    setTimeout(() => loadReceipts(), 0)
   }
 
   const handleCreateReceipt = async () => {
@@ -144,7 +141,6 @@ export const ReceiptPage = () => {
       alert(`Количество должно быть от 1 до ${MAX_QUANTITY}`)
       return
     }
-
     try {
       await ReceiptApi.addMerchandise(currentReceipt.id, selectedMerchandiseId, selectedMerchandiseQuantity)
       const updated = await ReceiptApi.getById(currentReceipt.id)
@@ -167,7 +163,6 @@ export const ReceiptPage = () => {
       alert(`Количество должно быть от 1 до ${MAX_QUANTITY}`)
       return
     }
-
     try {
       await ReceiptApi.addCombo(currentReceipt.id, selectedComboId, selectedComboQuantity)
       const updated = await ReceiptApi.getById(currentReceipt.id)
@@ -263,10 +258,8 @@ export const ReceiptPage = () => {
       alert('Выберите способ оплаты')
       return
     }
-
     setSellingReceiptId(currentReceipt.id)
     setLoading(true)
-
     try {
       const sold = await ReceiptApi.sell(currentReceipt.id, paymentMethod)
       setCurrentReceipt(null)
@@ -288,10 +281,8 @@ export const ReceiptPage = () => {
       return
     }
     if (!window.confirm(`Вернуть чек №${receiptId}?`)) return
-
     setCancellingReceiptId(receiptId)
     setLoading(true)
-
     try {
       const cancelled = await ReceiptApi.cancel(receiptId)
       await loadReceipts()
@@ -332,12 +323,6 @@ export const ReceiptPage = () => {
     const methods = { 'CASH': 'Наличные', 'CARD': 'Карта', 'ONLINE': 'Онлайн' }
     return methods[method] || method || '-'
   }
-
-  useEffect(() => {
-    loadMerchandise()
-    loadCombos()
-    loadReceipts()
-  }, [page, isFiltered])
 
   if (loading && receipts.length === 0) {
     return (
@@ -605,28 +590,13 @@ export const ReceiptPage = () => {
               </tbody>
             </table>
 
-            {totalPages > 1 && (
-              <div className="receipt-page__pagination">
-                <button 
-                  onClick={() => setPage(p => Math.max(0, p - 1))} 
-                  disabled={page === 0}
-                  className="receipt-page__btn-secondary"
-                >
-                  Назад
-                </button>
-                <span className="receipt-page__pagination-info">
-                  Страница <strong>{page + 1}</strong> из {totalPages} 
-                  <span style={{ color: '#94a3b8', marginLeft: 4 }}>(всего {totalElements} чеков)</span>
-                </span>
-                <button 
-                  onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} 
-                  disabled={page >= totalPages - 1}
-                  className="receipt-page__btn-secondary"
-                >
-                  Вперёд
-                </button>
-              </div>
-            )}
+            <Pagination 
+              page={page} 
+              totalPages={totalPages} 
+              totalElements={totalElements} 
+              onPageChange={setPage} 
+              label="чеков" 
+            />
           </>
         )}
       </div>
@@ -638,7 +608,6 @@ export const ReceiptPage = () => {
             <p><strong>Дата:</strong> {new Date(currentReceipt.date).toLocaleString()}</p>
             <p><strong>Статус:</strong> {getStatusLabel(currentReceipt.typeOfOperation)}</p>
             <p><strong>Способ оплаты:</strong> {getPaymentMethodLabel(currentReceipt.paymentMethod)}</p>
-
             <h4 className="receipt-page__section-title">Товары:</h4>
             {currentReceipt.merchandiseItems.length === 0 && currentReceipt.comboItems.length === 0 ? (
               <div className="receipt-page__empty">Нет товаров</div>
@@ -679,7 +648,6 @@ export const ReceiptPage = () => {
                 </tbody>
               </table>
             )}
-
             <div style={{ marginTop: 20, display: 'flex', justifyContent: 'flex-end' }}>
               <button onClick={closeModal} className="receipt-page__btn-secondary">Закрыть</button>
             </div>

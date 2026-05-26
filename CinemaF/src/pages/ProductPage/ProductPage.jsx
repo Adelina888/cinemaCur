@@ -1,25 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { ProductApi } from '../../services/ProductApi'
+import { Pagination } from '../../components/Pagination'
 import './ProductPage.css'
 
 export const ProductPage = () => {
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [loading, setLoading] = useState(true)
-  
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [totalElements, setTotalElements] = useState(0)
   const [pageSize] = useState(10)
-  
   const [searchName, setSearchName] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
-  
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [category, setCategory] = useState('')
   const [expirationDays, setExpirationDays] = useState('')
-  
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editPrice, setEditPrice] = useState('')
@@ -46,7 +43,6 @@ export const ProductPage = () => {
       alert('Название не должно превышать 100 символов')
       return false
     }
-
     const isDuplicate = existingProducts.some(p => 
       p.name.toLowerCase() === data.name.toLowerCase() && 
       (!isUpdate || p.id !== data.id)
@@ -55,7 +51,6 @@ export const ProductPage = () => {
       alert(`Товар с названием "${data.name}" уже существует!`)
       return false
     }
-
     if (!data.price && data.price !== 0) {
       alert('Цена обязательна')
       return false
@@ -72,12 +67,10 @@ export const ProductPage = () => {
       alert('Цена не может превышать 1 000 000 рублей')
       return false
     }
-
     if (!data.category) {
       alert('Выберите категорию')
       return false
     }
-
     if (!data.expirationDays && data.expirationDays !== 0) {
       alert('Срок годности обязателен')
       return false
@@ -95,11 +88,10 @@ export const ProductPage = () => {
       alert('Срок годности не может превышать 10 лет (3650 дней)')
       return false
     }
-
     return true
   }
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     setLoading(true)
     try {
       const data = await ProductApi.getPage(page, pageSize)
@@ -113,29 +105,35 @@ export const ProductPage = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, pageSize])
 
-  const applyFilters = (data, nameFilter, categoryFilter) => {
-    let filtered = [...data]
-    if (nameFilter) {
-      filtered = filtered.filter(p => p.name.toLowerCase().includes(nameFilter.toLowerCase()))
+  const applyFilters = useCallback(() => {
+    let filtered = [...products]
+    if (searchName) {
+      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchName.toLowerCase()))
     }
-    if (categoryFilter) {
-      filtered = filtered.filter(p => p.category === categoryFilter)
+    if (filterCategory) {
+      filtered = filtered.filter(p => p.category === filterCategory)
     }
     setFilteredProducts(filtered)
-  }
+  }, [products, searchName, filterCategory])
+
+  useEffect(() => {
+    loadProducts()
+  }, [loadProducts])
+
+  useEffect(() => {
+    applyFilters()
+  }, [applyFilters])
 
   const handleSearch = (e) => {
     const value = e.target.value
     setSearchName(value)
-    applyFilters(products, value, filterCategory)
   }
 
   const handleFilterCategory = (e) => {
     const value = e.target.value
     setFilterCategory(value)
-    applyFilters(products, searchName, value)
   }
 
   const clearFilters = () => {
@@ -146,7 +144,6 @@ export const ProductPage = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault()
-    
     if (!validateProduct({
       name,
       price: parseFloat(price),
@@ -155,7 +152,6 @@ export const ProductPage = () => {
     }, false, products)) {
       return
     }
-
     try {
       await ProductApi.create({
         name,
@@ -215,7 +211,6 @@ export const ProductPage = () => {
     }, true, products)) {
       return
     }
-
     try {
       await ProductApi.update(id, {
         name: editName,
@@ -237,10 +232,6 @@ export const ProductPage = () => {
       }
     }
   }
-
-  useEffect(() => {
-    loadProducts()
-  }, [page])
 
   if (loading) {
     return (
@@ -380,13 +371,11 @@ export const ProductPage = () => {
                   : product.daysLeft <= 3 
                     ? 'product-page__badge--warning' 
                     : 'product-page__badge--success'
-
                 const statusText = product.isExpired || product.daysLeft <= 0
                   ? 'Просрочен'
                   : product.daysLeft <= 3 
                     ? `Истекает: ${product.daysLeft} дн.` 
                     : `Годен: ${product.daysLeft} дн.`
-
                 return (
                   <tr key={product.id}>
                     {editingId === product.id ? (
@@ -488,30 +477,13 @@ export const ProductPage = () => {
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="product-page__pagination">
-          <button 
-            onClick={() => setPage(p => Math.max(0, p - 1))} 
-            disabled={page === 0}
-            className="product-page__btn-secondary"
-          >
-            Назад
-          </button>
-          <span className="product-page__pagination-info">
-            Страница <strong>{page + 1}</strong> из {totalPages} 
-            <span style={{ color: '#94a3b8', marginLeft: '4px' }}>
-              (всего {totalElements} товаров)
-            </span>
-          </span>
-          <button 
-            onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} 
-            disabled={page >= totalPages - 1}
-            className="product-page__btn-secondary"
-          >
-            Вперёд
-          </button>
-        </div>
-      )}
+      <Pagination 
+        page={page} 
+        totalPages={totalPages} 
+        totalElements={totalElements} 
+        onPageChange={setPage} 
+        label="товаров" 
+      />
     </div>
   )
 }

@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { MerchandiseApi } from '../../services/MerchandiseApi'
+import { Pagination } from '../../components/Pagination'
 import './MerchandisePage.css'
 
 export const MerchandisePage = () => {
   const [merchandise, setMerchandise] = useState([])
   const [filteredMerchandise, setFilteredMerchandise] = useState([])
   const [loading, setLoading] = useState(true)
-
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [totalElements, setTotalElements] = useState(0)
   const [pageSize] = useState(10)
-
   const [searchName, setSearchName] = useState('')
   const [filterType, setFilterType] = useState('')
   const [filterSize, setFilterSize] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
-
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [type, setType] = useState('')
@@ -24,7 +22,6 @@ export const MerchandisePage = () => {
   const [material, setMaterial] = useState('')
   const [count, setCount] = useState('')
   const [imageUrl, setImageUrl] = useState('')
-
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editPrice, setEditPrice] = useState('')
@@ -71,7 +68,6 @@ export const MerchandisePage = () => {
       alert('Название не должно превышать 100 символов')
       return false
     }
-
     const isDuplicate = existingItems.some(item =>
       item.name.toLowerCase() === data.name.toLowerCase() &&
       (!isUpdate || item.id !== data.id)
@@ -80,7 +76,6 @@ export const MerchandisePage = () => {
       alert(`Товар с названием "${data.name}" уже существует!`)
       return false
     }
-
     if (!data.price && data.price !== 0) {
       alert('Цена обязательна')
       return false
@@ -93,22 +88,18 @@ export const MerchandisePage = () => {
       alert('Цена не может превышать 1 000 000 рублей')
       return false
     }
-
     if (!data.type) {
       alert('Выберите тип товара')
       return false
     }
-
     if (data.material && data.material.length > 200) {
       alert('Материал не должен превышать 200 символов')
       return false
     }
-
     if (data.imageUrl && data.imageUrl.length > 500) {
       alert('URL изображения не должен превышать 500 символов')
       return false
     }
-
     if (data.size !== undefined && data.size !== null && data.size !== '') {
       const sizeValue = Number(data.size)
       if (isNaN(sizeValue)) {
@@ -120,7 +111,6 @@ export const MerchandisePage = () => {
         return false
       }
     }
-
     if (data.count !== undefined && data.count !== null && data.count !== '') {
       const qty = Number(data.count)
       if (isNaN(qty) || qty < 0) {
@@ -132,11 +122,10 @@ export const MerchandisePage = () => {
         return false
       }
     }
-
     return true
   }
 
-  const loadMerchandise = async () => {
+  const loadMerchandise = useCallback(async () => {
     setLoading(true)
     try {
       const data = await MerchandiseApi.getPage(page, pageSize)
@@ -150,11 +139,10 @@ export const MerchandisePage = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, pageSize])
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...merchandise]
-    
     if (searchName) {
       filtered = filtered.filter(item => 
         item.name.toLowerCase().includes(searchName.toLowerCase())
@@ -169,13 +157,16 @@ export const MerchandisePage = () => {
     if (filterStatus) {
       filtered = filtered.filter(item => item.status === parseInt(filterStatus))
     }
-    
     setFilteredMerchandise(filtered)
-  }
+  }, [merchandise, searchName, filterType, filterSize, filterStatus])
+
+  useEffect(() => {
+    loadMerchandise()
+  }, [loadMerchandise])
 
   useEffect(() => {
     applyFilters()
-  }, [searchName, filterType, filterSize, filterStatus, merchandise])
+  }, [applyFilters])
 
   const handleSearch = (e) => setSearchName(e.target.value)
   const handleFilterType = (e) => setFilterType(e.target.value)
@@ -191,10 +182,8 @@ export const MerchandisePage = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault()
-
     const countValue = count ? parseInt(count) : 0
     const sizeValue = size ? parseInt(size) : null
-
     if (!validateMerchandise({
       name,
       price: parseFloat(price),
@@ -206,7 +195,6 @@ export const MerchandisePage = () => {
     }, false, merchandise)) {
       return
     }
-
     try {
       await MerchandiseApi.create({
         name,
@@ -275,7 +263,6 @@ export const MerchandisePage = () => {
   const handleUpdate = async (id) => {
     const countValue = editCount ? parseInt(editCount) : 0
     const sizeValue = editSize ? parseInt(editSize) : null
-
     if (!validateMerchandise({
       id: id,
       name: editName,
@@ -288,7 +275,6 @@ export const MerchandisePage = () => {
     }, true, merchandise)) {
       return
     }
-
     try {
       await MerchandiseApi.update(id, {
         name: editName,
@@ -314,10 +300,6 @@ export const MerchandisePage = () => {
   }
 
   const getStatusLabel = (status) => status === 1 ? 'Активен' : 'Неактивен'
-
-  useEffect(() => {
-    loadMerchandise()
-  }, [page])
 
   if (loading) {
     return (
@@ -611,28 +593,13 @@ export const MerchandisePage = () => {
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="merch-page__pagination">
-          <button 
-            onClick={() => setPage(p => Math.max(0, p - 1))} 
-            disabled={page === 0}
-            className="merch-page__btn-secondary"
-          >
-            Назад
-          </button>
-          <span className="merch-page__pagination-info">
-            Страница <strong>{page + 1}</strong> из {totalPages} 
-            <span style={{ color: '#94a3b8', marginLeft: 4 }}>(всего {totalElements} товаров)</span>
-          </span>
-          <button 
-            onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} 
-            disabled={page >= totalPages - 1}
-            className="merch-page__btn-secondary"
-          >
-            Вперёд
-          </button>
-        </div>
-      )}
+      <Pagination 
+        page={page} 
+        totalPages={totalPages} 
+        totalElements={totalElements} 
+        onPageChange={setPage} 
+        label="товаров" 
+      />
     </div>
   )
 }

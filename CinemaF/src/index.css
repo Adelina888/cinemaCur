@@ -10,7 +10,6 @@ body {
   color: #1a1a2e;
 }
 
-/* Навигация */
 .navbar {
   background: white;
   border-bottom: 1px solid #e2e8f0;
@@ -76,14 +75,14 @@ body {
   background: #f1f5f9;
 }
 
-/* Контейнер */
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
 }
 
-/* Карточка */
+
 .card {
   background: white;
   border-radius: 12px;
@@ -108,7 +107,7 @@ body {
   padding: 20px;
 }
 
-/* Кнопки */
+
 .btn {
   padding: 8px 16px;
   border-radius: 6px;
@@ -152,7 +151,6 @@ body {
   font-size: 12px;
 }
 
-/* Таблица */
 .table-wrapper {
   overflow-x: auto;
 }
@@ -181,7 +179,7 @@ body {
   background: #fafbfc;
 }
 
-/* Формы */
+
 .form-group {
   margin-bottom: 16px;
 }
@@ -209,7 +207,6 @@ body {
   box-shadow: 0 0 0 2px rgba(26, 26, 46, 0.1);
 }
 
-/* Статусы */
 .status {
   display: inline-block;
   padding: 2px 8px;
@@ -238,7 +235,7 @@ body {
   color: #2d3748;
 }
 
-/* Пагинация */
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -272,7 +269,6 @@ body {
   color: #4a5568;
 }
 
-/* Модалка */
 .modal {
   position: fixed;
   top: 0;
@@ -329,14 +325,13 @@ body {
   gap: 12px;
 }
 
-/* Загрузка */
 .loader {
   text-align: center;
   padding: 60px;
   color: #a0aec0;
 }
 
-/* Сетка */
+
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -364,7 +359,6 @@ body {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
 }
 
-/* Статистика */
 .stat-card {
   text-align: center;
   padding: 20px;
@@ -402,7 +396,6 @@ body {
   margin-bottom: 4px;
 }
 
-/* Хлебные крошки */
 .page-header {
   display: flex;
   justify-content: space-between;
