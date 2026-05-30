@@ -15,6 +15,9 @@ export const MerchandisePage = () => {
   const [filterType, setFilterType] = useState('')
   const [filterSize, setFilterSize] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
+  
+  const [showAddForm, setShowAddForm] = useState(false)
+
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [type, setType] = useState('')
@@ -22,6 +25,7 @@ export const MerchandisePage = () => {
   const [material, setMaterial] = useState('')
   const [count, setCount] = useState('')
   const [imageUrl, setImageUrl] = useState('')
+  
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editPrice, setEditPrice] = useState('')
@@ -113,8 +117,12 @@ export const MerchandisePage = () => {
     }
     if (data.count !== undefined && data.count !== null && data.count !== '') {
       const qty = Number(data.count)
-      if (isNaN(qty) || qty < 0) {
-        alert('Количество не может быть отрицательным')
+      if (isNaN(qty)) {
+        alert('Количество должно быть числом')
+        return false
+      }
+      if (qty < 1) {
+        alert('Количество должно быть не менее 1')
         return false
       }
       if (qty > 999999) {
@@ -180,39 +188,46 @@ export const MerchandisePage = () => {
     setFilterStatus('')
   }
 
+  const openAddForm = () => {
+    setShowAddForm(true)
+  }
+
+  const closeAddForm = () => {
+    setShowAddForm(false)
+    setName('')
+    setPrice('')
+    setType('')
+    setSize('')
+    setMaterial('')
+    setCount('')
+    setImageUrl('')
+  }
+
   const handleCreate = async (e) => {
     e.preventDefault()
     const countValue = count ? parseInt(count) : 0
     const sizeValue = size ? parseInt(size) : null
-    if (!validateMerchandise({
-      name,
-      price: parseFloat(price),
-      type,
-      size: sizeValue,
-      material,
-      count: countValue,
-      imageUrl
-    }, false, merchandise)) {
+    
+    if (countValue < 1) {
+      alert('Количество товара должно быть не менее 1')
+      return
+    }
+    
+    if (!validateMerchandise({name, price: parseFloat(price), type, size: sizeValue, material, count: countValue, imageUrl}, false, merchandise)) {
       return
     }
     try {
-      await MerchandiseApi.create({
-        name,
-        price: parseFloat(price),
-        type,
-        size: sizeValue,
-        material,
-        count: countValue,
-        imageUrl,
+      await MerchandiseApi.create({ 
+        name, 
+        price: parseFloat(price), 
+        type, 
+        size: sizeValue,  
+        material, 
+        count: countValue, 
+        imageUrl, 
         status: 1
       })
-      setName('')
-      setPrice('')
-      setType('')
-      setSize('')
-      setMaterial('')
-      setCount('')
-      setImageUrl('')
+      closeAddForm()
       loadMerchandise()
     } catch (error) {
       console.error('Ошибка создания', error)
@@ -263,6 +278,12 @@ export const MerchandisePage = () => {
   const handleUpdate = async (id) => {
     const countValue = editCount ? parseInt(editCount) : 0
     const sizeValue = editSize ? parseInt(editSize) : null
+    
+    if (countValue < 1) {
+      alert('Количество товара должно быть не менее 1')
+      return
+    }
+    
     if (!validateMerchandise({
       id: id,
       name: editName,
@@ -315,6 +336,121 @@ export const MerchandisePage = () => {
   return (
     <div className="merch-page">
       <h1 className="merch-page__header">Мерчендайз</h1>
+      
+      <div className="merch-page__add-button-container">
+        <button onClick={openAddForm} className="merch-page__btn-primary">
+          + Добавить мерч
+        </button>
+      </div>
+
+      {showAddForm && (
+        <div className="merch-page__modal">
+          <div className="merch-page__modal-content">
+            <div className="merch-page__modal-header">
+              <h3>Добавить мерч</h3>
+              <button className="merch-page__modal-close" onClick={closeAddForm}>×</button>
+            </div>
+            <form onSubmit={handleCreate}>
+              <div className="merch-page__form-grid">
+                <div className="merch-page__form-field">
+                  <label className="merch-page__label">Название *</label>
+                  <input
+                    type="text"
+                    placeholder="Введите название"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="merch-page__input"
+                    maxLength="100"
+                  />
+                  <span className="merch-page__helper">2-100 символов</span>
+                </div>
+                
+                <div className="merch-page__form-field">
+                  <label className="merch-page__label">Цена (руб.) *</label>
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                    className="merch-page__input"
+                    step="0.01"
+                    min="0.01"
+                    max="1000000"
+                  />
+                  <span className="merch-page__helper">0.01 — 1 000 000</span>
+                </div>
+                
+                <div className="merch-page__form-field">
+                  <label className="merch-page__label">Тип *</label>
+                  <select value={type} onChange={(e) => setType(e.target.value)} required className="merch-page__select">
+                    <option value="">Выберите тип</option>
+                    {types.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  </select>
+                </div>
+                
+                <div className="merch-page__form-field">
+                  <label className="merch-page__label">Размер</label>
+                  <select value={size} onChange={(e) => setSize(e.target.value)} className="merch-page__select">
+                    <option value="">Не указан</option>
+                    {sizes.slice(1).map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                  </select>
+                  <span className="merch-page__helper">0-100</span>
+                </div>
+                
+                <div className="merch-page__form-field">
+                  <label className="merch-page__label">Материал</label>
+                  <input
+                    type="text"
+                    placeholder="Материал"
+                    value={material}
+                    onChange={(e) => setMaterial(e.target.value)}
+                    className="merch-page__input"
+                    
+                  />
+                </div>
+                
+                <div className="merch-page__form-field">
+                  <label className="merch-page__label">Количество *</label>
+                  <input
+                    type="number"
+                    placeholder="1"
+                    value={count}
+                    onChange={(e) => setCount(e.target.value)}
+                    required
+                    className="merch-page__input"
+                    min="1"
+                    max="999999"
+                  />
+                  <span className="merch-page__helper">Минимум 1</span>
+                </div>
+                
+                <div className="merch-page__form-field merch-page__full-width">
+                  <label className="merch-page__label">URL изображения</label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    className="merch-page__input"
+                    maxLength="500"
+                  />
+                </div>
+              </div>
+              
+              <div className="merch-page__modal-footer">
+                <button type="button" onClick={closeAddForm} className="merch-page__btn-secondary">
+                  Отмена
+                </button>
+                <button type="submit" className="merch-page__btn-primary">
+                  Добавить
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="merch-page__card">
         <h3 className="merch-page__card-title">Поиск и фильтрация</h3>
@@ -344,95 +480,6 @@ export const MerchandisePage = () => {
           </select>
           <button onClick={clearFilters} className="merch-page__btn-secondary">Сбросить</button>
         </div>
-      </div>
-
-      <div className="merch-page__card">
-        <h3 className="merch-page__card-title">Добавить товар</h3>
-        <form onSubmit={handleCreate}>
-          <div className="merch-page__form-row">
-            <div className="merch-page__form-field">
-              <label className="merch-page__label">Название</label>
-              <input
-                type="text"
-                placeholder="Введите название"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="merch-page__input merch-page__w-180"
-                maxLength="100"
-              />
-              <span className="merch-page__helper">2-100 символов</span>
-            </div>
-            <div className="merch-page__form-field">
-              <label className="merch-page__label">Цена (руб.)</label>
-              <input
-                type="number"
-                placeholder="0.00"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-                className="merch-page__input merch-page__w-120"
-                step="0.01"
-                min="0.01"
-                max="1000000"
-              />
-              <span className="merch-page__helper">0.01 — 1 000 000</span>
-            </div>
-            <div className="merch-page__form-field">
-              <label className="merch-page__label">Тип</label>
-              <select value={type} onChange={(e) => setType(e.target.value)} required className="merch-page__select">
-                <option value="">Выберите тип</option>
-                {types.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-              </select>
-            </div>
-            <div className="merch-page__form-field">
-              <label className="merch-page__label">Размер</label>
-              <select value={size} onChange={(e) => setSize(e.target.value)} className="merch-page__select">
-                <option value="">Не указан</option>
-                {sizes.slice(1).map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-              </select>
-              <span className="merch-page__helper">0-100</span>
-            </div>
-            <div className="merch-page__form-field">
-              <label className="merch-page__label">Материал</label>
-              <input
-                type="text"
-                placeholder="Материал"
-                value={material}
-                onChange={(e) => setMaterial(e.target.value)}
-                className="merch-page__input merch-page__w-140"
-                maxLength="200"
-              />
-            </div>
-            <div className="merch-page__form-field">
-              <label className="merch-page__label">Количество</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={count}
-                onChange={(e) => setCount(e.target.value)}
-                required
-                className="merch-page__input merch-page__w-100"
-                min="0"
-                max="999999"
-              />
-            </div>
-            <div className="merch-page__form-field">
-              <label className="merch-page__label">URL изображения</label>
-              <input
-                type="text"
-                placeholder="https://..."
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="merch-page__input merch-page__w-200"
-                maxLength="500"
-              />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-              <button type="submit" className="merch-page__btn">Добавить</button>
-            </div>
-          </div>
-        </form>
       </div>
 
       <div style={{ overflowX: 'auto' }}>
@@ -533,7 +580,7 @@ export const MerchandisePage = () => {
                           value={editCount}
                           onChange={(e) => setEditCount(e.target.value)}
                           className="merch-page__input merch-page__w-70"
-                          min="0"
+                          min="1"
                           max="999999"
                         />
                       </td>

@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { NotificationApi } from '../services/NotificationApi'
 import { AuthApi } from '../services/AuthApi'
+import './DashboardPage.css'
 
 export const DashboardPage = () => {
   const { user } = useAuth()
   const [notifications, setNotifications] = useState(null)
   const [loading, setLoading] = useState(true)
   const [profile, setProfile] = useState(null)
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [readNotifications, setReadNotifications] = useState([])
 
   useEffect(() => {
     loadProfile()
@@ -44,7 +47,6 @@ export const DashboardPage = () => {
     }
   }
 
-  // Получаем имя для приветствия
   const getUserName = () => {
     if (profile?.fullName) return profile.fullName
     if (user?.fullName) return user.fullName
@@ -53,92 +55,182 @@ export const DashboardPage = () => {
     return 'Администратор'
   }
 
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications)
+  }
+
+  const markAsRead = (notificationKey) => {
+    if (!readNotifications.includes(notificationKey)) {
+      setReadNotifications([...readNotifications, notificationKey])
+    }
+  }
+
+  const markAllAsRead = () => {
+    const allKeys = []
+    if (notifications?.expiredProducts?.length) {
+      allKeys.push('expired')
+    }
+    if (notifications?.expiringSoonProducts?.length) {
+      allKeys.push('expiring')
+    }
+    if (notifications?.lowStockProducts?.length) {
+      allKeys.push('lowStock')
+    }
+    setReadNotifications(allKeys)
+  }
+
+  const getUnreadCount = () => {
+    if (!notifications) return 0
+    let count = 0
+    if (notifications.expiredProducts?.length && !readNotifications.includes('expired')) {
+      count++
+    }
+    if (notifications.expiringSoonProducts?.length && !readNotifications.includes('expiring')) {
+      count++
+    }
+    if (notifications.lowStockProducts?.length && !readNotifications.includes('lowStock')) {
+      count++
+    }
+    return count
+  }
+
+  const handleClickOutside = useCallback((e) => {
+    if (showNotifications && !e.target.closest('.dashboard__notifications-container')) {
+      setShowNotifications(false)
+    }
+  }, [showNotifications])
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [handleClickOutside])
+
+  const getVisibleNotifications = () => {
+    if (!notifications) return []
+    const visible = []
+    
+    if (notifications.expiredProducts?.length > 0 && !readNotifications.includes('expired')) {
+      visible.push({
+        type: 'expired',
+        title: 'Просроченные товары',
+        items: notifications.expiredProducts,
+        color: 'danger',
+        hint: 'Продажа заблокирована'
+      })
+    }
+    
+    if (notifications.expiringSoonProducts?.length > 0 && !readNotifications.includes('expiring')) {
+      visible.push({
+        type: 'expiring',
+        title: 'Срок годности истекает',
+        items: notifications.expiringSoonProducts,
+        color: 'warning',
+        hint: 'Рекомендуем продать в ближайшее время'
+      })
+    }
+    
+    if (notifications.lowStockProducts?.length > 0 && !readNotifications.includes('lowStock')) {
+      visible.push({
+        type: 'lowStock',
+        title: 'Низкие остатки',
+        items: notifications.lowStockProducts,
+        color: 'info',
+        hint: 'Необходимо пополнить запасы'
+      })
+    }
+    
+    return visible
+  }
+
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-      <h1>Панель управления</h1>
-      <p>Добро пожаловать, {getUserName()}!</p>
+    <div className="dashboard">
+      <div className="dashboard__header">
+        <h1 className="dashboard__title">Панель управления</h1>
+        
+        <div className="dashboard__header-right">
+          <div className="dashboard__notifications-container">
+            <button 
+              className="dashboard__bell"
+              onClick={toggleNotifications}
+            >
+              🔔
+              {getUnreadCount() > 0 && (
+                <span className="dashboard__bell-badge">
+                  {getUnreadCount()}
+                </span>
+              )}
+            </button>
+            
+            {showNotifications && (
+              <div className="dashboard__notifications-dropdown">
+                <div className="dashboard__notifications-header">
+                  <h3>Уведомления</h3>
+                  {getUnreadCount() > 0 && (
+                    <button 
+                      className="dashboard__mark-all-btn"
+                      onClick={markAllAsRead}
+                    >
+                      Прочитать всё
+                    </button>
+                  )}
+                </div>
+                
+                <div className="dashboard__notifications-list">
+                  {!loading && getVisibleNotifications().length > 0 ? (
+                    getVisibleNotifications().map((notification, idx) => (
+                      <div 
+                        key={idx}
+                        className={`dashboard__notification-item dashboard__notification-item--${notification.color}`}
+                        onClick={() => markAsRead(notification.type)}
+                      >
+                        <div className="dashboard__notification-icon">{notification.icon}</div>
+                        <div className="dashboard__notification-content">
+                          <div className="dashboard__notification-title">
+                            {notification.title}
+                          </div>
+                          <div className="dashboard__notification-message">
+                            {notification.items.join(', ')}
+                          </div>
+                          <div className="dashboard__notification-hint">
+                            {notification.hint}
+                          </div>
+                        </div>
+                        <div className="dashboard__notification-arrow">▼</div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="dashboard__notification-empty">
+                      {loading ? (
+                        <div>Загрузка уведомлений...</div>
+                      ) : (
+                        <>
+                          <div className="dashboard__notification-empty-icon">✅</div>
+                          <div>Нет непрочитанных уведомлений</div>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="dashboard__user">
+            <span className="dashboard__user-name">{getUserName()}</span>
+            <div className="dashboard__user-avatar">
+              {getUserName().charAt(0).toUpperCase()}
+            </div>
+          </div>
+        </div>
+      </div>
       
-      {/* Блок уведомлений */}
-      {!loading && notifications && (
-        <div style={{ marginTop: 30 }}>
-          <h2> Уведомления</h2>
-          
-          {/* Просроченные товары - красный блок */}
-          {notifications.expiredProducts?.length > 0 && (
-            <div style={{
-              background: '#fee',
-              borderLeft: '4px solid #dc3545',
-              padding: 15,
-              marginBottom: 15,
-              borderRadius: 8
-            }}>
-              <h3 style={{ color: '#dc3545', margin: '0 0 10px 0' }}> Просроченные товары</h3>
-              <ul style={{ margin: 0 }}>
-                {notifications.expiredProducts.map((name, idx) => (
-                  <li key={idx}>{name}</li>
-                ))}
-              </ul>
-              <p style={{ marginTop: 10, fontSize: 14, color: '#666' }}>
-                 Продажа этих товаров автоматически заблокирована
-              </p>
-            </div>
-          )}
-          
-          {/* Истекающие товары - оранжевый блок */}
-          {notifications.expiringSoonProducts?.length > 0 && (
-            <div style={{
-              background: '#fff3e0',
-              borderLeft: '4px solid #ff9800',
-              padding: 15,
-              marginBottom: 15,
-              borderRadius: 8
-            }}>
-              <h3 style={{ color: '#ff9800', margin: '0 0 10px 0' }}> Срок годности истекает</h3>
-              <ul style={{ margin: 0 }}>
-                {notifications.expiringSoonProducts.map((name, idx) => (
-                  <li key={idx}>{name}</li>
-                ))}
-              </ul>
-              <p style={{ marginTop: 10, fontSize: 14, color: '#666' }}>
-                 Рекомендуем продать или переместить эти товары в ближайшее время
-              </p>
-            </div>
-          )}
-          
-          {/* Низкие остатки - синий блок */}
-          {notifications.lowStockProducts?.length > 0 && (
-            <div style={{
-              background: '#e3f2fd',
-              borderLeft: '4px solid #2196f3',
-              padding: 15,
-              marginBottom: 15,
-              borderRadius: 8
-            }}>
-              <h3 style={{ color: '#2196f3', margin: '0 0 10px 0' }}> Низкие остатки</h3>
-              <ul style={{ margin: 0 }}>
-                {notifications.lowStockProducts.map((name, idx) => (
-                  <li key={idx}>{name}</li>
-                ))}
-              </ul>
-              <p style={{ marginTop: 10, fontSize: 14, color: '#666' }}>
-                 Необходимо пополнить запасы
-              </p>
-            </div>
-          )}
-          
-          {/* Если нет уведомлений */}
-          {(notifications.expiredProducts?.length === 0 || !notifications.expiredProducts) && 
-           (notifications.expiringSoonProducts?.length === 0 || !notifications.expiringSoonProducts) && 
-           (notifications.lowStockProducts?.length === 0 || !notifications.lowStockProducts) && (
-            <div style={{
-              background: '#e8f5e9',
-              borderLeft: '4px solid #4caf50',
-              padding: 15,
-              borderRadius: 8
-            }}>
-              <p style={{ margin: 0, color: '#2e7d32' }}> Все хорошо! Нет критических уведомлений.</p>
-            </div>
-          )}
+      <div className="dashboard__welcome">
+        <p>Добро пожаловать, {getUserName()}!</p>
+      </div>
+      
+      {!loading && notifications && getUnreadCount() === 0 && (
+        <div className="dashboard__success-card">
+          <p>Все системы работают нормально. Нет критических уведомлений.</p>
         </div>
       )}
     </div>

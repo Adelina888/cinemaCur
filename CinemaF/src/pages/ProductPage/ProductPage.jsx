@@ -13,10 +13,13 @@ export const ProductPage = () => {
   const [pageSize] = useState(10)
   const [searchName, setSearchName] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
+  
+  const [showAddForm, setShowAddForm] = useState(false)
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [category, setCategory] = useState('')
   const [expirationDays, setExpirationDays] = useState('')
+  
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editPrice, setEditPrice] = useState('')
@@ -80,8 +83,8 @@ export const ProductPage = () => {
       alert('Срок годности должен быть числом')
       return false
     }
-    if (days < 0) {
-      alert('Срок годности не может быть отрицательным')
+    if (days < 1) {
+      alert('Срок годности должен быть не менее 1 дня')
       return false
     }
     if (days > 3650) {
@@ -126,20 +129,20 @@ export const ProductPage = () => {
     applyFilters()
   }, [applyFilters])
 
-  const handleSearch = (e) => {
-    const value = e.target.value
-    setSearchName(value)
-  }
-
-  const handleFilterCategory = (e) => {
-    const value = e.target.value
-    setFilterCategory(value)
-  }
-
+  const handleSearch = (e) => setSearchName(e.target.value)
+  const handleFilterCategory = (e) => setFilterCategory(e.target.value)
   const clearFilters = () => {
     setSearchName('')
     setFilterCategory('')
-    setFilteredProducts(products)
+  }
+
+  const openAddForm = () => setShowAddForm(true)
+  const closeAddForm = () => {
+    setShowAddForm(false)
+    setName('')
+    setPrice('')
+    setCategory('')
+    setExpirationDays('')
   }
 
   const handleCreate = async (e) => {
@@ -159,10 +162,7 @@ export const ProductPage = () => {
         category,
         expirationDays: parseInt(expirationDays)
       })
-      setName('')
-      setPrice('')
-      setCategory('')
-      setExpirationDays('')
+      closeAddForm()
       loadProducts()
     } catch (error) {
       console.error('Ошибка создания', error)
@@ -197,9 +197,7 @@ export const ProductPage = () => {
     setEditExpirationDays(product.expirationDays)
   }
 
-  const cancelEdit = () => {
-    setEditingId(null)
-  }
+  const cancelEdit = () => setEditingId(null)
 
   const handleUpdate = async (id) => {
     if (!validateProduct({
@@ -247,6 +245,95 @@ export const ProductPage = () => {
   return (
     <div className="product-page">
       <h1 className="product-page__header">Товары бара</h1>
+      
+      <div className="product-page__add-button-container">
+        <button onClick={openAddForm} className="product-page__btn-primary">
+          + Добавить товар
+        </button>
+      </div>
+
+      {showAddForm && (
+        <div className="product-page__modal">
+          <div className="product-page__modal-content">
+            <div className="product-page__modal-header">
+              <h3>Добавить товар</h3>
+              <button className="product-page__modal-close" onClick={closeAddForm}>×</button>
+            </div>
+            <form onSubmit={handleCreate}>
+              <div className="product-page__form-grid">
+                <div className="product-page__form-field">
+                  <label className="product-page__label">Название *</label>
+                  <input
+                    type="text"
+                    placeholder="Введите название"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="product-page__input"
+                    maxLength="100"
+                  />
+                  <span className="product-page__helper">2-100 символов</span>
+                </div>
+                
+                <div className="product-page__form-field">
+                  <label className="product-page__label">Цена (руб.) *</label>
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                    className="product-page__input"
+                    step="0.01"
+                    min="0.01"
+                    max="1000000"
+                  />
+                  <span className="product-page__helper">0.01 — 1 000 000</span>
+                </div>
+                
+                <div className="product-page__form-field">
+                  <label className="product-page__label">Категория *</label>
+                  <select 
+                    value={category} 
+                    onChange={(e) => setCategory(e.target.value)} 
+                    required 
+                    className="product-page__select"
+                  >
+                    <option value="">Выберите категорию</option>
+                    {categories.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="product-page__form-field">
+                  <label className="product-page__label">Срок годности (дни) *</label>
+                  <input
+                    type="number"
+                    placeholder="1"
+                    value={expirationDays}
+                    onChange={(e) => setExpirationDays(e.target.value)}
+                    required
+                    className="product-page__input"
+                    min="1"
+                    max="3650"
+                  />
+                  <span className="product-page__helper">1 — 3650 дней</span>
+                </div>
+              </div>
+              
+              <div className="product-page__modal-footer">
+                <button type="button" onClick={closeAddForm} className="product-page__btn-secondary">
+                  Отмена
+                </button>
+                <button type="submit" className="product-page__btn-primary">
+                  Добавить
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="product-page__card">
         <h3 className="product-page__card-title">Поиск и фильтрация</h3>
@@ -272,73 +359,6 @@ export const ProductPage = () => {
             Сбросить
           </button>
         </div>
-      </div>
-
-      <div className="product-page__card">
-        <h3 className="product-page__card-title">Добавить новый товар</h3>
-        <form onSubmit={handleCreate}>
-          <div className="product-page__form-row">
-            <div className="product-page__form-field">
-              <label className="product-page__label">Название</label>
-              <input
-                type="text"
-                placeholder="Введите название"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="product-page__input product-page__w-180"
-              />
-            </div>
-            <div className="product-page__form-field">
-              <label className="product-page__label">Цена (руб.)</label>
-              <input
-                type="number"
-                placeholder="0.00"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-                className="product-page__input product-page__w-120"
-                step="0.01"
-                min="0.01"
-                max="1000000"
-              />
-              <span className="product-page__helper">0.01 — 1 000 000</span>
-            </div>
-            <div className="product-page__form-field">
-              <label className="product-page__label">Категория</label>
-              <select 
-                value={category} 
-                onChange={(e) => setCategory(e.target.value)} 
-                required 
-                className="product-page__select product-page__w-140"
-              >
-                <option value="">Выберите...</option>
-                {categories.map(cat => (
-                  <option key={cat.value} value={cat.value}>{cat.label}</option>
-                ))}
-              </select>
-            </div>
-            <div className="product-page__form-field">
-              <label className="product-page__label">Срок (дни)</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={expirationDays}
-                onChange={(e) => setExpirationDays(e.target.value)}
-                required
-                className="product-page__input product-page__w-120"
-                min="0"
-                max="3650"
-              />
-              <span className="product-page__helper">0 — 3650</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-              <button type="submit" className="product-page__btn">
-                Добавить
-              </button>
-            </div>
-          </div>
-        </form>
       </div>
 
       <div style={{ overflowX: 'auto' }}>
@@ -387,6 +407,7 @@ export const ProductPage = () => {
                             value={editName}
                             onChange={(e) => setEditName(e.target.value)}
                             className="product-page__input product-page__w-full"
+                            maxLength="100"
                           />
                         </td>
                         <td className="product-page__table-cell">
@@ -417,7 +438,7 @@ export const ProductPage = () => {
                             value={editExpirationDays}
                             onChange={(e) => setEditExpirationDays(e.target.value)}
                             className="product-page__input product-page__w-90"
-                            min="0"
+                            min="1"
                             max="3650"
                           />
                         </td>

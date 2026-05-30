@@ -15,12 +15,17 @@ export const ComboPage = () => {
   const [pageSize] = useState(10)
   const [searchName, setSearchName] = useState('')
   const [filterActive, setFilterActive] = useState('')
+  
+  // Состояние для формы добавления
+  const [showAddForm, setShowAddForm] = useState(false)
   const [name, setName] = useState('')
   const [discountPercent, setDiscountPercent] = useState('')
   const [description, setDescription] = useState('')
   const [selectedProducts, setSelectedProducts] = useState([])
   const [selectedProductId, setSelectedProductId] = useState('')
   const [selectedProductQuantity, setSelectedProductQuantity] = useState(1)
+  
+  // Состояние для редактирования
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editDiscountPercent, setEditDiscountPercent] = useState('')
@@ -216,6 +221,17 @@ export const ComboPage = () => {
     return true
   }
 
+  const openAddForm = () => setShowAddForm(true)
+  const closeAddForm = () => {
+    setShowAddForm(false)
+    setName('')
+    setDiscountPercent('')
+    setDescription('')
+    setSelectedProducts([])
+    setSelectedProductId('')
+    setSelectedProductQuantity(1)
+  }
+
   const handleCreate = async (e) => {
     e.preventDefault()
     if (!validateCombo({
@@ -235,10 +251,7 @@ export const ComboPage = () => {
           quantity: p.quantity
         }))
       })
-      setName('')
-      setDiscountPercent('')
-      setDescription('')
-      setSelectedProducts([])
+      closeAddForm()
       loadCombos()
     } catch (error) {
       console.error('Ошибка создания', error)
@@ -334,6 +347,160 @@ export const ComboPage = () => {
   return (
     <div className="combo-page">
       <h1 className="combo-page__header">Комбо-предложения</h1>
+      
+      <div className="combo-page__add-button-container">
+        <button onClick={openAddForm} className="combo-page__btn-primary">
+          + Добавить комбо
+        </button>
+      </div>
+
+      {/* Модальное окно добавления комбо */}
+      {showAddForm && (
+        <div className="combo-page__modal">
+          <div className="combo-page__modal-content">
+            <div className="combo-page__modal-header">
+              <h3>Добавить комбо</h3>
+              <button className="combo-page__modal-close" onClick={closeAddForm}>×</button>
+            </div>
+            <form onSubmit={handleCreate}>
+              <div className="combo-page__form-grid">
+                <div className="combo-page__form-field">
+                  <label className="combo-page__label">Название *</label>
+                  <input
+                    type="text"
+                    placeholder="Введите название комбо"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="combo-page__input"
+                    maxLength="100"
+                  />
+                  <span className="combo-page__helper">2-100 символов</span>
+                </div>
+                
+                <div className="combo-page__form-field">
+                  <label className="combo-page__label">Скидка % *</label>
+                  <input
+                    type="number"
+                    placeholder="0"
+                    value={discountPercent}
+                    onChange={(e) => setDiscountPercent(e.target.value)}
+                    required
+                    className="combo-page__input"
+                    min="0"
+                    max="100"
+                    step="1"
+                  />
+                  <span className="combo-page__helper">0-100%</span>
+                </div>
+                
+                <div className="combo-page__form-field combo-page__full-width">
+                  <label className="combo-page__label">Описание</label>
+                  <input
+                    type="text"
+                    placeholder="Описание комбо"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="combo-page__input"
+                    maxLength="500"
+                  />
+                </div>
+              </div>
+              
+              <div className="combo-page__products-section">
+                <h4>Товары в комбо *</h4>
+                <div className="combo-page__add-product-row">
+                  <select 
+                    value={selectedProductId} 
+                    onChange={(e) => setSelectedProductId(e.target.value)} 
+                    className="combo-page__select"
+                  >
+                    <option value="">Выберите товар</option>
+                    {availableProducts.map(p => (
+                      <option key={p.id} value={p.id}>{p.name} ({p.price} руб.)</option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    placeholder="Количество"
+                    value={selectedProductQuantity}
+                    onChange={(e) => setSelectedProductQuantity(parseInt(e.target.value) || 1)}
+                    min="1"
+                    className="combo-page__input"
+                    style={{ width: 100 }}
+                  />
+                  <button type="button" onClick={addProductToCombo} className="combo-page__btn-secondary">
+                    Добавить товар
+                  </button>
+                </div>
+                
+                {selectedProducts.length > 0 && (
+                  <table className="combo-page__products-table">
+                    <thead>
+                      <tr>
+                        <th>Товар</th>
+                        <th>Цена</th>
+                        <th>Количество</th>
+                        <th>Сумма</th>
+                        <th>Действия</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedProducts.map((p, idx) => (
+                        <tr key={idx}>
+                          <td>{p.productName}</td>
+                          <td>{p.price} руб.</td>
+                          <td>
+                            <input
+                              type="number"
+                              value={p.quantity}
+                              onChange={(e) => updateProductQuantity(idx, parseInt(e.target.value) || 1)}
+                              min="1"
+                              className="combo-page__input"
+                              style={{ width: 70 }}
+                            />
+                          </td>
+                          <td>{p.price * p.quantity} руб.</td>
+                          <td>
+                            <button 
+                              type="button" 
+                              onClick={() => removeProductFromCombo(idx)}
+                              className="combo-page__btn-danger"
+                            >
+                              Удалить
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colSpan="3" className="combo-page__total-label">Итого обычная цена:</td>
+                        <td colSpan="2">{calculateRegularPrice(selectedProducts)} руб.</td>
+                      </tr>
+                      <tr>
+                        <td colSpan="3" className="combo-page__total-label">Цена со скидкой {discountPercent || 0}%:</td>
+                        <td colSpan="2">
+                          {calculateComboPrice(calculateRegularPrice(selectedProducts), parseFloat(discountPercent || 0)).toFixed(2)} руб.
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                )}
+              </div>
+              
+              <div className="combo-page__modal-footer">
+                <button type="button" onClick={closeAddForm} className="combo-page__btn-secondary">
+                  Отмена
+                </button>
+                <button type="submit" className="combo-page__btn-primary">
+                  Добавить
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="combo-page__card">
         <h3 className="combo-page__card-title">Поиск и фильтрация</h3>
@@ -361,136 +528,6 @@ export const ComboPage = () => {
             Сбросить
           </button>
         </div>
-      </div>
-
-      <div className="combo-page__card">
-        <h3 className="combo-page__card-title">Добавить комбо</h3>
-        <form onSubmit={handleCreate}>
-          <div className="combo-page__form-row">
-            <div className="combo-page__form-field">
-              <label className="combo-page__label">Название</label>
-              <input
-                type="text"
-                placeholder="Название комбо"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="combo-page__input combo-page__w-200"
-                maxLength="100"
-              />
-            </div>
-            <div className="combo-page__form-field">
-              <label className="combo-page__label">Скидка %</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={discountPercent}
-                onChange={(e) => setDiscountPercent(e.target.value)}
-                required
-                className="combo-page__input combo-page__w-100"
-                min="0"
-                max="100"
-                step="1"
-              />
-            </div>
-            <div className="combo-page__form-field">
-              <label className="combo-page__label">Описание</label>
-              <input
-                type="text"
-                placeholder="Описание"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="combo-page__input combo-page__w-220"
-                maxLength="500"
-              />
-            </div>
-          </div>
-          
-          <div className="combo-page__card" style={{ marginTop: 16 }}>
-            <h4 className="combo-page__card-title">Товары в комбо</h4>
-            <div className="combo-page__filter-row">
-              <select 
-                value={selectedProductId} 
-                onChange={(e) => setSelectedProductId(e.target.value)} 
-                className="combo-page__select combo-page__w-200"
-              >
-                <option value="">Выберите товар</option>
-                {availableProducts.map(p => (
-                  <option key={p.id} value={p.id}>{p.name} ({p.price} руб.)</option>
-                ))}
-              </select>
-              <input
-                type="number"
-                placeholder="Количество"
-                value={selectedProductQuantity}
-                onChange={(e) => setSelectedProductQuantity(parseInt(e.target.value) || 1)}
-                min="1"
-                className="combo-page__input combo-page__w-100"
-              />
-              <button type="button" onClick={addProductToCombo} className="combo-page__btn-secondary">
-                Добавить товар
-              </button>
-            </div>
-            
-            {selectedProducts.length > 0 && (
-              <table className="combo-page__products-table">
-                <thead>
-                  <tr>
-                    <th>Товар</th>
-                    <th>Цена</th>
-                    <th>Количество</th>
-                    <th>Сумма</th>
-                    <th>Действия</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {selectedProducts.map((p, idx) => (
-                    <tr key={idx}>
-                      <td>{p.productName}</td>
-                      <td>{p.price} руб.</td>
-                      <td>
-                        <input
-                          type="number"
-                          value={p.quantity}
-                          onChange={(e) => updateProductQuantity(idx, parseInt(e.target.value) || 1)}
-                          min="1"
-                          className="combo-page__input"
-                          style={{ width: 70 }}
-                        />
-                      </td>
-                      <td>{p.price * p.quantity} руб.</td>
-                      <td>
-                        <button 
-                          type="button" 
-                          onClick={() => removeProductFromCombo(idx)}
-                          className="combo-page__btn-danger"
-                        >
-                          Удалить
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan="3" align="right">Итого обычная цена:</td>
-                    <td colSpan="2">{calculateRegularPrice(selectedProducts)} руб.</td>
-                  </tr>
-                  <tr>
-                    <td colSpan="3" align="right">Цена со скидкой {discountPercent || 0}%:</td>
-                    <td colSpan="2">
-                      {calculateComboPrice(calculateRegularPrice(selectedProducts), parseFloat(discountPercent || 0))} руб.
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            )}
-          </div>
-          
-          <button type="submit" className="combo-page__btn" style={{ marginTop: 16 }}>
-            Добавить комбо
-          </button>
-        </form>
       </div>
 
       <div style={{ overflowX: 'auto' }}>
@@ -525,155 +562,111 @@ export const ComboPage = () => {
                 return (
                   <tr key={item.id} className={!item.isActive ? 'combo-page__row-inactive' : ''}>
                     {editingId === item.id ? (
-                      <td colSpan="9" className="combo-page__table-cell">
-                        <div className="combo-page__edit-panel">
-                          <h4>Редактирование комбо</h4>
-                          <div className="combo-page__form-row" style={{ marginBottom: 16 }}>
-                            <div className="combo-page__form-field">
-                              <label className="combo-page__label">Название</label>
-                              <input
-                                type="text"
-                                value={editName}
-                                onChange={(e) => setEditName(e.target.value)}
-                                className="combo-page__input combo-page__w-200"
-                                maxLength="100"
-                              />
-                            </div>
-                            <div className="combo-page__form-field">
-                              <label className="combo-page__label">Скидка %</label>
-                              <input
-                                type="number"
-                                value={editDiscountPercent}
-                                onChange={(e) => setEditDiscountPercent(e.target.value)}
-                                className="combo-page__input combo-page__w-100"
-                                min="0"
-                                max="100"
-                              />
-                            </div>
-                            <div className="combo-page__form-field">
-                              <label className="combo-page__label">Описание</label>
-                              <input
-                                type="text"
-                                value={editDescription}
-                                onChange={(e) => setEditDescription(e.target.value)}
-                                className="combo-page__input combo-page__w-220"
-                                maxLength="500"
-                              />
-                            </div>
-                            <div className="combo-page__form-field">
-                              <label className="combo-page__label">Статус</label>
-                              <select 
-                                value={editIsActive ? 'true' : 'false'} 
-                                onChange={(e) => setEditIsActive(e.target.value === 'true')}
-                                className="combo-page__select"
-                              >
-                                <option value="true">Активен</option>
-                                <option value="false">Неактивен</option>
-                              </select>
-                            </div>
-                          </div>
-
-                          <div style={{ marginTop: 16 }}>
-                            <h5>Товары в комбо</h5>
-                            <div className="combo-page__filter-row" style={{ marginBottom: 10 }}>
-                              <select 
-                                value={editSelectedProductId} 
-                                onChange={(e) => setEditSelectedProductId(e.target.value)} 
-                                className="combo-page__select combo-page__w-200"
-                              >
-                                <option value="">Выберите товар</option>
-                                {availableProducts.map(p => (
-                                  <option key={p.id} value={p.id}>{p.name} ({p.price} руб.)</option>
-                                ))}
-                              </select>
+                      <>
+                        <td className="combo-page__table-cell">{item.id}</td>
+                        <td className="combo-page__table-cell">
+                          <input
+                            type="text"
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            className="combo-page__input"
+                            maxLength="100"
+                          />
+                        </td>
+                        <td className="combo-page__table-cell">
+                          <div className="combo-page__edit-products">
+                            <select 
+                              value={editSelectedProductId} 
+                              onChange={(e) => setEditSelectedProductId(e.target.value)} 
+                              className="combo-page__select"
+                              style={{ marginBottom: 8 }}
+                            >
+                              <option value="">Выберите товар</option>
+                              {availableProducts.map(p => (
+                                <option key={p.id} value={p.id}>{p.name} ({p.price} руб.)</option>
+                              ))}
+                            </select>
+                            <div className="combo-page__add-product-row" style={{ marginBottom: 8 }}>
                               <input
                                 type="number"
-                                placeholder="Количество"
+                                placeholder="Кол-во"
                                 value={editSelectedProductQuantity}
                                 onChange={(e) => setEditSelectedProductQuantity(parseInt(e.target.value) || 1)}
                                 min="1"
-                                className="combo-page__input combo-page__w-100"
+                                className="combo-page__input"
+                                style={{ width: 80 }}
                               />
                               <button 
                                 type="button" 
                                 onClick={addProductToEditCombo}
                                 className="combo-page__btn-secondary"
+                                style={{ padding: '4px 12px' }}
                               >
-                                Добавить товар
+                                Добавить
                               </button>
                             </div>
-
-                            {editSelectedProducts.length > 0 && (
-                              <table className="combo-page__products-table">
-                                <thead>
-                                  <tr>
-                                    <th>Товар</th>
-                                    <th>Цена</th>
-                                    <th>Количество</th>
-                                    <th>Сумма</th>
-                                    <th>Действия</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {editSelectedProducts.map((p, idx) => (
-                                    <tr key={idx}>
-                                      <td>{p.productName}</td>
-                                      <td>{p.price} руб.</td>
-                                      <td>
-                                        <input
-                                          type="number"
-                                          value={p.quantity}
-                                          onChange={(e) => updateEditProductQuantity(idx, parseInt(e.target.value) || 1)}
-                                          min="1"
-                                          className="combo-page__input"
-                                          style={{ width: 70 }}
-                                        />
-                                      </td>
-                                      <td>{p.price * p.quantity} руб.</td>
-                                      <td>
-                                        <button 
-                                          type="button" 
-                                          onClick={() => removeProductFromEditCombo(idx)}
-                                          className="combo-page__btn-danger"
-                                        >
-                                          Удалить
-                                        </button>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                                <tfoot>
-                                  <tr>
-                                    <td colSpan="3" align="right">Итого обычная цена:</td>
-                                    <td colSpan="2">{calculateRegularPrice(editSelectedProducts)} руб.</td>
-                                  </tr>
-                                  <tr>
-                                    <td colSpan="3" align="right">Цена со скидкой {editDiscountPercent || 0}%:</td>
-                                    <td colSpan="2">
-                                      {calculateComboPrice(calculateRegularPrice(editSelectedProducts), parseFloat(editDiscountPercent || 0))} руб.
-                                    </td>
-                                  </tr>
-                                </tfoot>
-                              </table>
-                            )}
+                            {editSelectedProducts.map((p, idx) => (
+                              <div key={idx} className="combo-page__edit-product-item">
+                                <span>{p.productName}</span>
+                                <input
+                                  type="number"
+                                  value={p.quantity}
+                                  onChange={(e) => updateEditProductQuantity(idx, parseInt(e.target.value) || 1)}
+                                  min="1"
+                                  style={{ width: 60 }}
+                                />
+                                <button onClick={() => removeProductFromEditCombo(idx)}>×</button>
+                              </div>
+                            ))}
                           </div>
-
-                          <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
-                            <button 
-                              onClick={() => handleUpdate(item.id)} 
-                              className="combo-page__btn-success"
-                            >
+                        </td>
+                        <td className="combo-page__table-cell">
+                          {calculateRegularPrice(editSelectedProducts)} руб.
+                        </td>
+                        <td className="combo-page__table-cell">
+                          {calculateComboPrice(calculateRegularPrice(editSelectedProducts), parseFloat(editDiscountPercent || 0)).toFixed(2)} руб.
+                        </td>
+                        <td className="combo-page__table-cell">
+                          <input
+                            type="number"
+                            value={editDiscountPercent}
+                            onChange={(e) => setEditDiscountPercent(e.target.value)}
+                            className="combo-page__input"
+                            style={{ width: 70 }}
+                            min="0"
+                            max="100"
+                          />%
+                        </td>
+                        <td className="combo-page__table-cell">
+                          <input
+                            type="text"
+                            value={editDescription}
+                            onChange={(e) => setEditDescription(e.target.value)}
+                            className="combo-page__input"
+                            maxLength="500"
+                          />
+                        </td>
+                        <td className="combo-page__table-cell">
+                          <select 
+                            value={editIsActive ? 'true' : 'false'} 
+                            onChange={(e) => setEditIsActive(e.target.value === 'true')}
+                            className="combo-page__select"
+                          >
+                            <option value="true">Активен</option>
+                            <option value="false">Неактивен</option>
+                          </select>
+                        </td>
+                        <td className="combo-page__table-cell">
+                          <div className="combo-page__btn-group">
+                            <button onClick={() => handleUpdate(item.id)} className="combo-page__btn-success">
                               Сохранить
                             </button>
-                            <button 
-                              onClick={cancelEdit} 
-                              className="combo-page__btn-secondary"
-                            >
+                            <button onClick={cancelEdit} className="combo-page__btn-secondary">
                               Отмена
                             </button>
                           </div>
-                        </div>
-                      </td>
+                        </td>
+                      </>
                     ) : (
                       <>
                         <td className="combo-page__table-cell">{item.id}</td>
@@ -690,25 +683,16 @@ export const ComboPage = () => {
                         </td>
                         <td className="combo-page__table-cell">
                           <div className="combo-page__btn-group">
-                            <button 
-                              onClick={() => startEdit(item)} 
-                              className="combo-page__btn-secondary"
-                            >
+                            <button onClick={() => startEdit(item)} className="combo-page__btn-secondary">
                               Редактировать
                             </button>
                             {item.isActive ? (
-                              <button 
-                                onClick={() => handleDeactivate(item.id)} 
-                                className="combo-page__btn-danger"
-                              >
+                              <button onClick={() => handleDeactivate(item.id)} className="combo-page__btn-danger">
                                 Деактивировать
                               </button>
                             ) : (
-                              <button 
-                                onClick={() => handleHardDelete(item.id)} 
-                                className="combo-page__btn-danger"
-                              >
-                                Удалить навсегда
+                              <button onClick={() => handleHardDelete(item.id)} className="combo-page__btn-danger">
+                                Удалить
                               </button>
                             )}
                           </div>
