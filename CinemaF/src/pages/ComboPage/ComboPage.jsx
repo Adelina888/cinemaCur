@@ -15,8 +15,7 @@ export const ComboPage = () => {
   const [pageSize] = useState(10)
   const [searchName, setSearchName] = useState('')
   const [filterActive, setFilterActive] = useState('')
-  
-  // Состояние для формы добавления
+
   const [showAddForm, setShowAddForm] = useState(false)
   const [name, setName] = useState('')
   const [discountPercent, setDiscountPercent] = useState('')
@@ -24,8 +23,7 @@ export const ComboPage = () => {
   const [selectedProducts, setSelectedProducts] = useState([])
   const [selectedProductId, setSelectedProductId] = useState('')
   const [selectedProductQuantity, setSelectedProductQuantity] = useState(1)
-  
-  // Состояние для редактирования
+
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editDiscountPercent, setEditDiscountPercent] = useState('')
@@ -354,7 +352,6 @@ export const ComboPage = () => {
         </button>
       </div>
 
-      {/* Модальное окно добавления комбо */}
       {showAddForm && (
         <div className="combo-page__modal">
           <div className="combo-page__modal-content">

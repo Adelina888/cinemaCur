@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { useAuth } from '../hooks/useAuth'
-import { NotificationApi } from '../services/NotificationApi'
-import { AuthApi } from '../services/AuthApi'
+import { useAuth } from '../../hooks/useAuth'
+import { NotificationApi } from '../../services/NotificationApi'
+import { AuthApi } from '../../services/AuthApi'
 import './DashboardPage.css'
 
 export const DashboardPage = () => {
@@ -204,7 +204,7 @@ export const DashboardPage = () => {
                         <div>Загрузка уведомлений...</div>
                       ) : (
                         <>
-                          <div className="dashboard__notification-empty-icon">✅</div>
+                          <div className="dashboard__notification-empty-icon"></div>
                           <div>Нет непрочитанных уведомлений</div>
                         </>
                       )}
